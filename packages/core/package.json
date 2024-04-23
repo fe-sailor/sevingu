@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "main": "",
     "scripts": {
-        "format": "prettier --cache --write"
+        "format": "prettier --cache --write ."
     },
     "devDependencies": {}
 }

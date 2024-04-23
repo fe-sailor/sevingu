@@ -25,12 +25,12 @@
     "prettier": "^3.2.5"
   },
   "lint-staged": {
-    "packages/website/*.{js,jsx,ts,tsx}": [
+    "packages/website/**/*.{js,jsx,ts,tsx}": [
       "eslint --cache --fix --config packages/website/.eslintrc.cjs",
-      "prettier --cache --write"
+      "prettier --write"
     ],
-    "packages/core/*.{js,jsx,ts,tsx}": [
-      "prettier --cache --write"
+    "packages/core/**/*.{js,jsx,ts,tsx}": [
+      "prettier --write"
     ]
   }
 }
