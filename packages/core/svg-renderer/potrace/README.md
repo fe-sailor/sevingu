@@ -1,4 +1,5 @@
 # POTRACE
+
 Based on http://potrace.sourceforge.net and https://github.com/kilobtye/potrace.
 
 Converts bitmap images to vector paths.
@@ -46,11 +47,12 @@ var POTRACE = require('potrace-js');
   opttolerance: Float
 }
 ```
-  - turnpolicy: how to resolve ambiguities in path decomposition. (default: "minority")       
-  - turdsize: suppress speckles of up to this size (default: 2)
-  - optcurve: turn on/off curve optimization (default: true)
-  - alphamax: corner threshold parameter (default: 1)
-  - opttolerance: curve optimization tolerance (default: 0.2)
+
+- turnpolicy: how to resolve ambiguities in path decomposition. (default: "minority")
+- turdsize: suppress speckles of up to this size (default: 2)
+- optcurve: turn on/off curve optimization (default: true)
+- alphamax: corner threshold parameter (default: 1)
+- opttolerance: curve optimization tolerance (default: 0.2)
 
 **POTRACE.traceUrl**
 
@@ -59,8 +61,9 @@ Traces a given image from url.
 ```javascript
 [...Path] = async POTRACE.traceUrl(url: String, [ options: Object ])
 ```
-  - url: path to the image
-  - options: trace options
+
+- url: path to the image
+- options: trace options
 
 **POTRACE.traceImage**
 
@@ -69,8 +72,9 @@ Traces a given image.
 ```javascript
 [...Path] = POTRACE.traceImage(image: HTMLImageElement, [ options: Object ])
 ```
-  - image: image containing the image
-  - options: trace options
+
+- image: image containing the image
+- options: trace options
 
 **POTRACE.traceCanvas**
 
@@ -79,26 +83,27 @@ Traces a given canvas.
 ```javascript
 [...Path] = POTRACE.traceCanvas(canvas: HTMLCanvasElement, [ options: Object ])
 ```
-  - canvas: canvas containing the image
-  - options: trace options
+
+- canvas: canvas containing the image
+- options: trace options
 
 **POTRACE.bitmap**
 
 Traces a given bitmap.
 
-  ```javascript
-  [...Path] = POTRACE.traceBitmap(bitmap: POTRACE.Bitmap, [ options: Object ])
-  ```
+```javascript
+[...Path] = POTRACE.traceBitmap(bitmap: POTRACE.Bitmap, [ options: Object ])
+```
+
     - bitmap: bitmap containing image info (1 and 0 values)
     - options: trace options
-
 
 **POTRACE.getSVG**
 
 Converts trace result to svg.
 
 ```javascript
-svg: String = POTRACE.getSVG([...Path])
+svg: String = POTRACE.getSVG([...Path]);
 ```
 
 **POTRACE.getPaths**
@@ -106,5 +111,5 @@ svg: String = POTRACE.getSVG([...Path])
 Converts trace result to readable paths.
 
 ```javascript
-svg: String = POTRACE.getPaths([...Path])
+svg: String = POTRACE.getPaths([...Path]);
 ```

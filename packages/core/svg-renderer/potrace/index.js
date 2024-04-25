@@ -6,50 +6,50 @@ import getPaths from './getPaths.js';
 import Bitmap from './Bitmap.js';
 
 const OPTIONS = {
-  turnpolicy: 'right',
-  turdsize: 2,
-  optcurve: true,
-  alphamax: 1,
-  opttolerance: 0.2
+	turnpolicy: 'right',
+	turdsize: 2,
+	optcurve: true,
+	alphamax: 1,
+	opttolerance: 0.2,
 };
 
 export async function traceUrl(url, options) {
-  const image = await loadImage(url, options);
+	const image = await loadImage(url, options);
 
-  return traceImage(image, options);
+	return traceImage(image, options);
 }
 
 export function traceImage(image, options) {
-  const canvas = document.createElement('canvas');
-  canvas.width = image.width;
-  canvas.height = image.height;
+	const canvas = document.createElement('canvas');
+	canvas.width = image.width;
+	canvas.height = image.height;
 
-  const context = canvas.getContext('2d');
-  context.drawImage(image, 0, 0);
+	const context = canvas.getContext('2d');
+	context.drawImage(image, 0, 0);
 
-  return traceCanvas(canvas, options);
+	return traceCanvas(canvas, options);
 }
 
 export function traceCanvas(canvas, options) {
-  const bitmap = createBitmap(canvas);
+	const bitmap = createBitmap(canvas);
 
-  return traceBitmap(bitmap, options);
+	return traceBitmap(bitmap, options);
 }
 
 export function traceBitmap(bitmap, options = OPTIONS) {
-  const pathList = bitmapToPathList(bitmap, options);
-  processPath(pathList, options);
+	const pathList = bitmapToPathList(bitmap, options);
+	processPath(pathList, options);
 
-  return pathList;
+	return pathList;
 }
 
 export { getSVG, getPaths, Bitmap };
 
 export default {
-  Bitmap,
-  getSVG,
-  getPaths,
-  traceCanvas,
-  traceImage,
-  traceUrl
+	Bitmap,
+	getSVG,
+	getPaths,
+	traceCanvas,
+	traceImage,
+	traceUrl,
 };

@@ -1,9 +1,9 @@
 {
-    "name": "@mono/core",
-    "version": "0.1.0",
-    "main": "",
-    "scripts": {
-        "format": "prettier --cache --write ."
-    },
-    "devDependencies": {}
+	"name": "@mono/core",
+	"version": "0.1.0",
+	"main": "",
+	"scripts": {
+		"format": "prettier --cache --write ."
+	},
+	"devDependencies": {}
 }
