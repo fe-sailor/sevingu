@@ -9,7 +9,6 @@ export const ImageViewerState = {
 interface ImageViewerStore {
 	imageViewer: null | HTMLCanvasElement;
 	setImageViewer: (imageViewer: HTMLCanvasElement) => void;
-	setImageSrc: (imageUrl: string) => void;
 	getImageUri: (fileChangeEvent: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -17,14 +16,6 @@ export const useImageViewerStore = create<ImageViewerStore>((set, get) => ({
 	imageViewer: null,
 	setImageViewer: (imageViewer: HTMLCanvasElement) =>
 		set(() => ({ imageViewer })),
-	setImageSrc: (imageUrl: string) => {
-		const imageViewer = get().imageViewer;
-		if (!imageViewer) {
-			return;
-		}
-		imageViewer.onload = () => {};
-		imageViewer.onerror = () => {};
-	},
 	getImageUri: (fileChangeEvent: React.ChangeEvent<HTMLInputElement>) => {
 		if (!fileChangeEvent.target.files?.length) {
 			return;
