@@ -53,11 +53,12 @@ const MainViewer = () => {
 				{
 					// NOTE: 임시로 넣어둔 img
 				}
-				<img
+				<canvas className="h-full w-full"></canvas>
+				{/* <img
 					ref={imgViewerRef}
 					src="https://picsum.photos/200/300"
 					alt="임시 이미지"
-				/>
+				/> */}
 			</ResizablePanel>
 			<ResizableHandle withHandle />
 			<ResizablePanel
