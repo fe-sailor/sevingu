@@ -11,9 +11,22 @@ import {
 	MAIN_VIEWER_PANEL_MIN_SIZE_SVG,
 	MAIN_VIEWER_HEIGHT,
 } from '@/components/main-viewer/const';
+import { useEffect, useRef } from 'react';
+import { useImgViewerStore } from '@/stores/img-viewer-store';
 
 const MainViewer = () => {
+	const imgViewerRef = useRef<HTMLImageElement | null>(null);
+	const { setImgViewer } = useImgViewerStore();
+
 	const handleResizeImage: PanelProps['onResize'] = (a, b) => {};
+
+	useEffect(() => {
+		if (!imgViewerRef.current) {
+			return;
+		}
+		setImgViewer(imgViewerRef.current);
+	}, [setImgViewer]);
+
 	return (
 		<ResizablePanelGroup
 			direction="horizontal"
@@ -29,7 +42,11 @@ const MainViewer = () => {
 				{
 					// NOTE: 임시로 넣어둔 img
 				}
-				<img src="https://picsum.photos/200/300" alt="임시 이미지" />
+				<img
+					ref={imgViewerRef}
+					src="https://picsum.photos/200/300"
+					alt="임시 이미지"
+				/>
 			</ResizablePanel>
 			<ResizableHandle withHandle />
 			<ResizablePanel

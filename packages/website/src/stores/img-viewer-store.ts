@@ -2,6 +2,7 @@ import { create } from 'zustand';
 
 interface ImgViewerStore {
 	imgViewer: null | HTMLImageElement;
+	setImgViewer: (imgViewer: HTMLImageElement) => void;
 }
 
 export const useImgViewerStore = create<ImgViewerStore>(set => ({
