@@ -1,36 +1,37 @@
 {
-  "name": "sevingu",
-  "version": "1.0.0",
-  "description": "",
-  "main": "",
-  "scripts": {
-    "dev": "pnpm --filter website dev",
-    "test:all": "pnpm -r test",
-    "postinstall": "husky install",
-    "lint": "pnpm --filter website lint",
-    "format": "pnpm -r format"
-  },
-  "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
-  "keywords": [],
-  "author": "fe-sailor",
-  "license": "ISC",
-  "devDependencies": {
-    "@commitlint/cli": "^19.2.2",
-    "@commitlint/config-conventional": "^19.2.2",
-    "husky": "^9.0.11",
-    "lint-staged": "^15.2.2",
-    "prettier": "^3.2.5"
-  },
-  "lint-staged": {
-    "packages/website/**/*.{js,jsx,ts,tsx}": [
-      "eslint --cache --fix --config packages/website/.eslintrc.cjs",
-      "prettier --write"
-    ],
-    "packages/core/**/*.{js,jsx,ts,tsx}": [
-      "prettier --write"
-    ]
-  }
+	"name": "sevingu",
+	"version": "1.0.0",
+	"description": "",
+	"main": "",
+	"scripts": {
+		"dev": "pnpm --filter website dev",
+		"test:all": "pnpm -r test",
+		"postinstall": "husky install",
+		"lint": "pnpm --filter website lint",
+		"format": "pnpm -r format",
+		"web:shadcn:add": "pnpm --filter website shadcn:add "
+	},
+	"dependencies": {
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0"
+	},
+	"keywords": [],
+	"author": "fe-sailor",
+	"license": "ISC",
+	"devDependencies": {
+		"@commitlint/cli": "^19.2.2",
+		"@commitlint/config-conventional": "^19.2.2",
+		"husky": "^9.0.11",
+		"lint-staged": "^15.2.2",
+		"prettier": "^3.2.5"
+	},
+	"lint-staged": {
+		"packages/website/**/*.{js,jsx,ts,tsx}": [
+			"eslint --cache --fix --config packages/website/.eslintrc.cjs",
+			"prettier --write"
+		],
+		"packages/core/**/*.{js,jsx,ts,tsx}": [
+			"prettier --write"
+		]
+	}
 }
