@@ -13,10 +13,14 @@ import {
 } from '@/components/main-viewer/const';
 import { useEffect, useRef } from 'react';
 import { useImgViewerStore } from '@/stores/img-viewer-store';
+import { useSvgViewerStore } from '@/stores/svg-viewer-store';
 
 const MainViewer = () => {
 	const imgViewerRef = useRef<HTMLImageElement | null>(null);
 	const { setImgViewer } = useImgViewerStore();
+
+	const svgViewerRef = useRef<HTMLDivElement | null>(null);
+	const { setSvgViewer } = useSvgViewerStore();
 
 	const handleResizeImage: PanelProps['onResize'] = (a, b) => {};
 
@@ -26,6 +30,13 @@ const MainViewer = () => {
 		}
 		setImgViewer(imgViewerRef.current);
 	}, [setImgViewer]);
+
+	useEffect(() => {
+		if (!svgViewerRef.current) {
+			return;
+		}
+		setSvgViewer(svgViewerRef.current);
+	}, [setSvgViewer]);
 
 	return (
 		<ResizablePanelGroup
@@ -54,6 +65,7 @@ const MainViewer = () => {
 				collapsible
 				minSize={MAIN_VIEWER_PANEL_MIN_SIZE_SVG}>
 				<div
+					ref={svgViewerRef}
 					dangerouslySetInnerHTML={{
 						__html:
 							// NOTE: 임시로 넣어둔 svg
