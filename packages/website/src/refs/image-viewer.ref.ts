@@ -19,6 +19,21 @@ interface ImageViewerRef {
 	updateConfig: (imageConfig: ImageConfiguration) => void;
 }
 
+// NOTE: component 내에서 다음과 같이 사용하여 image config 가 canvas에 반영되도록 할 수 있음
+// const { updateConfig } = useImageViewerRef();
+// useEffect(
+// 	() =>
+// 		useImageViewerRef.subscribe(({ imageUri }) => {
+// 			if (!imageUri) {
+// 				return;
+// 			}
+// 			setTimeout(() => {
+// 				updateConfig({ blur: 10 });
+// 			}, 3000);
+// 		}),
+// 	[updateConfig]
+// );
+
 export const useImageViewerRef = create<ImageViewerRef>((set, get) => ({
 	imageViewer: null,
 	imageConfig: { blur: 20 },
@@ -92,7 +107,11 @@ const renderOnViewer = (
 		const height = (canvasRef.height = htmlRenderedImage.height);
 		const width = (canvasRef.width = htmlRenderedImage.width);
 
-		const canvas2dContext = canvasRef.getContext('2d');
+		const canvas2dContext = canvasRef.getContext('2d', {
+			// NOTE: canvas 성능향상을 위한 코드 임
+			willReadFrequently: true,
+		});
+
 		if (!canvas2dContext) {
 			console.error('canvas context empty');
 			return;
