@@ -22,7 +22,9 @@ const MainViewer = () => {
 	const svgViewerRef = useRef<HTMLDivElement | null>(null);
 	const { setSvgViewer } = useSvgViewerRef();
 
-	const handleResizeImage: PanelProps['onResize'] = (a, b) => {};
+	const handleResizeImage: PanelProps['onResize'] = (a, b) => {
+		a && b;
+	};
 
 	const handleImageChange: React.ChangeEventHandler<
 		HTMLInputElement
