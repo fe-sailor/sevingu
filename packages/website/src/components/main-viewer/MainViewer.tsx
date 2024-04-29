@@ -20,7 +20,7 @@ const MainViewer = () => {
 	const { setImageViewer, showImage } = useImageViewerRef();
 
 	const svgViewerRef = useRef<HTMLDivElement | null>(null);
-	const { setSvgViewer } = useSvgViewerRef();
+	const { setSvgViewer, setCanvasRef, showSvg } = useSvgViewerRef();
 
 	const handleResizeImage: PanelProps['onResize'] = (a, b) => {
 		a && b;
@@ -33,6 +33,7 @@ const MainViewer = () => {
 			return;
 		}
 		showImage(event.target.files[0]);
+		showSvg();
 	};
 
 	useEffect(() => {
@@ -40,7 +41,8 @@ const MainViewer = () => {
 			return;
 		}
 		setImageViewer(imageViewerRef.current);
-	}, [setImageViewer]);
+		setCanvasRef(imageViewerRef.current);
+	}, [setImageViewer, setCanvasRef]);
 
 	useEffect(() => {
 		if (!svgViewerRef.current) {
@@ -70,16 +72,7 @@ const MainViewer = () => {
 					defaultSize={MAIN_VIEWER_PANEL_DEFAULT_SIZE_SVG}
 					collapsible
 					minSize={MAIN_VIEWER_PANEL_MIN_SIZE_SVG}>
-					<div
-						ref={svgViewerRef}
-						dangerouslySetInnerHTML={{
-							__html:
-								// NOTE: 임시로 넣어둔 svg
-								`
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M6 13.5V3.75m0 9.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 3.75V16.5m12-3V3.75m0 9.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 3.75V16.5m-6-9V3.75m0 3.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 9.75V10.5" />
-            </svg>`,
-						}}></div>
+					<div ref={svgViewerRef}></div>
 				</ResizablePanel>
 			</ResizablePanelGroup>
 		</>
