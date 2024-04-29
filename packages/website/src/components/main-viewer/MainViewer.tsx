@@ -12,7 +12,6 @@ import {
 	MAIN_VIEWER_PANEL_MIN_SIZE_SVG,
 	MAIN_VIEWER_HEIGHT,
 } from '@/components/main-viewer/const';
-import { useEffect, useRef } from 'react';
 import { useSvgViewerRef } from '@/refs/svg-viewer.ref';
 import { useImageViewerRef } from '@/refs/image-viewer.ref';
 

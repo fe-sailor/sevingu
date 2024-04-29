@@ -4,9 +4,9 @@ import {
 	AccordionItem,
 	AccordionTrigger,
 } from '@/components/ui/accordion';
-import { Slider } from './ui/slider';
-import { Switch } from './ui/switch';
-import { Label } from './ui/label';
+import { Slider } from '../ui/slider';
+import { Switch } from '../ui/switch';
+import { Label } from '../ui/label';
 
 export default function Panel() {
 	return (
