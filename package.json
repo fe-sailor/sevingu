@@ -4,12 +4,13 @@
 	"description": "",
 	"main": "",
 	"scripts": {
-		"dev": "pnpm --filter website dev",
 		"test:all": "pnpm -r test",
 		"postinstall": "husky install",
-		"lint": "pnpm --filter website lint",
 		"format": "pnpm -r format",
-		"web:shadcn:add": "pnpm --filter website shadcn:add "
+		"web:dev": "pnpm --filter website dev",
+		"web:lint": "pnpm --filter website lint",
+		"web:shadcn:add": "pnpm --filter website shadcn:add ",
+		"web:add": "pnpm --filter website add"
 	},
 	"dependencies": {
 		"react": "^18.2.0",
