@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import MainViewer from './components/main-viewer/MainViewer';
+import Panel from './components/panel/Panel';
 import { useStore } from '@/stores/store';
 
 function App() {
