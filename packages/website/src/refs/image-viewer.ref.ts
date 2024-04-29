@@ -12,13 +12,18 @@ export type ImageConfiguration = { blur: number };
 interface ImageViewerRef {
 	imageViewer: null | HTMLCanvasElement;
 	imageConfig: ImageConfiguration;
+	htmlRenderedImage: HTMLImageElement;
+	imageUri: string;
 	setImageViewer: (imageViewer: HTMLCanvasElement) => void;
 	showImage: (imageBlob: Blob) => void;
+	updateConfig: (imageConfig: ImageConfiguration) => void;
 }
 
 export const useImageViewerRef = create<ImageViewerRef>((set, get) => ({
 	imageViewer: null,
 	imageConfig: { blur: 20 },
+	htmlRenderedImage: new Image(),
+	imageUri: '',
 	setImageViewer: (imageViewer: HTMLCanvasElement) =>
 		set(() => {
 			if (get().imageViewer === imageViewer) {
@@ -37,27 +42,52 @@ export const useImageViewerRef = create<ImageViewerRef>((set, get) => ({
 				return;
 			}
 
-			if (typeof reader.result !== 'string') {
+			const imagUri = reader.result;
+
+			if (typeof imagUri !== 'string') {
 				console.error('image data uri is not string');
 				return;
 			}
 
-			renderOnViewer(reader.result, imageViewer, get().imageConfig);
+			set(() => ({ imageUri: imagUri }));
+
+			renderOnViewer(
+				get().htmlRenderedImage,
+				imagUri,
+				imageViewer,
+				get().imageConfig
+			);
 		};
 
 		reader.onerror = () => {};
 
 		reader.readAsDataURL(imageBlob);
 	},
+	updateConfig: imageConfig => {
+		const imageViewer = get().imageViewer;
+
+		if (!imageViewer) {
+			console.error('image view empty');
+			return;
+		}
+
+		set(() => ({ imageConfig: imageConfig }));
+
+		renderOnViewer(
+			get().htmlRenderedImage,
+			get().imageUri,
+			imageViewer,
+			imageConfig
+		);
+	},
 }));
 
 const renderOnViewer = (
+	htmlRenderedImage: HTMLImageElement,
 	imageUri: string,
 	canvasRef: HTMLCanvasElement,
 	imageConfig: ImageConfiguration
 ) => {
-	const htmlRenderedImage = new Image();
-
 	htmlRenderedImage.onload = () => {
 		const height = (canvasRef.height = htmlRenderedImage.height);
 		const width = (canvasRef.width = htmlRenderedImage.width);
