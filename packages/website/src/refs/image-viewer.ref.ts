@@ -6,13 +6,13 @@ export const ImageViewerState = {
 	ImageLoaded: 'ImageLoaded',
 } as const;
 
-interface ImageViewerStore {
+interface ImageViewerRef {
 	imageViewer: null | HTMLCanvasElement;
 	setImageViewer: (imageViewer: HTMLCanvasElement) => void;
 	getImageUri: (fileChangeEvent: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const useImageViewerStore = create<ImageViewerStore>((set, get) => ({
+export const useImageViewerRef = create<ImageViewerRef>((set, get) => ({
 	imageViewer: null,
 	setImageViewer: (imageViewer: HTMLCanvasElement) =>
 		set(() => ({ imageViewer })),

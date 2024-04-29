@@ -1,12 +1,12 @@
 import { create } from 'zustand';
 
-interface SvgViewerStore {
+interface SvgViewerRef {
 	svgViewer: null | HTMLDivElement;
 	setSvgViewer: (svgViewer: HTMLDivElement) => void;
 	setSvg: (svgAsString: string) => void;
 }
 
-export const useSvgViewerStore = create<SvgViewerStore>((set, get) => ({
+export const useSvgViewerRef = create<SvgViewerRef>((set, get) => ({
 	svgViewer: null,
 	setSvgViewer: (svgViewer: HTMLDivElement) => set(() => ({ svgViewer })),
 	setSvg: (svgAsString: string) => {
