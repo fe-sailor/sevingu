@@ -10,7 +10,8 @@
 		"web:dev": "pnpm --filter website dev",
 		"web:lint": "pnpm --filter website lint",
 		"web:shadcn:add": "pnpm --filter website shadcn:add ",
-		"web:add": "pnpm --filter website add"
+		"web:add": "pnpm --filter website add",
+		"build": "pnpm -r --parallel run build"
 	},
 	"dependencies": {
 		"react": "^18.2.0",
