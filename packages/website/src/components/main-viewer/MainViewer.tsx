@@ -12,22 +12,27 @@ import {
 	MAIN_VIEWER_HEIGHT,
 } from '@/components/main-viewer/const';
 import { useEffect, useRef } from 'react';
-import { useSvgViewerStore } from '@/stores/svg-viewer-store';
-import { useImageViewerStore } from '@/stores/image-viewer-store';
+import { useSvgViewerRef } from '@/refs/svg-viewer.ref';
+import { useImageViewerRef } from '@/refs/image-viewer.ref';
 
 const MainViewer = () => {
 	const imageViewerRef = useRef<HTMLCanvasElement | null>(null);
-	const { setImageViewer, getImageUri } = useImageViewerStore();
+	const { setImageViewer, showImage } = useImageViewerRef();
 
 	const svgViewerRef = useRef<HTMLDivElement | null>(null);
-	const { setSvgViewer } = useSvgViewerStore();
+	const { setSvgViewer } = useSvgViewerRef();
 
-	const handleResizeImage: PanelProps['onResize'] = (a, b) => {};
+	const handleResizeImage: PanelProps['onResize'] = (a, b) => {
+		a && b;
+	};
 
 	const handleImageChange: React.ChangeEventHandler<
 		HTMLInputElement
 	> = event => {
-		getImageUri(event);
+		if (!event.target.files?.length) {
+			return;
+		}
+		showImage(event.target.files[0]);
 	};
 
 	useEffect(() => {
