@@ -17,7 +17,7 @@ import { useImageViewerRef } from '@/refs/image-viewer.ref';
 
 const MainViewer = () => {
 	const imageViewerRef = useRef<HTMLCanvasElement | null>(null);
-	const { setImageViewer, getImageUri } = useImageViewerRef();
+	const { setImageViewer, showImage } = useImageViewerRef();
 
 	const svgViewerRef = useRef<HTMLDivElement | null>(null);
 	const { setSvgViewer } = useSvgViewerRef();
@@ -29,7 +29,10 @@ const MainViewer = () => {
 	const handleImageChange: React.ChangeEventHandler<
 		HTMLInputElement
 	> = event => {
-		getImageUri(event);
+		if (!event.target.files?.length) {
+			return;
+		}
+		showImage(event.target.files[0]);
 	};
 
 	useEffect(() => {

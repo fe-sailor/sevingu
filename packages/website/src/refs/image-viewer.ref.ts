@@ -9,18 +9,20 @@ export const ImageViewerState = {
 interface ImageViewerRef {
 	imageViewer: null | HTMLCanvasElement;
 	setImageViewer: (imageViewer: HTMLCanvasElement) => void;
-	getImageUri: (fileChangeEvent: React.ChangeEvent<HTMLInputElement>) => void;
+	showImage: (imageBlob: Blob) => void;
 }
 
 export const useImageViewerRef = create<ImageViewerRef>((set, get) => ({
 	imageViewer: null,
 	setImageViewer: (imageViewer: HTMLCanvasElement) =>
-		set(() => ({ imageViewer })),
-	getImageUri: (fileChangeEvent: React.ChangeEvent<HTMLInputElement>) => {
-		if (!fileChangeEvent.target.files?.length) {
-			return;
-		}
+		set(() => {
+			if (get().imageViewer === imageViewer) {
+				return { imageViewer: get().imageViewer };
+			}
+			return { imageViewer };
+		}),
 
+	showImage: (imageBlob: Blob) => {
 		const reader = new FileReader();
 		reader.onloadend = () => {
 			const imageViewer = get().imageViewer;
@@ -40,7 +42,7 @@ export const useImageViewerRef = create<ImageViewerRef>((set, get) => ({
 
 		reader.onerror = () => {};
 
-		reader.readAsDataURL(fileChangeEvent.target.files[0]);
+		reader.readAsDataURL(imageBlob);
 	},
 }));
 
