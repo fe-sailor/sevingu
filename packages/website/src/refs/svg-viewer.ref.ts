@@ -61,20 +61,17 @@ export const useSvgViewerRef = create<SvgViewerRef>((set, get) => ({
 			canvasRef.width,
 			canvasRef.height
 		);
-		console.log('!!!');
 		const svgViewer = get().svgViewer;
 		if (!svgViewer) {
 			return;
 		}
-		console.log(
-			renderSvgString(
-				imageData.data,
-				canvasRef,
-				svgSetting,
-				canvasRef.width,
-				canvasRef.height
-			).then(svg => (svgViewer.innerHTML = svg))
-		);
+		renderSvgString(
+			imageData.data,
+			canvasRef,
+			svgSetting,
+			canvasRef.width,
+			canvasRef.height
+		).then(svg => (svgViewer.innerHTML = svg));
 	},
 }));
 
@@ -269,7 +266,6 @@ export function createCircles(
 	const { renderEveryXPixels, renderEveryYPixels } = settings;
 
 	const circles = [];
-	console.log(imageData);
 	for (let x = 0; x < width; x += renderEveryXPixels) {
 		for (let y = 0; y < height; y += renderEveryYPixels) {
 			const pixelColor = getPixelColorAtXY(imageData, x, y, width);
@@ -280,7 +276,6 @@ export function createCircles(
 			circles.push(createCircleAtPoint(x, y, settings, pixelColor));
 		}
 	}
-	console.log('circles', circles);
 	return circles;
 }
 export function getPixelColorAtDataIndex(
