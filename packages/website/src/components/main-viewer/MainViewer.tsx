@@ -1,26 +1,26 @@
-import { useEffect, useRef } from 'react';
 import {
-	ResizableHandle,
-	ResizablePanel,
-	ResizablePanelGroup,
-} from '../ui/resizable';
-import type { PanelProps } from 'react-resizable-panels';
-import {
+	MAIN_VIEWER_HEIGHT,
 	MAIN_VIEWER_PANEL_DEFAULT_SIZE_IMG,
 	MAIN_VIEWER_PANEL_DEFAULT_SIZE_SVG,
 	MAIN_VIEWER_PANEL_MIN_SIZE_IMG,
 	MAIN_VIEWER_PANEL_MIN_SIZE_SVG,
-	MAIN_VIEWER_HEIGHT,
 } from '@/components/main-viewer/const';
-import { useSvgViewerRef } from '@/refs/svg-viewer.ref';
 import { useImageViewerRef } from '@/refs/image-viewer.ref';
+import type { PanelProps } from 'react-resizable-panels';
+import {
+	ResizableHandle,
+	ResizablePanel,
+	ResizablePanelGroup,
+} from '@/components/ui/resizable';
+import { useRef, useEffect } from 'react';
+import { useSvgViewerRef } from '@/refs/svg-viewer.ref';
 
 const MainViewer = () => {
 	const imageViewerRef = useRef<HTMLCanvasElement | null>(null);
 	const { setImageViewer, showImage } = useImageViewerRef();
 
 	const svgViewerRef = useRef<HTMLDivElement | null>(null);
-	const { setSvgViewer, setCanvasRef, showSvg } = useSvgViewerRef();
+	const { showSvg, setSvgViewer } = useSvgViewerRef();
 
 	const handleResizeImage: PanelProps['onResize'] = (a, b) => {
 		a && b;
@@ -41,8 +41,7 @@ const MainViewer = () => {
 			return;
 		}
 		setImageViewer(imageViewerRef.current);
-		setCanvasRef(imageViewerRef.current);
-	}, [setImageViewer, setCanvasRef]);
+	}, [setImageViewer]);
 
 	useEffect(() => {
 		if (!svgViewerRef.current) {
