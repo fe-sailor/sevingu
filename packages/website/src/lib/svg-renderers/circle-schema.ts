@@ -57,7 +57,7 @@ export const circleSettingSchema = z.object({
 	useFill: z.boolean(),
 	fillColor: z.string(),
 
-	scale: z.number().min(0).max(255),
+	scale: z.number().min(0).max(3),
 });
 
 export type CircleSetting = z.infer<typeof circleSettingSchema>;
