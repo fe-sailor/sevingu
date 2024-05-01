@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
-      - run: |
+        run: |
           npm install -g pnpm
           pnpm --force ci
 
