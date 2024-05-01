@@ -25,3 +25,14 @@ export const rgbValidator = z.string().refine(
 		message: 'Invalid RGB format',
 	}
 );
+
+export const stringJoin = (...strings: (string | (() => string))[]): string => {
+	return strings.reduce<string>((prevString, curString) => {
+		return (prevString +=
+			typeof curString === 'string' ? curString : curString());
+	}, '');
+};
+
+export const exhaustiveTypeCheck = (never: never) => {
+	throw new Error(never);
+};
