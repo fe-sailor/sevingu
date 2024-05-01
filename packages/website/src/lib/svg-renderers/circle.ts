@@ -11,11 +11,16 @@ import {
 	circleSettingSchema,
 	forEachPixelPoints,
 } from './circle-schema';
+import { RenderSvg } from '@/lib/svg-renderers/bases';
 
-export class CircleService {
+export class CircleService implements RenderSvg {
 	static instances: Circle[] = [];
 
 	static instancesRendered: string;
+
+	static renderSvg(): string {
+		return this.renderCircles();
+	}
 
 	static setCircleSetting(setting: SvgSetting | CircleSetting) {
 		this.circleSetting = this.adaptSetting(setting);
