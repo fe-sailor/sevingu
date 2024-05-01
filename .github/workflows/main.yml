@@ -32,7 +32,7 @@ jobs:
         run: pnpm install
 
       - name: Build
-        run: CI=false pnpm run build --if-present
+        run: CI=false pnpm run build
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v3
