@@ -29,6 +29,12 @@ type SevinguState = {
 	setCurImage: (img: string) => void;
 	undo: () => void;
 	redo: () => void;
+	/** controller 관련 */
+	panelState: PanelState;
+	changePanelState: (
+		key: PanelStateKey,
+		value: boolean | number | string
+	) => void;
 } & ImageViewerRef &
 	SvgViewerRef;
 
@@ -53,6 +59,31 @@ const svgSetting: SvgSettingSvgurt = {
 	minColorRecognized: 1,
 	maxColorRecognized: 256,
 };
+
+interface PanelState {
+	grayscale: boolean;
+	invert: boolean;
+	blur: number;
+	posterize: boolean;
+	posterizeLevels: number;
+	edgeDetection: boolean;
+	lowThreshold: number;
+	highThreshold: number;
+	//svg관련
+	svgRenderType: string;
+	minColorRecognized: number;
+	maxColorRecognized: number;
+	renderEveryXPixels: number;
+	renderEveryYPixels: number;
+	fill: boolean;
+	fillColor: string;
+	stroke: boolean;
+	radius: number;
+	radiusOnColor: boolean;
+	radiusRandomness: number;
+}
+export type PanelStateKey = keyof PanelState;
+
 export const useStore = create<SevinguState>((set, get) => ({
 	curImage: logo,
 	pastImages: [],
@@ -202,6 +233,38 @@ export const useStore = create<SevinguState>((set, get) => ({
 		console.warn(SvgRenderService.renderSvg());
 		svgViewer.innerHTML = SvgRenderService.renderSvg();
 	},
+
+	/** controller 관련 */
+	panelState: {
+		grayscale: false,
+		invert: false,
+		blur: 0,
+		posterize: false,
+		posterizeLevels: 5,
+		edgeDetection: false,
+		lowThreshold: 20,
+		highThreshold: 50,
+		//svg관련
+		svgRenderType: 'Circle',
+		minColorRecognized: 50,
+		maxColorRecognized: 200,
+		renderEveryXPixels: 6,
+		renderEveryYPixels: 6,
+		fill: true,
+		fillColor: 'rgb(28,32,38)',
+		stroke: false,
+		radius: 4,
+		radiusOnColor: true,
+		radiusRandomness: 0.2,
+	},
+	changePanelState: (key, value) =>
+		set(state => ({
+			...state,
+			panelState: {
+				...state.panelState,
+				[key]: value,
+			},
+		})),
 }));
 
 const renderOnViewer = (
