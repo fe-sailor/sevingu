@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import logo from '@/assets/sevingu_logo.png';
 import * as StackBlur from 'stackblur-canvas';
+import { SvgRenderService } from '@/lib/svg-renderers/renderer';
 
 export type ImageConfiguration = { blur: number };
 
@@ -33,16 +34,16 @@ type SevinguState = {
 
 const SVG_RENDER_TYPES = { CIRCLE: 'CIRCLE' } as const;
 
-const svgSetting: SvgSetting = {
+const svgSetting: SvgSettingSvgurt = {
 	scale: 1,
 	svgRenderType: SVG_RENDER_TYPES.CIRCLE,
 	applyFractalDisplacement: '',
-	fill: '#000000',
-	fillColor: '',
-	stroke: '',
-	autoColor: '',
+	fill: true,
+	fillColor: '#000000',
+	stroke: true,
+	autoColor: true,
 	radius: 1,
-	radiusOnColor: 1,
+	radiusOnColor: true,
 	radiusRandomness: 1,
 	strokeColor: '',
 	strokeWidth: 1,
@@ -194,6 +195,11 @@ export const useStore = create<SevinguState>((set, get) => ({
 		if (!svgViewer) {
 			return;
 		}
+
+		SvgRenderService.setSetting(svgSetting);
+		SvgRenderService.setRenderSize(canvasRef.width, canvasRef.height);
+		console.warn(SvgRenderService.renderSvgString());
+
 		renderSvgString(
 			imageData.data,
 			canvasRef,
@@ -285,16 +291,16 @@ const blurImage = (
 	StackBlur.imageDataRGB(imageData, 0, 0, width, height, Math.floor(blur));
 };
 
-export type SvgSetting = {
+export type SvgSettingSvgurt = {
 	scale: number;
-	fill: string;
+	fill: boolean;
 	fillColor: string;
-	stroke: string;
+	stroke: boolean;
 	svgRenderType: keyof typeof SVG_RENDER_TYPES;
-	autoColor: string;
+	autoColor: boolean;
 	applyFractalDisplacement: string;
 	radius: number;
-	radiusOnColor: number;
+	radiusOnColor: boolean;
 	radiusRandomness: number;
 	strokeColor: string;
 	strokeWidth: number;
@@ -322,7 +328,7 @@ export type Pixel = {
 async function renderSvgString(
 	clampedArray: Uint8ClampedArray,
 	canvasRef: HTMLCanvasElement,
-	svgSettings: SvgSetting,
+	svgSettings: SvgSettingSvgurt,
 	width: number,
 	height: number
 ) {
@@ -408,7 +414,10 @@ async function renderSvgString(
 	return svgString;
 }
 
-export function renderCircles(svgSettings: SvgSetting, circles: Circle[]) {
+export function renderCircles(
+	svgSettings: SvgSettingSvgurt,
+	circles: Circle[]
+) {
 	const { fill, fillColor, scale, stroke } = svgSettings;
 
 	let renderString = '';
@@ -428,7 +437,7 @@ export function renderCircles(svgSettings: SvgSetting, circles: Circle[]) {
 function createCircleAtPoint(
 	baseX: number,
 	baseY: number,
-	settings: SvgSetting,
+	settings: SvgSettingSvgurt,
 	pixel: Pixel
 ) {
 	const {
@@ -468,7 +477,7 @@ function createCircleAtPoint(
 }
 
 export function createCircles(
-	settings: SvgSetting,
+	settings: SvgSettingSvgurt,
 	imageData: Uint8ClampedArray,
 	width: number,
 	height: number
@@ -511,7 +520,7 @@ export function getPixelColorAtXY(
 	return getPixelColorAtDataIndex(imageData, dataIndex);
 }
 
-export function isInColorThreshhold(pixel: Pixel, settings: SvgSetting) {
+export function isInColorThreshhold(pixel: Pixel, settings: SvgSettingSvgurt) {
 	const { minColorRecognized, maxColorRecognized } = settings;
 
 	return (
@@ -524,7 +533,10 @@ export function isInColorThreshhold(pixel: Pixel, settings: SvgSetting) {
 	);
 }
 
-export function getPixelColorIntensity(pixel: Pixel, settings: SvgSetting) {
+export function getPixelColorIntensity(
+	pixel: Pixel,
+	settings: SvgSettingSvgurt
+) {
 	const { minColorRecognized, maxColorRecognized } = settings;
 
 	const r = pixel.r - minColorRecognized;

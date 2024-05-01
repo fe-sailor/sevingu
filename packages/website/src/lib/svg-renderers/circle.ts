@@ -12,6 +12,7 @@ import {
 	forEachPixelPoints,
 } from './circle-schema';
 import { RenderSvg } from '@/lib/svg-renderers/bases';
+import { SvgSettingSvgurt } from '@/stores/store';
 
 export class CircleService implements RenderSvg {
 	static instances: Circle[] = [];
@@ -123,7 +124,7 @@ export class CircleService implements RenderSvg {
 	}
 
 	private static adaptSetting(
-		setting: SvgSetting | CircleSetting
+		setting: SvgSettingSvgurt | CircleSetting
 	): CircleSetting {
 		if (this.validateCircleSetting(setting)) {
 			return setting;
@@ -152,7 +153,7 @@ export class CircleService implements RenderSvg {
 	}
 
 	private static validateCircleSetting(
-		setting: SvgSetting | CircleSetting
+		setting: SvgSettingSvgurt | CircleSetting
 	): setting is CircleSetting {
 		return circleSettingSchema.safeParse(setting).success;
 	}
