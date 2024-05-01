@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import logo from '@/assets/sevingu_logo.png';
 import * as StackBlur from 'stackblur-canvas';
-import { SvgRenderService } from '@/lib/svg-renderers/renderer';
+import { SvgRenderService } from '@/lib/svg-renderers/svg-renderer';
 
 export type ImageConfiguration = { blur: number };
 

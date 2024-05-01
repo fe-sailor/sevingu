@@ -4,7 +4,7 @@ import {
 	SvgRendererSetting,
 	SvgSetting,
 	svgRendererSettingSchema,
-} from '@/lib/svg-renderers/renderer-schema';
+} from '@/lib/svg-renderers/svg-renderer-schema';
 import { exhaustiveTypeCheck, stringJoin } from '@/lib/utils';
 import { SvgSettingSvgurt } from '@/stores/store';
 import _ from 'lodash';
