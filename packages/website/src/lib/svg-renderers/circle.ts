@@ -3,6 +3,7 @@ import {
 	getPixelColorIntensity,
 	isInColorThreshold,
 } from '@/lib/svg-renderers/svg-service';
+import { SvgSettingSvgurt } from '@/stores/store';
 import _ from 'lodash';
 import {
 	Circle,
@@ -11,27 +12,31 @@ import {
 	circleSettingSchema,
 	forEachPixelPoints,
 } from './circle-schema';
-import { RenderSvg } from '@/lib/svg-renderers/bases';
-import { SvgSettingSvgurt } from '@/stores/store';
 
-export class CircleService implements RenderSvg {
+export class CircleService {
 	static instances: Circle[] = [];
 
 	static instancesRendered: string;
 
 	static renderSvg(): string {
+		this.createCircles();
 		return this.renderCircles();
+	}
+
+	static setSize(width: number, height: number) {
+		this.width = width;
+		this.height = height;
 	}
 
 	static setCircleSetting(setting: SvgSetting | CircleSetting) {
 		this.circleSetting = this.adaptSetting(setting);
 	}
 
-	static createCircles(
-		clampedArray: Uint8ClampedArray,
-		width: number,
-		height: number
-	) {
+	static setPixelRawData(pixelRawData: Uint8ClampedArray) {
+		this.pixelRawData = pixelRawData;
+	}
+
+	private static createCircles() {
 		if (!this.circleSetting) {
 			console.error('no circle setting error');
 			return;
@@ -39,11 +44,12 @@ export class CircleService implements RenderSvg {
 		const { renderEveryXPixels, renderEveryYPixels } = this.circleSetting;
 
 		this.instances = [];
+
 		forEachPixelPoints(
 			{
-				clampedArray: clampedArray,
-				width: width,
-				height: height,
+				clampedArray: this.pixelRawData,
+				width: this.width,
+				height: this.height,
 				betweenX: renderEveryXPixels,
 				betweenY: renderEveryYPixels,
 			},
@@ -70,6 +76,9 @@ export class CircleService implements RenderSvg {
 	}
 
 	private static circleSetting: CircleSetting;
+	private static width: number;
+	private static height: number;
+	private static pixelRawData: Uint8ClampedArray;
 
 	private static isInColorThreshold(pixelPoint: PixelPoint): boolean {
 		return isInColorThreshold(

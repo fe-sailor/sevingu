@@ -33,7 +33,7 @@ const MainViewer = () => {
 			return;
 		}
 		showImage(event.target.files[0]);
-		setTimeout(() => showSvg(), 3000);
+		setTimeout(() => showSvg(), 1000);
 	};
 
 	useEffect(() => {
