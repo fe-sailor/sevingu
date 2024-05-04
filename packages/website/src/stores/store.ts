@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import logo from '@/assets/sevingu_logo.png';
 import * as StackBlur from 'stackblur-canvas';
 import { SvgRenderService } from '@/lib/svg-renderers/svg-renderer';
+import { getFileUri, getImageWidthAndHeight } from '@/lib/utils';
 
 export type ImageConfiguration = { blur: number };
 
@@ -116,36 +117,22 @@ export const useStore = create<SevinguState>((set, get) => ({
 			return { imageViewer };
 		}),
 
-	showImage: (imageBlob: Blob) => {
-		const reader = new FileReader();
-		reader.onloadend = () => {
-			const imageViewer = get().imageViewer;
+	showImage: async (imageBlob: Blob) => {
+		const imagUri = await getFileUri(imageBlob);
+		set(() => ({ imageUri: imagUri }));
+		const imageViewer = get().imageViewer;
 
-			if (!imageViewer) {
-				console.error('image view empty');
-				return;
-			}
+		if (!imageViewer) {
+			console.error('image view empty');
+			return;
+		}
 
-			const imagUri = reader.result;
-
-			if (typeof imagUri !== 'string') {
-				console.error('image data uri is not string');
-				return;
-			}
-
-			set(() => ({ imageUri: imagUri }));
-
-			renderOnViewer(
-				get().htmlRenderedImage,
-				imagUri,
-				imageViewer,
-				get().imageConfig
-			);
-		};
-
-		reader.onerror = () => {};
-
-		reader.readAsDataURL(imageBlob);
+		renderOnViewer(
+			get().htmlRenderedImage,
+			imagUri,
+			imageViewer,
+			get().imageConfig
+		);
 	},
 	updateConfig: imageConfig => {
 		const imageViewer = get().imageViewer;
@@ -204,35 +191,29 @@ export const useStore = create<SevinguState>((set, get) => ({
 	},
 }));
 
-const renderOnViewer = (
+const renderOnViewer = async (
 	htmlRenderedImage: HTMLImageElement,
 	imageUri: string,
 	canvasRef: HTMLCanvasElement,
 	imageConfig: ImageConfiguration
 ) => {
-	htmlRenderedImage.onload = () => {
-		const height = (canvasRef.height = htmlRenderedImage.height);
-		const width = (canvasRef.width = htmlRenderedImage.width);
+	const { width, height, imageElement } =
+		await getImageWidthAndHeight(imageUri);
+	canvasRef.height = height;
+	canvasRef.width = width;
 
-		const canvas2dContext = canvasRef.getContext('2d', {
-			// NOTE: canvas 성능향상을 위한 코드 임
-			willReadFrequently: true,
-		});
-
-		if (!canvas2dContext) {
-			console.error('canvas context empty');
-			return;
-		}
-		canvas2dContext.drawImage(htmlRenderedImage, 0, 0, width, height);
-
-		const imageData = canvas2dContext.getImageData(0, 0, width, height);
-
-		manipulateImageData(imageData, imageConfig, width, height);
-
-		canvas2dContext.putImageData(imageData, 0, 0);
-	};
-
-	htmlRenderedImage.src = imageUri;
+	const canvas2dContext = canvasRef.getContext('2d', {
+		// NOTE: canvas 성능향상을 위한 코드 임
+		willReadFrequently: true,
+	});
+	if (!canvas2dContext) {
+		console.error('canvas context empty');
+		return;
+	}
+	canvas2dContext.drawImage(imageElement, 0, 0, width, height);
+	const imageData = canvas2dContext.getImageData(0, 0, width, height);
+	manipulateImageData(imageData, imageConfig, width, height);
+	canvas2dContext.putImageData(imageData, 0, 0);
 };
 
 const manipulateImageData = (
