@@ -4,10 +4,10 @@ import {
 	SvgRendererSetting,
 	SvgSetting,
 	svgRendererSettingSchema,
-} from '@/lib/svg-renderers/renderer-schema';
+} from '@/lib/svg-renderers/svg-renderer-schema';
 import { exhaustiveTypeCheck, stringJoin } from '@/lib/utils';
 import { SvgSettingSvgurt } from '@/stores/store';
-import _ from 'lodash';
+import pick from 'lodash/pick';
 
 export class SvgRenderService {
 	private static setting: SvgRendererSetting;
@@ -92,7 +92,7 @@ export class SvgRenderService {
 		setting: SvgSettingSvgurt | SvgSetting
 	): SvgRendererSetting {
 		if (this.validateSvgSetting(setting)) {
-			return _.pick(setting, ['renderType', 'scale']);
+			return pick(setting, ['renderType', 'scale']);
 		}
 		return {
 			renderType: setting.svgRenderType,
