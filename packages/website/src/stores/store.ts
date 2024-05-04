@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import logo from '@/assets/sevingu_logo.png';
 import * as StackBlur from 'stackblur-canvas';
 import { SvgRenderService } from '@/lib/svg-renderers/renderer';
+import { PanelState, PanelStateKey, SVGRenderTypes } from './storeType';
 
 export type ImageConfiguration = { blur: number };
 
@@ -33,7 +34,7 @@ type SevinguState = {
 	panelState: PanelState;
 	changePanelState: (
 		key: PanelStateKey,
-		value: boolean | number | string
+		value: boolean | number | string | keyof typeof SVGRenderTypes
 	) => void;
 } & ImageViewerRef &
 	SvgViewerRef;
@@ -59,30 +60,6 @@ const svgSetting: SvgSettingSvgurt = {
 	minColorRecognized: 1,
 	maxColorRecognized: 256,
 };
-
-interface PanelState {
-	grayscale: boolean;
-	invert: boolean;
-	blur: number;
-	posterize: boolean;
-	posterizeLevels: number;
-	edgeDetection: boolean;
-	lowThreshold: number;
-	highThreshold: number;
-	//svg관련
-	svgRenderType: string;
-	minColorRecognized: number;
-	maxColorRecognized: number;
-	renderEveryXPixels: number;
-	renderEveryYPixels: number;
-	fill: boolean;
-	fillColor: string;
-	stroke: boolean;
-	radius: number;
-	radiusOnColor: boolean;
-	radiusRandomness: number;
-}
-export type PanelStateKey = keyof PanelState;
 
 export const useStore = create<SevinguState>((set, get) => ({
 	curImage: logo,
@@ -245,7 +222,7 @@ export const useStore = create<SevinguState>((set, get) => ({
 		lowThreshold: 20,
 		highThreshold: 50,
 		//svg관련
-		svgRenderType: 'Circle',
+		svgRenderType: SVGRenderTypes.CIRCLE,
 		minColorRecognized: 50,
 		maxColorRecognized: 200,
 		renderEveryXPixels: 6,
