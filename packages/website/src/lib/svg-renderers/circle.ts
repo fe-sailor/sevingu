@@ -4,7 +4,7 @@ import {
 	isInColorThreshold,
 } from '@/lib/svg-renderers/svg-service';
 import { SvgSettingSvgurt } from '@/stores/store';
-import _ from 'lodash';
+import pick from 'lodash/pick';
 import {
 	Circle,
 	CircleSetting,
@@ -82,8 +82,8 @@ export class CircleService {
 
 	private static isInColorThreshold(pixelPoint: PixelPoint): boolean {
 		return isInColorThreshold(
-			_.pick(pixelPoint, ['r', 'g', 'b', 'a']),
-			_.pick(this.circleSetting, ['minColorRecognized', 'maxColorRecognized'])
+			pick(pixelPoint, ['r', 'g', 'b', 'a']),
+			pick(this.circleSetting, ['minColorRecognized', 'maxColorRecognized'])
 		);
 	}
 
@@ -102,7 +102,7 @@ export class CircleService {
 		if (useRadiusColorIntensity) {
 			circleRadius =
 				getPixelColorIntensity(
-					_.pick(pixelPoint, ['r', 'g', 'b', 'a']),
+					pick(pixelPoint, ['r', 'g', 'b', 'a']),
 					this.circleSetting
 				) * radius;
 		}
