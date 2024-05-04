@@ -30,6 +30,7 @@ type SevinguState = {
 	setCurImage: (img: string) => void;
 	undo: () => void;
 	redo: () => void;
+	download: () => void;
 	/** controller 관련 */
 	panelState: PanelState;
 	changePanelState: (
@@ -135,6 +136,35 @@ export const useStore = create<SevinguState>((set, get) => ({
 				futureImages: newFutureImages,
 			};
 		}),
+
+	download: () => {
+		// 사용자에게 파일 이름 입력받기
+		const fileName = prompt(
+			'다운로드할 SVG 파일의 이름을 입력하세요.',
+			'downloaded_svg.svg'
+		);
+		// 사용자가 취소를 누른 경우
+		if (fileName === null) {
+			console.log('다운로드 취소됨.');
+			return;
+		}
+
+		console.log('download complete.');
+		const linkElement = document.createElement('a');
+		linkElement.download = fileName; // 입력받은 파일 이름 사용
+		const svgViewer = get().svgViewer;
+		if (!svgViewer) {
+			return;
+		}
+		const svgData = new XMLSerializer().serializeToString(svgViewer);
+		const blob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+		linkElement.href = URL.createObjectURL(blob);
+		linkElement.style.display = 'none';
+
+		document.body.appendChild(linkElement);
+		linkElement.click();
+		document.body.removeChild(linkElement);
+	},
 
 	imageViewer: null,
 	imageConfig: { blur: 20 },

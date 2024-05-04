@@ -1,17 +1,28 @@
-import { useRef } from 'react';
+import { useRef, useCallback } from 'react'; // useCallback 추가
 import { Button } from '@/components/ui/button';
 import MainViewer from './components/main-viewer/MainViewer';
 import MainPanel from './components/panel/MainPanel';
 import { useStore } from '@/stores/store';
 
 function App() {
-	const [, setCurImage, undo, redo] = useStore(state => [
+	const [, setCurImage, undo, redo, originalDownload] = useStore(state => [
 		state.curImage,
 		state.setCurImage,
 		state.undo,
 		state.redo,
+		state.download,
 	]);
 	const fileInputRef = useRef<HTMLInputElement>(null);
+
+	// 광고를 표시하고 5초 후에 다운로드를 실행
+	const downloadWithAd = useCallback(() => {
+		console.log('광고 표시 시작...');
+
+		setTimeout(() => {
+			console.log('5초 지남, 다운로드 시작...');
+			originalDownload();
+		}, 5000); // 5초 대기
+	}, [originalDownload]);
 
 	const handleUploadButtonClick = () => {
 		if (fileInputRef.current) {
@@ -46,6 +57,10 @@ function App() {
 				</Button>
 				<Button variant="destructive" onClick={redo}>
 					redo
+				</Button>
+				{/* downloadWithAd 함수를 사용하도록 수정 */}
+				<Button variant="destructive" onClick={downloadWithAd}>
+					download
 				</Button>
 			</div>
 			<input
