@@ -814,6 +814,7 @@ packages:
 
   /@radix-ui/react-collapsible@1.0.3(@types/react-dom@18.3.0)(@types/react@18.3.1)(react-dom@18.3.1)(react@18.3.1):
     resolution: {integrity: sha512-UBmVDkmR6IvDsloHVN+3rtx4Mi5TFvylYXpluuv0f37dtaz3H99bp8No0LGXRigVpl3UAT4l9j6bIchh42S/Gg==}
+>>>>>>> 7883500e1f30ec756307cec68338797d62330876
     peerDependencies:
       '@types/react': '*'
       '@types/react-dom': '*'
@@ -842,6 +843,7 @@ packages:
 
   /@radix-ui/react-collection@1.0.3(@types/react-dom@18.3.0)(@types/react@18.3.1)(react-dom@18.3.1)(react@18.3.1):
     resolution: {integrity: sha512-3SzW+0PW7yBBoQlT8wNcGtaxaD0XSu0uLUFgrtHY08Acx05TaHaOmVLR73c0j/cqpDy53KBMO7s0dx2wmOIDIA==}
+>>>>>>> 7883500e1f30ec756307cec68338797d62330876
     peerDependencies:
       '@types/react': '*'
       '@types/react-dom': '*'
@@ -866,9 +868,12 @@ packages:
 
   /@radix-ui/react-compose-refs@1.0.1(@types/react@18.3.1)(react@18.3.1):
     resolution: {integrity: sha512-fDSBgd44FKHa1FRMU59qBMPFcl2PZE+2nmqunj+BWFyYYjnhIDWL2ItDs3rrbJDQOtzt5nIebLCQc4QRfz6LJw==}
+>>>>>>> 7883500e1f30ec756307cec68338797d62330876
     peerDependencies:
       '@types/react': '*'
+      '@types/react-dom': '*'
       react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
     peerDependenciesMeta:
       '@types/react':
         optional: true
@@ -880,6 +885,7 @@ packages:
 
   /@radix-ui/react-context@1.0.1(@types/react@18.3.1)(react@18.3.1):
     resolution: {integrity: sha512-ebbrdFoYTcuZ0v4wG5tedGnp9tzcV8awzsxYph7gXUyvnNLuTIcCk1q17JEbnVhXAKG9oX3KtchwiMIAYp9NLg==}
+>>>>>>> 7883500e1f30ec756307cec68338797d62330876
     peerDependencies:
       '@types/react': '*'
       react: ^16.8 || ^17.0 || ^18.0
@@ -894,6 +900,7 @@ packages:
 
   /@radix-ui/react-direction@1.0.1(@types/react@18.3.1)(react@18.3.1):
     resolution: {integrity: sha512-RXcvnXgyvYvBEOhCBuddKecVkoMiI10Jcm5cTI7abJRAHYfFxeu+FBQs/DvdxSYucxR5mna0dNsL6QFlds5TMA==}
+>>>>>>> 7883500e1f30ec756307cec68338797d62330876
     peerDependencies:
       '@types/react': '*'
       react: ^16.8 || ^17.0 || ^18.0
@@ -970,6 +977,7 @@ packages:
 
   /@radix-ui/react-id@1.0.1(@types/react@18.3.1)(react@18.3.1):
     resolution: {integrity: sha512-tI7sT/kqYp8p96yGWY1OAnLHrqDgzHefRBKQ2YAkBS5ja7QLcZ9Z/uY7bEjPUatf8RomoXM8/1sMj1IJaE5UzQ==}
+>>>>>>> 7883500e1f30ec756307cec68338797d62330876
     peerDependencies:
       '@types/react': '*'
       react: ^16.8 || ^17.0 || ^18.0
@@ -985,6 +993,7 @@ packages:
 
   /@radix-ui/react-label@2.0.2(@types/react-dom@18.3.0)(@types/react@18.3.1)(react-dom@18.3.1)(react@18.3.1):
     resolution: {integrity: sha512-N5ehvlM7qoTLx7nWPodsPYPgMzA5WM8zZChQg8nyFJKnDO5WHdba1vv5/H6IO5LtJMfD2Q3wh1qHFGNtK0w3bQ==}
+>>>>>>> 7883500e1f30ec756307cec68338797d62330876
     peerDependencies:
       '@types/react': '*'
       '@types/react-dom': '*'
