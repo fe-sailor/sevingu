@@ -1,16 +1,13 @@
 import {
 	Accordion,
-	AccordionContent,
 	AccordionItem,
 	AccordionTrigger,
 } from '@/components/ui/accordion';
-import { Slider } from '../ui/slider';
-import { Switch } from '../ui/switch';
-import { Label } from '../ui/label';
-import { PanelStateKey, useStore } from '@/stores/store';
+import { useStore } from '@/stores/store';
+import { PanelStateKey } from '@/stores/storeType';
+import EdgeDetection from './accordionContent/EdgeDetection';
 import ImageControls from './accordionContent/ImageControls';
 import Posterize from './accordionContent/Posterize';
-import EdgeDetection from './accordionContent/EdgeDetection';
 import SVGControls from './accordionContent/SVGControls';
 
 export default function MainPanel() {
