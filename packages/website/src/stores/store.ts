@@ -369,23 +369,3 @@ const blurImage = (
 ) => {
 	StackBlur.imageDataRGB(imageData, 0, 0, width, height, Math.floor(blur));
 };
-
-export type SvgSettingSvgurt = {
-	scale: number;
-	fill: boolean;
-	fillColor: string;
-	stroke: boolean;
-	svgRenderType: keyof typeof SVG_RENDER_TYPES;
-	autoColor: boolean;
-	applyFractalDisplacement: string;
-	radius: number;
-	radiusOnColor: boolean;
-	radiusRandomness: number;
-	strokeColor: string;
-	strokeWidth: number;
-	strokeWidthRandomness: number;
-	renderEveryXPixels: number;
-	renderEveryYPixels: number;
-	minColorRecognized: number;
-	maxColorRecognized: number;
-};

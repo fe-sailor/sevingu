@@ -1,21 +1,30 @@
-import { RenderSvg } from '@/lib/svg-renderers/bases';
-import { CircleService } from '@/lib/svg-renderers/circle';
+import {
+	RenderSvg,
+	SetSetting,
+	SetRenderSize,
+	SetPixelRawData,
+} from '@/lib/svg-renderers/bases';
+import { CircleRenderer } from '@/lib/svg-renderers/circle-renderer';
 import {
 	SvgRendererSetting,
 	SvgSetting,
+	SvgSettingSvgurt,
 	svgRendererSettingSchema,
 } from '@/lib/svg-renderers/svg-renderer-schema';
 import { exhaustiveTypeCheck, stringJoin } from '@/lib/utils';
-import { SvgSettingSvgurt } from '@/stores/store';
 import pick from 'lodash/pick';
 
-export class SvgRenderService {
-	private static setting: SvgRendererSetting;
-	private static width: number;
-	private static height: number;
-	private static pixelRawData: Uint8ClampedArray;
+export class SvgRenderer
+	implements RenderSvg, SetSetting, SetRenderSize, SetPixelRawData
+{
+	constructor(
+		private setting: SvgSettingSvgurt | SvgSetting,
+		private width: number,
+		private height: number,
+		private pixelRawData: Uint8ClampedArray
+	) {}
 
-	static renderSvg = () => {
+	renderSvg(): string {
 		const nameSpaceString =
 			'xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"';
 		console.warn(this.getRenderer());
@@ -24,71 +33,53 @@ export class SvgRenderService {
 			() => this.getRenderer().renderSvg(),
 			'</svg>'
 		);
-	};
+	}
 
-	static setRenderSize(width: number, height: number) {
+	setRenderSize(width: number, height: number): SvgRenderer {
 		this.width = width;
 		this.height = height;
-		this.setSubSize();
+		return this.clone();
 	}
 
-	static setSetting(setting: SvgSettingSvgurt | SvgSetting) {
-		this.setting = this.adaptSetting(setting);
-		this.setSubSetting(setting);
+	setSetting(setting: SvgSettingSvgurt | SvgSetting): SvgRenderer {
+		this.setting = setting;
+		return this.clone();
 	}
 
-	static setPixelRawData(pixelRawData: Uint8ClampedArray) {
+	setPixelRawData(pixelRawData: Uint8ClampedArray): SvgRenderer {
 		this.pixelRawData = pixelRawData;
-		this.setSubPixelRawData();
+		return this.clone();
 	}
 
-	private static getRenderer(): typeof RenderSvg {
-		const { renderType } = this.setting;
+	private clone(): SvgRenderer {
+		return new SvgRenderer(
+			this.setting,
+			this.width,
+			this.height,
+			this.pixelRawData
+		);
+	}
+
+	private getRenderer(): RenderSvg {
+		const { renderType } = this.adaptSetting(this.setting);
 		switch (renderType) {
 			case 'CIRCLE':
-				return CircleService;
+				return new CircleRenderer(
+					this.setting,
+					this.width,
+					this.height,
+					this.pixelRawData
+				);
 			default:
 				throw exhaustiveTypeCheck(renderType);
 		}
 	}
 
-	private static setSubSetting(setting: SvgSettingSvgurt | SvgSetting) {
-		const { renderType } = this.setting;
-		switch (renderType) {
-			case 'CIRCLE':
-				CircleService.setCircleSetting(setting);
-				return;
-			default:
-				throw exhaustiveTypeCheck(renderType);
-		}
-	}
-	private static setSubSize() {
-		const { renderType } = this.setting;
-		switch (renderType) {
-			case 'CIRCLE':
-				CircleService.setSize(this.width, this.height);
-				return;
-			default:
-				throw exhaustiveTypeCheck(renderType);
-		}
-	}
-
-	private static setSubPixelRawData() {
-		const { renderType } = this.setting;
-		switch (renderType) {
-			case 'CIRCLE':
-				CircleService.setPixelRawData(this.pixelRawData);
-				return;
-			default:
-				throw exhaustiveTypeCheck(renderType);
-		}
-	}
-
-	private static getSizeString(): string {
+	private getSizeString(): string {
 		return `height="${this.height * this.setting.scale}" width="${this.width * this.setting.scale}"`;
 	}
 
-	private static adaptSetting(
+	private adaptSetting(
 		setting: SvgSettingSvgurt | SvgSetting
 	): SvgRendererSetting {
 		if (this.validateSvgSetting(setting)) {
@@ -100,7 +91,7 @@ export class SvgRenderService {
 		};
 	}
 
-	private static validateSvgSetting(
+	private validateSvgSetting(
 		setting: SvgSettingSvgurt | SvgSetting
 	): setting is SvgSetting {
 		return svgRendererSettingSchema.safeParse(setting).success;
