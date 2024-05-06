@@ -1,4 +1,16 @@
-import { ImageViewerStore, useStore } from '@/stores/store';
+import { useStore } from '@/stores/store';
+
+export type ImageConfiguration = { blur: number };
+
+export type ImageViewerStore = {
+	imageViewer: null | HTMLCanvasElement;
+	imageConfig: ImageConfiguration;
+	htmlRenderedImage: HTMLImageElement;
+	imageUri: string;
+	setImageViewer: (imageViewer: HTMLCanvasElement) => void;
+	showImage: (imageBlob: Blob) => void;
+	updateConfig: (imageConfig: ImageConfiguration) => void;
+};
 
 // NOTE: component 내에서 다음과 같이 사용하여 image config 가 canvas에 반영되도록 할 수 있음
 // const { updateConfig } = useImageViewerStore();

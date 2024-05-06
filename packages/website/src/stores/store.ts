@@ -4,42 +4,28 @@ import * as StackBlur from 'stackblur-canvas';
 import { SvgRenderService } from '@/lib/svg-renderers/svg-renderer';
 import { getFileUri, getImageWidthAndHeight } from '@/lib/utils';
 import { PanelState, PanelStateKey, SVGRenderTypes } from './storeType';
+import { ImageConfiguration, ImageViewerStore } from './image-viewer.store';
+import { SvgViewerStore } from './svg-viewer.store';
 
-export type ImageConfiguration = { blur: number };
-
-export type ImageViewerStore = {
-	imageViewer: null | HTMLCanvasElement;
-	imageConfig: ImageConfiguration;
-	htmlRenderedImage: HTMLImageElement;
-	imageUri: string;
-	setImageViewer: (imageViewer: HTMLCanvasElement) => void;
-	showImage: (imageBlob: Blob) => void;
-	updateConfig: (imageConfig: ImageConfiguration) => void;
-};
-
-export type SvgViewerStore = {
-	svgViewer: null | HTMLDivElement;
-	setSvgViewer: (svgViewer: HTMLDivElement) => void;
-	setSvg: (svgAsString: string) => void;
-	showSvg: () => void;
-};
-
-type SevinguState = {
-	curImage: string;
-	pastImages: string[];
-	futureImages: string[];
-	setCurImage: (img: string) => void;
-	undo: () => void;
-	redo: () => void;
-	download: () => void;
-	/** controller 관련 */
-	panelState: PanelState;
-	changePanelState: (
-		key: PanelStateKey,
-		value: boolean | number | string | keyof typeof SVGRenderTypes
-	) => void;
-} & ImageViewerStore &
-	SvgViewerStore;
+// prettier-ignore
+type SevinguState =
+  {
+    curImage: string;
+    pastImages: string[];
+    futureImages: string[];
+    setCurImage: (img: string) => void;
+    undo: () => void;
+    redo: () => void;
+    download: () => void;
+    /** controller 관련 */
+    panelState: PanelState;
+    changePanelState: (
+      key: PanelStateKey,
+      value: boolean | number | string | keyof typeof SVGRenderTypes
+    ) => void;
+  }
+  & ImageViewerStore
+  & SvgViewerStore;
 
 const SVG_RENDER_TYPES = { CIRCLE: 'CIRCLE' } as const;
 
