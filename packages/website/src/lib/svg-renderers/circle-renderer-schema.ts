@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { SvgSetting } from './svg-renderer-schema';
+import { SvgSetting, getPixelColorAtXY } from './svg-renderer-schema';
 
 export const pixelPointSchema = z.object({
 	x: z.number().int(),
@@ -18,23 +18,6 @@ export type PixelData = {
 	height: number;
 	betweenX: number;
 	betweenY: number;
-};
-
-export const forEachPixelPoints = (
-	pixelData: PixelData,
-	callBack: (pixelPoint: PixelPoint) => void
-) => {
-	const { clampedArray, width, height, betweenX, betweenY } = pixelData;
-	for (let x = 0; x < width; x += betweenX) {
-		for (let y = 0; y < height; y += betweenY) {
-			const pixelPoint = {
-				x: x,
-				y: y,
-				...getPixelColorAtXY(clampedArray, x, y, width),
-			};
-			callBack(pixelPoint);
-		}
-	}
 };
 
 export const circleSettingSchema = z.object({
@@ -86,33 +69,6 @@ export function getPixelColorIntensity(
 	const outOf = Math.max(1, Math.abs(maxColorRecognized - minColorRecognized));
 
 	return colorSum / 3 / outOf;
-}
-
-export function isInColorThreshold(
-	pixel: Pick<PixelPoint, 'r' | 'g' | 'b' | 'a'>,
-	settings: Pick<SvgSetting, 'minColorRecognized' | 'maxColorRecognized'>
-) {
-	const { minColorRecognized, maxColorRecognized } = settings;
-
-	return (
-		pixel.r >= minColorRecognized &&
-		pixel.g >= minColorRecognized &&
-		pixel.b >= minColorRecognized &&
-		pixel.r <= maxColorRecognized &&
-		pixel.g <= maxColorRecognized &&
-		pixel.b <= maxColorRecognized
-	);
-}
-
-export function getPixelColorAtXY(
-	imageData: Uint8ClampedArray,
-	x: number,
-	y: number,
-	width: number
-) {
-	const dataIndex = (Math.round(x) + Math.round(y) * width) * 4;
-
-	return getPixelColorAtDataIndex(imageData, dataIndex);
 }
 
 export function getPixelColorAtDataIndex(

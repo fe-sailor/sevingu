@@ -1,7 +1,13 @@
 import { z } from 'zod';
-import { CircleSetting } from '@/lib/svg-renderers/circle-renderer-schema';
+import {
+	CircleSetting,
+	getPixelColorAtDataIndex,
+	PixelPoint,
+	PixelData,
+} from '@/lib/svg-renderers/circle-renderer-schema';
+import { CurveSetting } from '@/lib/svg-renderers/curve-renderer-schema';
 
-export const SVG_RENDER_TYPES = z.enum(['CIRCLE']);
+export const SVG_RENDER_TYPES = z.enum(['CIRCLE', 'CURVE']);
 
 export const svgRendererSettingSchema = z.object({
 	renderType: SVG_RENDER_TYPES,
@@ -9,7 +15,7 @@ export const svgRendererSettingSchema = z.object({
 });
 
 export type SvgRendererSetting = z.infer<typeof svgRendererSettingSchema>;
-export type SvgSetting = SvgRendererSetting & CircleSetting;
+export type SvgSetting = SvgRendererSetting & CircleSetting & CurveSetting;
 
 export type SvgSettingSvgurt = {
 	scale: number;
@@ -29,4 +35,57 @@ export type SvgSettingSvgurt = {
 	renderEveryYPixels: number;
 	minColorRecognized: number;
 	maxColorRecognized: number;
+
+	amplitude: number;
+	amplitudeRandomness: number;
+	direction: number;
+	directionRandomness: number;
+	wavelength: number;
+	wavelengthRandomness: number;
+	waves: number;
+	wavesRandomness: number;
+};
+
+export function getPixelColorAtXY(
+	imageData: Uint8ClampedArray,
+	x: number,
+	y: number,
+	width: number
+) {
+	const dataIndex = (Math.round(x) + Math.round(y) * width) * 4;
+
+	return getPixelColorAtDataIndex(imageData, dataIndex);
+}
+
+export function isInColorThreshold(
+	pixel: Pick<PixelPoint, 'r' | 'g' | 'b' | 'a'>,
+	settings: Pick<SvgSetting, 'minColorRecognized' | 'maxColorRecognized'>
+) {
+	const { minColorRecognized, maxColorRecognized } = settings;
+
+	return (
+		pixel.r >= minColorRecognized &&
+		pixel.g >= minColorRecognized &&
+		pixel.b >= minColorRecognized &&
+		pixel.r <= maxColorRecognized &&
+		pixel.g <= maxColorRecognized &&
+		pixel.b <= maxColorRecognized
+	);
+}
+
+export const forEachPixelPoints = (
+	pixelData: PixelData,
+	callBack: (pixelPoint: PixelPoint) => void
+) => {
+	const { clampedArray, width, height, betweenX, betweenY } = pixelData;
+	for (let x = 0; x < width; x += betweenX) {
+		for (let y = 0; y < height; y += betweenY) {
+			const pixelPoint = {
+				x: x,
+				y: y,
+				...getPixelColorAtXY(clampedArray, x, y, width),
+			};
+			callBack(pixelPoint);
+		}
+	}
 };

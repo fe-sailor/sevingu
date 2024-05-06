@@ -4,11 +4,14 @@ import {
 	CircleSetting,
 	PixelPoint,
 	circleSettingSchema,
-	forEachPixelPoints,
 	getPixelColorIntensity,
-	isInColorThreshold,
 } from './circle-renderer-schema';
-import { SvgSettingSvgurt, SvgSetting } from './svg-renderer-schema';
+import {
+	SvgSettingSvgurt,
+	SvgSetting,
+	isInColorThreshold,
+	forEachPixelPoints,
+} from './svg-renderer-schema';
 import { RenderSvg } from '@/lib/svg-renderers/bases';
 
 export class CircleRenderer implements RenderSvg {
@@ -52,7 +55,7 @@ export class CircleRenderer implements RenderSvg {
 		return this.instances;
 	}
 
-	renderCircles(): string {
+	private renderCircles(): string {
 		if (this.instances.length === 0) {
 			console.warn('no circles');
 			return (this.instancesRendered = '');
