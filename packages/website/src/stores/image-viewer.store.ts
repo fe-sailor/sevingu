@@ -1,10 +1,10 @@
-import { ImageViewerRef, useStore } from '@/stores/store';
+import { ImageViewerStore, useStore } from '@/stores/store';
 
 // NOTE: component 내에서 다음과 같이 사용하여 image config 가 canvas에 반영되도록 할 수 있음
-// const { updateConfig } = useImageViewerRef();
+// const { updateConfig } = useImageViewerStore();
 // useEffect(
 // 	() =>
-// 		useImageViewerRef.subscribe(({ imageUri }) => {
+// 		useImageViewerStore.subscribe(({ imageUri }) => {
 // 			if (!imageUri) {
 // 				return;
 // 			}
@@ -15,8 +15,8 @@ import { ImageViewerRef, useStore } from '@/stores/store';
 // 	[updateConfig]
 // );
 
-export const useImageViewerRef = () =>
-	useStore<ImageViewerRef>(state => ({
+export const useImageViewerStore = () =>
+	useStore<ImageViewerStore>(state => ({
 		imageViewer: state.imageViewer,
 		imageConfig: state.imageConfig,
 		htmlRenderedImage: state.htmlRenderedImage,

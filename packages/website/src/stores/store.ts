@@ -7,7 +7,7 @@ import { PanelState, PanelStateKey, SVGRenderTypes } from './storeType';
 
 export type ImageConfiguration = { blur: number };
 
-export type ImageViewerRef = {
+export type ImageViewerStore = {
 	imageViewer: null | HTMLCanvasElement;
 	imageConfig: ImageConfiguration;
 	htmlRenderedImage: HTMLImageElement;
@@ -17,7 +17,7 @@ export type ImageViewerRef = {
 	updateConfig: (imageConfig: ImageConfiguration) => void;
 };
 
-export type SvgViewerRef = {
+export type SvgViewerStore = {
 	svgViewer: null | HTMLDivElement;
 	setSvgViewer: (svgViewer: HTMLDivElement) => void;
 	setSvg: (svgAsString: string) => void;
@@ -38,8 +38,8 @@ type SevinguState = {
 		key: PanelStateKey,
 		value: boolean | number | string | keyof typeof SVGRenderTypes
 	) => void;
-} & ImageViewerRef &
-	SvgViewerRef;
+} & ImageViewerStore &
+	SvgViewerStore;
 
 const SVG_RENDER_TYPES = { CIRCLE: 'CIRCLE' } as const;
 
