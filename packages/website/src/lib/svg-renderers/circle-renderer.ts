@@ -1,9 +1,3 @@
-import {
-	SvgSetting,
-	getPixelColorIntensity,
-	isInColorThreshold,
-} from '@/lib/svg-renderers/svg-service';
-import { SvgSettingSvgurt } from '@/stores/store';
 import pick from 'lodash/pick';
 import {
 	Circle,
@@ -11,39 +5,33 @@ import {
 	PixelPoint,
 	circleSettingSchema,
 	forEachPixelPoints,
-} from './circle-schema';
+	getPixelColorIntensity,
+	isInColorThreshold,
+} from './circle-renderer-schema';
+import { SvgSettingSvgurt, SvgSetting } from './svg-renderer-schema';
+import { RenderSvg } from '@/lib/svg-renderers/bases';
 
-export class CircleService {
-	static instances: Circle[] = [];
+export class CircleRenderer implements RenderSvg {
+	constructor(
+		private circleSetting: SvgSettingSvgurt | SvgSetting,
+		private width: number,
+		private height: number,
+		private pixelRawData: Uint8ClampedArray,
+		public instances: Circle[] = [],
+		public instancesRendered: string = ''
+	) {}
 
-	static instancesRendered: string;
-
-	static renderSvg(): string {
+	renderSvg(): string {
 		this.createCircles();
 		return this.renderCircles();
 	}
 
-	static setSize(width: number, height: number) {
-		this.width = width;
-		this.height = height;
-	}
-
-	static setCircleSetting(setting: SvgSetting | CircleSetting) {
-		this.circleSetting = this.adaptSetting(setting);
-	}
-
-	static setPixelRawData(pixelRawData: Uint8ClampedArray) {
-		this.pixelRawData = pixelRawData;
-	}
-
-	private static createCircles() {
+	private createCircles() {
 		if (!this.circleSetting) {
 			console.error('no circle setting error');
 			return;
 		}
 		const { renderEveryXPixels, renderEveryYPixels } = this.circleSetting;
-
-		this.instances = [];
 
 		forEachPixelPoints(
 			{
@@ -64,7 +52,7 @@ export class CircleService {
 		return this.instances;
 	}
 
-	static renderCircles(): string {
+	renderCircles(): string {
 		if (this.instances.length === 0) {
 			console.warn('no circles');
 			return (this.instancesRendered = '');
@@ -75,19 +63,14 @@ export class CircleService {
 		));
 	}
 
-	private static circleSetting: CircleSetting;
-	private static width: number;
-	private static height: number;
-	private static pixelRawData: Uint8ClampedArray;
-
-	private static isInColorThreshold(pixelPoint: PixelPoint): boolean {
+	private isInColorThreshold(pixelPoint: PixelPoint): boolean {
 		return isInColorThreshold(
 			pick(pixelPoint, ['r', 'g', 'b', 'a']),
 			pick(this.circleSetting, ['minColorRecognized', 'maxColorRecognized'])
 		);
 	}
 
-	private static createCircle(pixelPoint: PixelPoint): Circle {
+	private createCircle(pixelPoint: PixelPoint): Circle {
 		const {
 			useAutoStrokeColor,
 			radius,
@@ -96,7 +79,7 @@ export class CircleService {
 			strokeColor,
 			strokeWidth,
 			strokeWidthRandomness,
-		} = this.circleSetting;
+		} = this.adaptSetting(this.circleSetting);
 
 		let circleRadius = radius;
 		if (useRadiusColorIntensity) {
@@ -122,8 +105,10 @@ export class CircleService {
 		);
 	}
 
-	private static renderCircle(circle: Circle): string {
-		const { useFill, fillColor, scale, useStroke } = this.circleSetting;
+	private renderCircle(circle: Circle): string {
+		const { useFill, fillColor, scale, useStroke } = this.adaptSetting(
+			this.circleSetting
+		);
 		const { x, y, r, strokeWidth, strokeColor } = circle;
 		return `<circle cx="${x * scale}" cy="${
 			y * scale
@@ -132,7 +117,7 @@ export class CircleService {
 		}; stroke-width: ${strokeWidth}; fill: ${useFill ? fillColor : 'none'};" />`;
 	}
 
-	private static adaptSetting(
+	private adaptSetting(
 		setting: SvgSettingSvgurt | CircleSetting
 	): CircleSetting {
 		if (this.validateCircleSetting(setting)) {
@@ -161,7 +146,7 @@ export class CircleService {
 		};
 	}
 
-	private static validateCircleSetting(
+	private validateCircleSetting(
 		setting: SvgSettingSvgurt | CircleSetting
 	): setting is CircleSetting {
 		return circleSettingSchema.safeParse(setting).success;

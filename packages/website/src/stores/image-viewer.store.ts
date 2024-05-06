@@ -12,6 +12,7 @@ export type ImageViewerStore = {
 	showImage: (imageBlob: Blob) => void;
 	updateConfig: (imageConfig: ImageConfiguration) => void;
 	showDefaultImage: () => void;
+	renderOnViewer: (imageUri: string, canvasRef: HTMLCanvasElement) => void;
 };
 
 // NOTE: component 내에서 다음과 같이 사용하여 image config 가 canvas에 반영되도록 할 수 있음
@@ -40,4 +41,5 @@ export const useImageViewerStore = () =>
 		showImage: state.showImage,
 		updateConfig: state.updateConfig,
 		showDefaultImage: state.showDefaultImage,
+		renderOnViewer: state.renderOnViewer,
 	}));

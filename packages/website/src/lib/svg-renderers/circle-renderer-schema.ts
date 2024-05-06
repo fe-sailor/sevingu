@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { getPixelColorAtXY } from '@/lib/svg-renderers/svg-service';
+import { SvgSetting } from './svg-renderer-schema';
 
 export const pixelPointSchema = z.object({
 	x: z.number().int(),
@@ -63,23 +63,66 @@ export const circleSettingSchema = z.object({
 export type CircleSetting = z.infer<typeof circleSettingSchema>;
 
 export class Circle {
-	x: number;
-	y: number;
-	r: number;
-	strokeColor: string;
-	strokeWidth: number;
-
 	constructor(
-		x: number,
-		y: number,
-		r: number,
-		strokeColor: string,
-		strokeWidth: number
-	) {
-		this.x = x;
-		this.y = y;
-		this.r = r;
-		this.strokeColor = strokeColor;
-		this.strokeWidth = strokeWidth;
-	}
+		public x: number,
+		public y: number,
+		public r: number,
+		public strokeColor: string,
+		public strokeWidth: number
+	) {}
+}
+
+export function getPixelColorIntensity(
+	pixel: Pick<PixelPoint, 'r' | 'g' | 'b' | 'a'>,
+	settings: Pick<SvgSetting, 'minColorRecognized' | 'maxColorRecognized'>
+) {
+	const { minColorRecognized, maxColorRecognized } = settings;
+
+	const r = pixel.r - minColorRecognized;
+	const g = pixel.g - minColorRecognized;
+	const b = pixel.b - minColorRecognized;
+	const colorSum = Math.max(1, r + g + b);
+
+	const outOf = Math.max(1, Math.abs(maxColorRecognized - minColorRecognized));
+
+	return colorSum / 3 / outOf;
+}
+
+export function isInColorThreshold(
+	pixel: Pick<PixelPoint, 'r' | 'g' | 'b' | 'a'>,
+	settings: Pick<SvgSetting, 'minColorRecognized' | 'maxColorRecognized'>
+) {
+	const { minColorRecognized, maxColorRecognized } = settings;
+
+	return (
+		pixel.r >= minColorRecognized &&
+		pixel.g >= minColorRecognized &&
+		pixel.b >= minColorRecognized &&
+		pixel.r <= maxColorRecognized &&
+		pixel.g <= maxColorRecognized &&
+		pixel.b <= maxColorRecognized
+	);
+}
+
+export function getPixelColorAtXY(
+	imageData: Uint8ClampedArray,
+	x: number,
+	y: number,
+	width: number
+) {
+	const dataIndex = (Math.round(x) + Math.round(y) * width) * 4;
+
+	return getPixelColorAtDataIndex(imageData, dataIndex);
+}
+
+export function getPixelColorAtDataIndex(
+	imageData: Uint8ClampedArray,
+	dataIndex: number
+) {
+	return {
+		r: imageData[dataIndex],
+		g: imageData[dataIndex + 1],
+		b: imageData[dataIndex + 2],
+		a: imageData[dataIndex + 3] / 255,
+	};
 }
