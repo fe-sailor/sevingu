@@ -15,6 +15,8 @@ import {
 import { useRef, useEffect } from 'react';
 import { useSvgViewerStore } from '@/stores/svg-viewer.store';
 import { useMessage } from '@/stores/message.store';
+import { useDropZone } from '@reactuses/core';
+import { cn } from '@/lib/utils';
 
 const MainViewer = () => {
 	const imageViewerRef = useRef<HTMLCanvasElement | null>(null);
@@ -22,6 +24,8 @@ const MainViewer = () => {
 
 	const svgViewerRef = useRef<HTMLDivElement | null>(null);
 	const { showSvg, setSvgViewer } = useSvgViewerStore();
+
+	const dragOverRef = useRef<HTMLDivElement | null>(null);
 
 	const handleResizeImage: PanelProps['onResize'] = (a, b) => {
 		a && b;
@@ -35,6 +39,13 @@ const MainViewer = () => {
 		}
 		showImage(event.target.files[0]);
 	};
+
+	const isOver = useDropZone(dragOverRef, files => {
+		if (!files) {
+			return;
+		}
+		showImage(files[0]);
+	});
 
 	useMessage(
 		{ on: 'SuccessToImageLoaded', listener: () => showSvg() },
@@ -61,29 +72,33 @@ const MainViewer = () => {
 	return (
 		<>
 			<input accept="image/*" onChange={handleImageChange} type="file" />
-			<ResizablePanelGroup
-				direction="horizontal"
-				className="rounded-lg border"
-				style={{
-					height: MAIN_VIEWER_HEIGHT,
-				}}>
-				<ResizablePanel
-					defaultSize={MAIN_VIEWER_PANEL_DEFAULT_SIZE_IMG}
-					onResize={handleResizeImage}
-					collapsible
-					minSize={MAIN_VIEWER_PANEL_MIN_SIZE_IMG}>
-					<canvas className="mx-auto" ref={imageViewerRef}></canvas>
-				</ResizablePanel>
-				<ResizableHandle withHandle />
-				<ResizablePanel
-					defaultSize={MAIN_VIEWER_PANEL_DEFAULT_SIZE_SVG}
-					collapsible
-					minSize={MAIN_VIEWER_PANEL_MIN_SIZE_SVG}>
-					<div
-						className="flex justify-center items-center"
-						ref={svgViewerRef}></div>
-				</ResizablePanel>
-			</ResizablePanelGroup>
+			<div ref={dragOverRef}>
+				<ResizablePanelGroup
+					direction="horizontal"
+					className={cn('rounded-lg border-4 border-solid', {
+						'border-lime-400 border-dashed bg-lime-50': isOver,
+					})}
+					style={{
+						height: MAIN_VIEWER_HEIGHT,
+					}}>
+					<ResizablePanel
+						defaultSize={MAIN_VIEWER_PANEL_DEFAULT_SIZE_IMG}
+						onResize={handleResizeImage}
+						collapsible
+						minSize={MAIN_VIEWER_PANEL_MIN_SIZE_IMG}>
+						<canvas className="mx-auto" ref={imageViewerRef}></canvas>
+					</ResizablePanel>
+					<ResizableHandle withHandle />
+					<ResizablePanel
+						defaultSize={MAIN_VIEWER_PANEL_DEFAULT_SIZE_SVG}
+						collapsible
+						minSize={MAIN_VIEWER_PANEL_MIN_SIZE_SVG}>
+						<div
+							className="flex justify-center items-center"
+							ref={svgViewerRef}></div>
+					</ResizablePanel>
+				</ResizablePanelGroup>
+			</div>
 		</>
 	);
 };
