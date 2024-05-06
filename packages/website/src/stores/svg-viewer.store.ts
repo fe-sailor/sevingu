@@ -1,4 +1,11 @@
-import { SvgViewerStore, useStore } from '@/stores/store';
+import { useStore } from '@/stores/store';
+
+export type SvgViewerStore = {
+	svgViewer: null | HTMLDivElement;
+	setSvgViewer: (svgViewer: HTMLDivElement) => void;
+	setSvg: (svgAsString: string) => void;
+	showSvg: () => void;
+};
 
 export const useSvgViewerStore = () =>
 	useStore<SvgViewerStore>(state => ({
