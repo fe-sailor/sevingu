@@ -6,7 +6,7 @@ import {
 } from '@/lib/canvas-filter/canvas-filter-schema';
 import * as StackBlur from 'stackblur-canvas';
 import { z } from 'zod';
-
+import jsfeat from 'jsfeat';
 export class CanvasFilter {
 	constructor(
 		private imageUri: string,
@@ -72,6 +72,7 @@ export class CanvasFilter {
 			useGrayscale: canvasSetting.grayscale,
 			useInvert: canvasSetting.invert,
 			blur: canvasSetting.blur,
+			postBlur: canvasSetting.postBlur,
 			usePosterize: canvasSetting.posterize,
 			posterizeLevels: canvasSetting.posterizeLevels,
 			useEdgeDetection: canvasSetting.edgeDetection,
@@ -92,39 +93,35 @@ export class CanvasFilter {
 		width: number,
 		height: number
 	) {
-		// if (imageSettings.grayscale) {
-		// 	grayScale(imageData, width, height);
-		// }
+		if (canvasSetting.useGrayscale) {
+			this.grayScale(imageData, width, height);
+		}
 
-		// if (imageSettings.invert) {
-		// 	invertImage(imageData);
-		// }
+		if (canvasSetting.useInvert) {
+			this.invertImage(imageData);
+		}
 
 		if (canvasSetting.blur && canvasSetting.blur > 0) {
 			this.blurImage(imageData, canvasSetting.blur, width, height);
 		}
 
-		// if (imageSettings.posterize) {
-		// 	posterizeImage(imageData, imageSettings.posterizeLevels);
-		// }
+		if (canvasSetting.usePosterize) {
+			this.posterizeImage(imageData, canvasSetting.posterizeLevels);
+		}
 
-		// if (imageSettings['Edge Detection']) {
-		// 	cannyEdgeDetection(
-		// 		imageData,
-		// 		imageSettings.lowThreshold,
-		// 		imageSettings.highThreshold,
-		// 		width,
-		// 		height
-		// 	);
-		// }
+		if (canvasSetting.useEdgeDetection) {
+			this.cannyEdgeDetection(
+				imageData,
+				canvasSetting.lowThreshold,
+				canvasSetting.highThreshold,
+				width,
+				height
+			);
+		}
 
-		// if (imageSettings.applyFractalField) {
-		// 	fractalField(imageData, imageSettings, width);
-		// }
-
-		// if (imageSettings.postBlur && imageSettings.postBlur > 0) {
-		// 	blurImage(imageData, imageSettings.postBlur, width, height);
-		// }
+		if (canvasSetting.postBlur && canvasSetting.postBlur > 0) {
+			this.blurImage(imageData, canvasSetting.postBlur, width, height);
+		}
 	}
 
 	private blurImage(
@@ -134,5 +131,71 @@ export class CanvasFilter {
 		height: number
 	) {
 		StackBlur.imageDataRGB(imageData, 0, 0, width, height, Math.floor(blur));
+	}
+
+	private grayScale(imageData: ImageData, width: number, height: number) {
+		// TODO: jsfeat type 문제 해결필요
+		const grayImageMatrix = new jsfeat.matrix_t(width, height, jsfeat.U8C1_t);
+
+		jsfeat.imgproc.grayscale(imageData.data, width, height, grayImageMatrix);
+
+		const data_u32 = new Uint32Array(imageData.data.buffer);
+		let i = grayImageMatrix.cols * grayImageMatrix.rows;
+		let pix = 0;
+
+		const alpha = 0xff << 24;
+		while (--i >= 0) {
+			pix = grayImageMatrix.data[i];
+			data_u32[i] = alpha | (pix << 16) | (pix << 8) | pix;
+		}
+
+		return grayImageMatrix;
+	}
+
+	invertImage(imageData: ImageData) {
+		for (let i = 0; i < imageData.data.length; i++) {
+			if ((i + 1) % 4 !== 0) {
+				// Skip alpha channel.
+				imageData.data[i] = 255 - imageData.data[i];
+			}
+		}
+	}
+
+	posterizeImage(imageData: ImageData, posterizeLevels: number) {
+		const numOfAreas = 256 / posterizeLevels;
+		const numOfValues = 255 / (posterizeLevels - 1);
+
+		for (let i = 0; i < imageData.data.length; i++) {
+			if ((i + 1) % 4 !== 0) {
+				// Skip alpha channel.
+				imageData.data[i] = Math.floor(
+					Math.floor(imageData.data[i] / numOfAreas) * numOfValues
+				);
+			}
+		}
+	}
+
+	cannyEdgeDetection(
+		imageData: ImageData,
+		lowThreshold: number,
+		highThreshold: number,
+		width: number,
+		height: number
+	) {
+		const matrix = new jsfeat.matrix_t(width, height, jsfeat.U8C1_t);
+
+		jsfeat.imgproc.grayscale(imageData.data, width, height, matrix);
+
+		jsfeat.imgproc.canny(matrix, matrix, lowThreshold, highThreshold);
+
+		const data_u32 = new Uint32Array(imageData.data.buffer);
+		let i = matrix.cols * matrix.rows;
+		let pix = 0;
+
+		const alpha = 0xff << 24;
+		while (--i >= 0) {
+			pix = matrix.data[i];
+			data_u32[i] = alpha | (pix << 16) | (pix << 8) | pix;
+		}
 	}
 }
