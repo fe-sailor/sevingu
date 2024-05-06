@@ -142,7 +142,7 @@ export const useStore = create<SevinguState>((set, get) => ({
 	imageConfig: { blur: 20 },
 	htmlRenderedImage: new Image(),
 	imageUri: '',
-	defaultImageUri: '/src/assets/sample_image.jpg',
+	defaultImageUri: '/sample_image.jpg',
 	setImageViewer: (imageViewer: HTMLCanvasElement) => {
 		const prevViewer = get().imageViewer;
 
