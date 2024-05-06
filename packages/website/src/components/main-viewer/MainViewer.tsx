@@ -5,7 +5,7 @@ import {
 	MAIN_VIEWER_PANEL_MIN_SIZE_IMG,
 	MAIN_VIEWER_PANEL_MIN_SIZE_SVG,
 } from '@/components/main-viewer/const';
-import { useImageViewerRef } from '@/refs/image-viewer.ref';
+import { useImageViewerStore } from '@/stores/image-viewer.store';
 import type { PanelProps } from 'react-resizable-panels';
 import {
 	ResizableHandle,
@@ -13,14 +13,15 @@ import {
 	ResizablePanelGroup,
 } from '@/components/ui/resizable';
 import { useRef, useEffect } from 'react';
-import { useSvgViewerRef } from '@/refs/svg-viewer.ref';
+import { useSvgViewerStore } from '@/stores/svg-viewer.store';
+import { useMessage } from '@/stores/message.store';
 
 const MainViewer = () => {
 	const imageViewerRef = useRef<HTMLCanvasElement | null>(null);
-	const { setImageViewer, showImage } = useImageViewerRef();
+	const { setImageViewer, showImage, showDefaultImage } = useImageViewerStore();
 
 	const svgViewerRef = useRef<HTMLDivElement | null>(null);
-	const { showSvg, setSvgViewer } = useSvgViewerRef();
+	const { showSvg, setSvgViewer } = useSvgViewerStore();
 
 	const handleResizeImage: PanelProps['onResize'] = (a, b) => {
 		a && b;
@@ -33,8 +34,15 @@ const MainViewer = () => {
 			return;
 		}
 		showImage(event.target.files[0]);
-		setTimeout(() => showSvg(), 1000);
 	};
+
+	useMessage(
+		{ on: 'SuccessToImageLoaded', listener: () => showSvg() },
+		{
+			on: 'SetImageViewerFirstTime',
+			listener: () => showDefaultImage(),
+		}
+	);
 
 	useEffect(() => {
 		if (!imageViewerRef.current) {

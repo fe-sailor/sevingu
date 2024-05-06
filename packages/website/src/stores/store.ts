@@ -4,42 +4,33 @@ import * as StackBlur from 'stackblur-canvas';
 import { SvgRenderService } from '@/lib/svg-renderers/svg-renderer';
 import { getFileUri, getImageWidthAndHeight } from '@/lib/utils';
 import { PanelState, PanelStateKey, SVGRenderTypes } from './storeType';
+import { SvgViewerStore } from './svg-viewer.store';
+import { MessageStore, SevinguMessage } from './message.store';
+import { ImageConfiguration, ImageViewerStore } from './image-viewer.store';
 
-export type ImageConfiguration = { blur: number };
+// prettier-ignore
+export type SevinguState =
+  {
+    curImage: string;
+    pastImages: string[];
+    futureImages: string[];
+    setCurImage: (img: string) => void;
+    undo: () => void;
+    redo: () => void;
+    download: () => void;
+    /** controller 관련 */
+    panelState: PanelState;
+    changePanelState: (...panelEntry: PanelEntries) => void;
+  }
+  & ImageViewerStore
+  & SvgViewerStore
+  & MessageStore;
 
-export type ImageViewerRef = {
-	imageViewer: null | HTMLCanvasElement;
-	imageConfig: ImageConfiguration;
-	htmlRenderedImage: HTMLImageElement;
-	imageUri: string;
-	setImageViewer: (imageViewer: HTMLCanvasElement) => void;
-	showImage: (imageBlob: Blob) => void;
-	updateConfig: (imageConfig: ImageConfiguration) => void;
-};
+type Entries<T> = {
+	[K in keyof T]: [K, T[K]];
+}[keyof T];
 
-export type SvgViewerRef = {
-	svgViewer: null | HTMLDivElement;
-	setSvgViewer: (svgViewer: HTMLDivElement) => void;
-	setSvg: (svgAsString: string) => void;
-	showSvg: () => void;
-};
-
-type SevinguState = {
-	curImage: string;
-	pastImages: string[];
-	futureImages: string[];
-	setCurImage: (img: string) => void;
-	undo: () => void;
-	redo: () => void;
-	download: () => void;
-	/** controller 관련 */
-	panelState: PanelState;
-	changePanelState: (
-		key: PanelStateKey,
-		value: boolean | number | string | keyof typeof SVGRenderTypes
-	) => void;
-} & ImageViewerRef &
-	SvgViewerRef;
+type PanelEntries = Entries<PanelState>;
 
 const SVG_RENDER_TYPES = { CIRCLE: 'CIRCLE' } as const;
 
@@ -143,21 +134,31 @@ export const useStore = create<SevinguState>((set, get) => ({
 		document.body.removeChild(linkElement);
 	},
 
+	/** ImageViewerStore */
 	imageViewer: null,
 	imageConfig: { blur: 20 },
 	htmlRenderedImage: new Image(),
 	imageUri: '',
-	setImageViewer: (imageViewer: HTMLCanvasElement) =>
+	defaultImageUri: '/src/assets/sample_image.jpg',
+	setImageViewer: (imageViewer: HTMLCanvasElement) => {
+		const prevViewer = get().imageViewer;
+
 		set(() => {
 			if (get().imageViewer === imageViewer) {
 				return { imageViewer: get().imageViewer };
 			}
 			return { imageViewer };
-		}),
+		});
+
+		if (!prevViewer) {
+			get().sendMessage('SetImageViewerFirstTime');
+		}
+	},
 
 	showImage: async (imageBlob: Blob) => {
 		const imagUri = await getFileUri(imageBlob);
 		set(() => ({ imageUri: imagUri }));
+		get().sendMessage('SuccessToGetImageUri');
 		const imageViewer = get().imageViewer;
 
 		if (!imageViewer) {
@@ -165,12 +166,14 @@ export const useStore = create<SevinguState>((set, get) => ({
 			return;
 		}
 
-		renderOnViewer(
+		await renderOnViewer(
 			get().htmlRenderedImage,
 			imagUri,
 			imageViewer,
 			get().imageConfig
 		);
+
+		get().sendMessage('SuccessToImageLoaded');
 	},
 	updateConfig: imageConfig => {
 		const imageViewer = get().imageViewer;
@@ -189,6 +192,25 @@ export const useStore = create<SevinguState>((set, get) => ({
 			imageConfig
 		);
 	},
+	showDefaultImage: async () => {
+		const imageViewer = get().imageViewer;
+
+		if (!imageViewer) {
+			console.error('image view empty');
+			return;
+		}
+
+		await renderOnViewer(
+			get().htmlRenderedImage,
+			get().defaultImageUri,
+			imageViewer,
+			get().imageConfig
+		);
+
+		get().sendMessage('SuccessToImageLoaded');
+	},
+
+	/** SvgViewerStore */
 	svgViewer: null,
 	setSvgViewer: (svgViewer: HTMLDivElement) => set(() => ({ svgViewer })),
 	setSvg: (svgAsString: string) => {
@@ -259,6 +281,15 @@ export const useStore = create<SevinguState>((set, get) => ({
 				[key]: value,
 			},
 		})),
+
+	/** MessageStore */
+	message: SevinguMessage.Default,
+	setMessage: message => set(() => ({ message: message })),
+	resetMessage: () => set(() => ({ message: SevinguMessage.Default })),
+	sendMessage: message => {
+		get().setMessage(message);
+		get().resetMessage();
+	},
 }));
 
 const renderOnViewer = async (
