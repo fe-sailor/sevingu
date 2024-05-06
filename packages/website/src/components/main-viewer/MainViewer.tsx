@@ -31,6 +31,22 @@ const mainViewerMessageListeners: MessageListener[] = [
 			state.showSvg();
 		},
 	},
+	{
+		on: 'ChangeImageSetting',
+		listener: state => {
+			if (!state.imageBlob) {
+				console.error('empty image blob');
+				return;
+			}
+			state.showImage(state.imageBlob);
+		},
+	},
+	{
+		on: 'ChangeSvgSetting',
+		listener: state => {
+			state.showSvg();
+		},
+	},
 ];
 
 const MainViewer = () => {

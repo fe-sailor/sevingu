@@ -15,6 +15,7 @@ export const SevinguMessage = {
 	SuccessToImageLoaded: 'SuccessToImageLoaded',
 	SuccessToSvgRendered: 'SuccessToSvgRendered',
 	ChangeSvgSetting: 'ChangeSvgSetting',
+	ChangeImageSetting: 'ChangeImageSetting',
 	EndedGoogleAd: 'EndedGoogleAd',
 } as const;
 

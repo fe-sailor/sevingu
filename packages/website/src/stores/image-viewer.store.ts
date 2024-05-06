@@ -8,6 +8,7 @@ export type ImageViewerStore = {
 	htmlRenderedImage: HTMLImageElement;
 	imageUri: string;
 	defaultImageUri: string;
+	imageBlob: Blob | null;
 	setImageViewer: (imageViewer: HTMLCanvasElement) => void;
 	showImage: (imageBlob: Blob) => void;
 	updateConfig: (imageConfig: ImageConfiguration) => void;
@@ -37,6 +38,7 @@ export const useImageViewerStore = () =>
 		htmlRenderedImage: state.htmlRenderedImage,
 		imageUri: state.imageUri,
 		defaultImageUri: state.defaultImageUri,
+		imageBlob: state.imageBlob,
 		setImageViewer: state.setImageViewer,
 		showImage: state.showImage,
 		updateConfig: state.updateConfig,
