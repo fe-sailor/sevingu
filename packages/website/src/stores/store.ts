@@ -4,9 +4,9 @@ import * as StackBlur from 'stackblur-canvas';
 import { SvgRenderService } from '@/lib/svg-renderers/svg-renderer';
 import { getFileUri, getImageWidthAndHeight } from '@/lib/utils';
 import { PanelState, PanelStateKey, SVGRenderTypes } from './storeType';
-import { ImageConfiguration, ImageViewerStore } from './image-viewer.store';
 import { SvgViewerStore } from './svg-viewer.store';
-import { MessageStore, SevinguMessage } from '@/stores/message.store';
+import { MessageStore, SevinguMessage } from './message.store';
+import { ImageConfiguration, ImageViewerStore } from './image-viewer.store';
 
 // prettier-ignore
 export type SevinguState =
