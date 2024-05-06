@@ -134,17 +134,26 @@ export const useStore = create<SevinguState>((set, get) => ({
 		document.body.removeChild(linkElement);
 	},
 
+	/** ImageViewerStore */
 	imageViewer: null,
 	imageConfig: { blur: 20 },
 	htmlRenderedImage: new Image(),
 	imageUri: '',
-	setImageViewer: (imageViewer: HTMLCanvasElement) =>
+	defaultImageUri: '/src/assets/sample_image.jpg',
+	setImageViewer: (imageViewer: HTMLCanvasElement) => {
+		const prevViewer = get().imageViewer;
+
 		set(() => {
 			if (get().imageViewer === imageViewer) {
 				return { imageViewer: get().imageViewer };
 			}
 			return { imageViewer };
-		}),
+		});
+
+		if (!prevViewer) {
+			get().sendMessage('SetImageViewerFirstTime');
+		}
+	},
 
 	showImage: async (imageBlob: Blob) => {
 		const imagUri = await getFileUri(imageBlob);
@@ -156,12 +165,14 @@ export const useStore = create<SevinguState>((set, get) => ({
 			console.error('image view empty');
 			return;
 		}
+
 		await renderOnViewer(
 			get().htmlRenderedImage,
 			imagUri,
 			imageViewer,
 			get().imageConfig
 		);
+
 		get().sendMessage('SuccessToImageLoaded');
 	},
 	updateConfig: imageConfig => {
@@ -181,6 +192,25 @@ export const useStore = create<SevinguState>((set, get) => ({
 			imageConfig
 		);
 	},
+	showDefaultImage: async () => {
+		const imageViewer = get().imageViewer;
+
+		if (!imageViewer) {
+			console.error('image view empty');
+			return;
+		}
+
+		await renderOnViewer(
+			get().htmlRenderedImage,
+			get().defaultImageUri,
+			imageViewer,
+			get().imageConfig
+		);
+
+		get().sendMessage('SuccessToImageLoaded');
+	},
+
+	/** SvgViewerStore */
 	svgViewer: null,
 	setSvgViewer: (svgViewer: HTMLDivElement) => set(() => ({ svgViewer })),
 	setSvg: (svgAsString: string) => {

@@ -18,7 +18,7 @@ import { useMessage } from '@/stores/message.store';
 
 const MainViewer = () => {
 	const imageViewerRef = useRef<HTMLCanvasElement | null>(null);
-	const { setImageViewer, showImage } = useImageViewerStore();
+	const { setImageViewer, showImage, showDefaultImage } = useImageViewerStore();
 
 	const svgViewerRef = useRef<HTMLDivElement | null>(null);
 	const { showSvg, setSvgViewer } = useSvgViewerStore();
@@ -36,6 +36,14 @@ const MainViewer = () => {
 		showImage(event.target.files[0]);
 	};
 
+	useMessage(
+		{ on: 'SuccessToImageLoaded', listener: () => showSvg() },
+		{
+			on: 'SetImageViewerFirstTime',
+			listener: () => showDefaultImage(),
+		}
+	);
+
 	useEffect(() => {
 		if (!imageViewerRef.current) {
 			return;
@@ -49,8 +57,6 @@ const MainViewer = () => {
 		}
 		setSvgViewer(svgViewerRef.current);
 	}, [setSvgViewer]);
-
-	useMessage({ on: 'SuccessToImageLoaded', listener: () => showSvg() });
 
 	return (
 		<>
