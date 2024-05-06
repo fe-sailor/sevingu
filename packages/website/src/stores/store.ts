@@ -19,13 +19,16 @@ type SevinguState =
     download: () => void;
     /** controller 관련 */
     panelState: PanelState;
-    changePanelState: (
-      key: PanelStateKey,
-      value: boolean | number | string | keyof typeof SVGRenderTypes
-    ) => void;
+    changePanelState: (...panelEntry: PanelEntries) => void;
   }
   & ImageViewerStore
   & SvgViewerStore;
+
+type Entries<T> = {
+	[K in keyof T]: [K, T[K]];
+}[keyof T];
+
+type PanelEntries = Entries<PanelState>;
 
 const SVG_RENDER_TYPES = { CIRCLE: 'CIRCLE' } as const;
 
