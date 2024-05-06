@@ -20,7 +20,10 @@ export type SevinguState =
     download: () => void;
     /** controller 관련 */
     panelState: PanelState;
-    changePanelState: (...panelEntry: PanelEntries) => void;
+    changePanelState:  (
+        key: PanelStateKey,
+        value: boolean | number | string | keyof typeof SVGRenderTypes
+      ) => void;
   }
   & ImageViewerStore
   & SvgViewerStore
