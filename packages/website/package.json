@@ -23,6 +23,7 @@
 		"@reactuses/core": "^5.0.13",
 		"class-variance-authority": "^0.7.0",
 		"clsx": "^2.1.1",
+		"jsfeat": "^0.0.8",
 		"lodash": "^4.17.21",
 		"lucide-react": "^0.373.0",
 		"react": "^18.2.0",

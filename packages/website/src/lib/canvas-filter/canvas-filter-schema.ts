@@ -9,12 +9,14 @@ export const canvasSettingSchema = z.object({
 	useEdgeDetection: z.boolean(),
 	lowThreshold: z.number().int().min(0).max(128),
 	highThreshold: z.number().int().min(0).max(128),
+	postBlur: z.number().int().min(0).max(30),
 });
 
 export type CanvasSettingSvgurt = {
 	grayscale: boolean;
 	invert: boolean;
 	blur: number;
+	postBlur: number;
 	posterize: boolean;
 	posterizeLevels: number;
 	edgeDetection: boolean;
