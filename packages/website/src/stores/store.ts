@@ -1,7 +1,10 @@
 import logo from '@/assets/sevingu_logo.png';
 import { CanvasFilter } from '@/lib/canvas-filter/canvas-filter';
 import { SvgRenderer } from '@/lib/svg-renderers/svg-renderer';
-import { SvgSettingSvgurt } from '@/lib/svg-renderers/svg-renderer-schema';
+import {
+	SvgSettingSvgurt,
+	SVG_RENDER_TYPES,
+} from '@/lib/svg-renderers/svg-renderer-schema';
 import { getFileUri, getImageWidthAndHeight } from '@/lib/utils';
 import { create } from 'zustand';
 import { ImageViewerStore } from './image-viewer.store';
@@ -36,11 +39,9 @@ type Entries<T> = {
 
 type PanelEntries = Entries<PanelState>;
 
-const SVG_RENDER_TYPES = { CIRCLE: 'CIRCLE' } as const;
-
 const svgSetting: SvgSettingSvgurt = {
 	scale: 1,
-	svgRenderType: SVG_RENDER_TYPES.CIRCLE,
+	svgRenderType: SVG_RENDER_TYPES.Enum.CURVE,
 	applyFractalDisplacement: '',
 	fill: true,
 	fillColor: '#000000',
@@ -56,6 +57,14 @@ const svgSetting: SvgSettingSvgurt = {
 	renderEveryYPixels: 10,
 	minColorRecognized: 1,
 	maxColorRecognized: 256,
+	amplitude: 1,
+	amplitudeRandomness: 1,
+	direction: 1,
+	directionRandomness: 1,
+	wavelength: 1,
+	wavelengthRandomness: 1,
+	waves: 1,
+	wavesRandomness: 1,
 };
 
 export const useStore = create<SevinguState>((set, get) => ({
@@ -216,6 +225,7 @@ export const useStore = create<SevinguState>((set, get) => ({
 			edgeDetection: false,
 			lowThreshold: 20,
 			highThreshold: 50,
+			postBlur: 1,
 		});
 		const imageData = await canvasFilter.renderImage();
 
@@ -259,7 +269,7 @@ export const useStore = create<SevinguState>((set, get) => ({
 		const renderer = new SvgRenderer(
 			{
 				scale: 1,
-				svgRenderType: SVG_RENDER_TYPES.CIRCLE,
+				svgRenderType: SVG_RENDER_TYPES.enum.CURVE,
 				applyFractalDisplacement: '',
 				fill: true,
 				fillColor: '#000000',
@@ -275,6 +285,14 @@ export const useStore = create<SevinguState>((set, get) => ({
 				renderEveryYPixels: 10,
 				minColorRecognized: 1,
 				maxColorRecognized: 256,
+				amplitude: 20,
+				amplitudeRandomness: 1,
+				direction: 1,
+				directionRandomness: 1,
+				wavelength: 10,
+				wavelengthRandomness: 1,
+				waves: 5,
+				wavesRandomness: 1,
 			},
 			canvasRef.width,
 			canvasRef.height,
