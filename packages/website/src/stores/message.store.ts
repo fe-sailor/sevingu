@@ -26,17 +26,17 @@ export const useMessageStore = () =>
 	}));
 
 export const useMessage = (
-	...listeners: [
-		on: keyof typeof SevinguMessage,
-		callback: (state: SevinguState, prevState: SevinguState) => void,
-	][]
+	...listeners: {
+		on: keyof typeof SevinguMessage;
+		listener: (state: SevinguState, prevState: SevinguState) => void;
+	}[]
 ) => {
 	useEffect(
 		() =>
 			useStore.subscribe((state, prevState) => {
-				for (const [on, callback] of listeners) {
+				for (const { on, listener } of listeners) {
 					if (state.message === on) {
-						callback(state, prevState);
+						listener(state, prevState);
 					}
 				}
 			}),

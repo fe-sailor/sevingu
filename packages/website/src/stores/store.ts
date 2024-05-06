@@ -149,19 +149,20 @@ export const useStore = create<SevinguState>((set, get) => ({
 	showImage: async (imageBlob: Blob) => {
 		const imagUri = await getFileUri(imageBlob);
 		set(() => ({ imageUri: imagUri }));
+		get().sendMessage('SuccessToGetImageUri');
 		const imageViewer = get().imageViewer;
 
 		if (!imageViewer) {
 			console.error('image view empty');
 			return;
 		}
-
-		renderOnViewer(
+		await renderOnViewer(
 			get().htmlRenderedImage,
 			imagUri,
 			imageViewer,
 			get().imageConfig
 		);
+		get().sendMessage('SuccessToImageLoaded');
 	},
 	updateConfig: imageConfig => {
 		const imageViewer = get().imageViewer;
@@ -256,7 +257,7 @@ export const useStore = create<SevinguState>((set, get) => ({
 	setMessage: message => set(() => ({ message: message })),
 	resetMessage: () => set(() => ({ message: SevinguMessage.Default })),
 	sendMessage: message => {
-		get().sendMessage(message);
+		get().setMessage(message);
 		get().resetMessage();
 	},
 }));
