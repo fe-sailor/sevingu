@@ -10,6 +10,7 @@ export type MessageStore = {
 
 export const SevinguMessage = {
 	Default: 'Default',
+	SetImageViewerFirstTime: 'SetImageViewerFirstTime',
 	SuccessToGetImageUri: 'SuccessToGetImageUri',
 	SuccessToImageLoaded: 'SuccessToImageLoaded',
 	SuccessToSvgRendered: 'SuccessToSvgRendered',
