@@ -257,7 +257,25 @@ export const useStore = create<SevinguState>((set, get) => ({
 		}
 
 		const renderer = new SvgRenderer(
-			svgSetting,
+			{
+				scale: 1,
+				svgRenderType: SVG_RENDER_TYPES.CIRCLE,
+				applyFractalDisplacement: '',
+				fill: true,
+				fillColor: '#000000',
+				stroke: true,
+				autoColor: true,
+				radius: 1,
+				radiusOnColor: true,
+				radiusRandomness: 1,
+				strokeColor: '',
+				strokeWidth: 20,
+				strokeWidthRandomness: 1,
+				renderEveryXPixels: 10,
+				renderEveryYPixels: 10,
+				minColorRecognized: 1,
+				maxColorRecognized: 256,
+			},
 			canvasRef.width,
 			canvasRef.height,
 			imageData.data

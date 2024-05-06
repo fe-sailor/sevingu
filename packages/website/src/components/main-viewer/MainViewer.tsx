@@ -63,7 +63,7 @@ const MainViewer = () => {
 			<input accept="image/*" onChange={handleImageChange} type="file" />
 			<ResizablePanelGroup
 				direction="horizontal"
-				className="max-w-md rounded-lg border"
+				className="rounded-lg border"
 				style={{
 					height: MAIN_VIEWER_HEIGHT,
 				}}>
@@ -72,14 +72,16 @@ const MainViewer = () => {
 					onResize={handleResizeImage}
 					collapsible
 					minSize={MAIN_VIEWER_PANEL_MIN_SIZE_IMG}>
-					<canvas className="w-full" ref={imageViewerRef}></canvas>
+					<canvas className="mx-auto" ref={imageViewerRef}></canvas>
 				</ResizablePanel>
 				<ResizableHandle withHandle />
 				<ResizablePanel
 					defaultSize={MAIN_VIEWER_PANEL_DEFAULT_SIZE_SVG}
 					collapsible
 					minSize={MAIN_VIEWER_PANEL_MIN_SIZE_SVG}>
-					<div ref={svgViewerRef}></div>
+					<div
+						className="flex justify-center items-center"
+						ref={svgViewerRef}></div>
 				</ResizablePanel>
 			</ResizablePanelGroup>
 		</>
