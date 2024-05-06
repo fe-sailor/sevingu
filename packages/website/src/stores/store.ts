@@ -6,9 +6,10 @@ import { getFileUri, getImageWidthAndHeight } from '@/lib/utils';
 import { PanelState, PanelStateKey, SVGRenderTypes } from './storeType';
 import { ImageConfiguration, ImageViewerStore } from './image-viewer.store';
 import { SvgViewerStore } from './svg-viewer.store';
+import { MessageStore, SevinguMessage } from '@/stores/message.store';
 
 // prettier-ignore
-type SevinguState =
+export type SevinguState =
   {
     curImage: string;
     pastImages: string[];
@@ -22,7 +23,8 @@ type SevinguState =
     changePanelState: (...panelEntry: PanelEntries) => void;
   }
   & ImageViewerStore
-  & SvgViewerStore;
+  & SvgViewerStore
+  & MessageStore;
 
 type Entries<T> = {
 	[K in keyof T]: [K, T[K]];
@@ -248,6 +250,15 @@ export const useStore = create<SevinguState>((set, get) => ({
 				[key]: value,
 			},
 		})),
+
+	/** MessageStore */
+	message: SevinguMessage.Default,
+	setMessage: message => set(() => ({ message: message })),
+	resetMessage: () => set(() => ({ message: SevinguMessage.Default })),
+	sendMessage: message => {
+		get().sendMessage(message);
+		get().resetMessage();
+	},
 }));
 
 const renderOnViewer = async (
