@@ -216,6 +216,7 @@ export const useStore = create<SevinguState>((set, get) => ({
 			edgeDetection: false,
 			lowThreshold: 20,
 			highThreshold: 50,
+			postBlur: 1,
 		});
 		const imageData = await canvasFilter.renderImage();
 
