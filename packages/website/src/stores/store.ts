@@ -1,12 +1,13 @@
 import { create } from 'zustand';
 import logo from '@/assets/sevingu_logo.png';
 import * as StackBlur from 'stackblur-canvas';
-import { SvgRenderService } from '@/lib/svg-renderers/svg-renderer';
 import { getFileUri, getImageWidthAndHeight } from '@/lib/utils';
 import { PanelState, PanelStateKey, SVGRenderTypes } from './storeType';
 import { SvgViewerStore } from './svg-viewer.store';
 import { MessageStore, SevinguMessage } from './message.store';
 import { ImageConfiguration, ImageViewerStore } from './image-viewer.store';
+import { SvgSettingSvgurt } from '@/lib/svg-renderers/svg-renderer-schema';
+import { SvgRenderer } from '@/lib/svg-renderers/svg-renderer';
 
 // prettier-ignore
 export type SevinguState =
@@ -246,11 +247,15 @@ export const useStore = create<SevinguState>((set, get) => ({
 			return;
 		}
 
-		SvgRenderService.setSetting(svgSetting);
-		SvgRenderService.setRenderSize(canvasRef.width, canvasRef.height);
-		SvgRenderService.setPixelRawData(imageData.data);
-		console.warn(SvgRenderService.renderSvg());
-		svgViewer.innerHTML = SvgRenderService.renderSvg();
+		const renderer = new SvgRenderer(
+			svgSetting,
+			canvasRef.width,
+			canvasRef.height,
+			imageData.data
+		);
+
+		console.warn(renderer.renderSvg());
+		svgViewer.innerHTML = renderer.renderSvg();
 	},
 
 	/** controller 관련 */
