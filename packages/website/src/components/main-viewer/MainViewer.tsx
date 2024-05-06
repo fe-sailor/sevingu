@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/resizable';
 import { useRef, useEffect } from 'react';
 import { useSvgViewerStore } from '@/stores/svg-viewer.store';
+import { useMessage } from '@/stores/message.store';
 
 const MainViewer = () => {
 	const imageViewerRef = useRef<HTMLCanvasElement | null>(null);
@@ -33,7 +34,6 @@ const MainViewer = () => {
 			return;
 		}
 		showImage(event.target.files[0]);
-		setTimeout(() => showSvg(), 1000);
 	};
 
 	useEffect(() => {
@@ -49,6 +49,8 @@ const MainViewer = () => {
 		}
 		setSvgViewer(svgViewerRef.current);
 	}, [setSvgViewer]);
+
+	useMessage({ on: 'SuccessToImageLoaded', listener: () => showSvg() });
 
 	return (
 		<>
