@@ -25,7 +25,7 @@ export interface PanelState {
 	lowThreshold: number;
 	highThreshold: number;
 	//svg관련
-	svgRenderType: keyof typeof SVGRenderTypes;
+	svgRenderType: keyof typeof SVGRenderTypes; // keyof typeof SVGRenderTypes
 	minColorRecognized: number;
 	maxColorRecognized: number;
 	renderEveryXPixels: number;
@@ -36,5 +36,20 @@ export interface PanelState {
 	radius: number;
 	radiusOnColor: boolean;
 	radiusRandomness: number;
+	// 커브에서 추가된것
+	autoColor: boolean;
+	strokeColor: string;
+	strokeWidth: number;
+	strokeWidthRandomness: number;
+	amplitude: number;
+	amplitudeRandomness: number;
+	direction: number;
+	directionRandomness: number;
+	wavelength: number;
+	wavelengthRandomness: number;
+	waves: number;
+	wavesRandomness: number;
+	// 프렉탈
+	applyFractalDisplacement: string;
 }
 export type PanelStateKey = keyof PanelState;

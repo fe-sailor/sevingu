@@ -1,4 +1,4 @@
-import { useStore } from '@/stores/store';
+import { PanelEntries, useStore } from '@/stores/store';
 import { Label } from '../ui/label';
 import { Switch } from '../ui/switch';
 import { Slider } from '../ui/slider';
@@ -14,13 +14,14 @@ import { PanelState, PanelStateKey } from '@/stores/storeType';
 
 export default function PanelElement({ id, name, style }: Controller) {
 	const checkPanelIdState = useStore(
-		(state: { panelState: PanelState }) => state.panelState[id as PanelStateKey]
+		// (state: { panelState: PanelState }) => state.panelState[id as PanelStateKey]
+		state => state.panelState[id]
 	);
 	const changePanelState = useStore(state => state.changePanelState);
 	const changePanelValue = (
-		value: boolean | number | keyof typeof SVGRenderTypes
+		value: PanelEntries // boolean | number | keyof typeof SVGRenderTypes
 	) => {
-		changePanelState(id, value);
+		changePanelState([id, value]);
 	};
 
 	const selectList = [
