@@ -238,13 +238,6 @@ export const useStore = create<SevinguState>((set, get) => ({
 	/** SvgViewerStore */
 	svgViewer: null,
 	setSvgViewer: (svgViewer: HTMLDivElement) => set(() => ({ svgViewer })),
-	setSvg: (svgAsString: string) => {
-		const svgViewer = get().svgViewer;
-		if (!svgViewer) {
-			return;
-		}
-		svgViewer.innerHTML = svgAsString;
-	},
 	showSvg: () => {
 		const canvasRef = get().imageViewer;
 		if (!canvasRef) {
