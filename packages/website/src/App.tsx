@@ -1,8 +1,9 @@
 import { useRef, useCallback } from 'react'; // useCallback 추가
-import { Button } from '@/components/ui/button';
+import MainHeader from './components/header/MainHeader';
 import MainViewer from './components/main-viewer/MainViewer';
 import MainPanel from './components/panel/MainPanel';
 import { useStore } from '@/stores/store';
+import { cn } from './lib/utils';
 
 function App() {
 	const [, setCurImage, undo, redo, originalDownload] = useStore(state => [
@@ -45,31 +46,11 @@ function App() {
 
 	return (
 		<>
-			<div className="px-10">
+			<MainHeader />
+			<div className={cn('flex')}>
 				<MainViewer />
+				<MainPanel />
 			</div>
-			<div className="flex gap-4 m-4">
-				<Button variant="destructive" onClick={handleUploadButtonClick}>
-					Image Upload
-				</Button>
-				<Button variant="destructive" onClick={undo}>
-					undo
-				</Button>
-				<Button variant="destructive" onClick={redo}>
-					redo
-				</Button>
-				{/* downloadWithAd 함수를 사용하도록 수정 */}
-				<Button variant="destructive" onClick={downloadWithAd}>
-					download
-				</Button>
-			</div>
-			<input
-				type="file"
-				ref={fileInputRef}
-				style={{ display: 'none' }}
-				onChange={handleFileChange}
-			/>
-			<MainPanel />
 		</>
 	);
 }

@@ -31,15 +31,6 @@ const MainViewer = () => {
 		a && b;
 	};
 
-	const handleImageChange: React.ChangeEventHandler<
-		HTMLInputElement
-	> = event => {
-		if (!event.target.files?.length) {
-			return;
-		}
-		showImage(event.target.files[0]);
-	};
-
 	const isOver = useDropZone(dragOverRef, files => {
 		if (!files) {
 			return;
@@ -94,7 +85,6 @@ const MainViewer = () => {
 
 	return (
 		<>
-			<input accept="image/*" onChange={handleImageChange} type="file" />
 			<div ref={dragOverRef}>
 				<ResizablePanelGroup
 					direction="horizontal"
