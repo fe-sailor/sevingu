@@ -51,7 +51,7 @@ export default function PanelElement({ id, name, style }: Controller) {
 		},
 	];
 	return (
-		<div className="flex items-center space-x-2">
+		<>
 			<Label htmlFor={id}>{name}</Label>
 			{style === 'switch' && (
 				<Switch id={id} onCheckedChange={value => changePanelValue(value)} />
@@ -84,6 +84,6 @@ export default function PanelElement({ id, name, style }: Controller) {
 					</SelectContent>
 				</Select>
 			)}
-		</div>
+		</>
 	);
 }

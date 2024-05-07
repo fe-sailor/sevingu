@@ -15,9 +15,7 @@ type Entries<T> = {
 	[K in keyof T]: [K, T[K]];
 }[keyof T];
 
-export type PanelEntries = Entries<PanelState>; // Entries<SvgRenderer>
-// let aa: PanelEntries;
-// console.log(typeof aa);
+export type svgControlValue = Entries<SvgSettingSvgurt>; // Entries<SvgRenderer>
 
 // prettier-ignore
 export type SevinguState =
@@ -30,9 +28,9 @@ export type SevinguState =
     redo: () => void;
     download: () => void;
     /** controller 관련 */
-    panelState: PanelState; // SvgRenderer
+    panelState: SvgSettingSvgurt; // PanelState; // SvgRenderer
     changePanelState:  (
-			[PanelStateKey, PanelEntries] // [keyof SvgRenderer, PanelEntries]
+			[PanelStateKey, PanelEntries]
         // key: PanelStateKey, // keyof SvgRenderer,
         // value: PanelEntries // boolean | number | string | keyof typeof SVGRenderTypes
       ) => void;
@@ -304,15 +302,16 @@ export const useStore = create<SevinguState>((set, get) => ({
 
 	/** controller 관련 */
 	panelState: {
-		grayscale: false,
-		invert: false,
-		blur: 0,
-		posterize: false,
-		posterizeLevels: 5,
-		edgeDetection: false,
-		lowThreshold: 20,
-		highThreshold: 50,
+		// grayscale: false,
+		// invert: false,
+		// blur: 0,
+		// posterize: false,
+		// posterizeLevels: 5,
+		// edgeDetection: false,
+		// lowThreshold: 20,
+		// highThreshold: 50,
 		//svg관련
+		scale: 1,
 		svgRenderType: SVGRenderTypes.CIRCLE, // SVG_RENDER_TYPES.enum.CIRCLE,
 		minColorRecognized: 50,
 		maxColorRecognized: 200,
