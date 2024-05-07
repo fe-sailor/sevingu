@@ -32,7 +32,7 @@ export type MessageListener = {
 	listener: (state: SevinguState, prevState: SevinguState) => void;
 };
 
-export const useMessage = (...listeners: MessageListener[]) => {
+export const useMessageListener = (...listeners: MessageListener[]) => {
 	useEffect(
 		() =>
 			useStore.subscribe((state, prevState) => {

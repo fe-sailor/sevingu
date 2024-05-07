@@ -14,40 +14,9 @@ import {
 } from '@/components/ui/resizable';
 import { useRef, useEffect } from 'react';
 import { useSvgViewerStore } from '@/stores/svg-viewer.store';
-import { useMessage, MessageListener } from '@/stores/message.store';
+import { useMessageListener } from '@/stores/message.store';
 import { useDropZone } from '@reactuses/core';
 import { cn } from '@/lib/utils';
-
-const mainViewerMessageListeners: MessageListener[] = [
-	{
-		on: 'SetImageViewerFirstTime',
-		listener: state => {
-			state.showDefaultImage();
-		},
-	},
-	{
-		on: 'SuccessToImageLoaded',
-		listener: state => {
-			state.showSvg();
-		},
-	},
-	{
-		on: 'ChangeImageSetting',
-		listener: state => {
-			if (!state.imageBlob) {
-				console.error('empty image blob');
-				return;
-			}
-			state.showImage(state.imageBlob);
-		},
-	},
-	{
-		on: 'ChangeSvgSetting',
-		listener: state => {
-			state.showSvg();
-		},
-	},
-];
 
 const MainViewer = () => {
 	const imageViewerRef = useRef<HTMLCanvasElement | null>(null);
@@ -78,7 +47,36 @@ const MainViewer = () => {
 		showImage(files[0]);
 	});
 
-	useMessage(...mainViewerMessageListeners);
+	useMessageListener(
+		{
+			on: 'SetImageViewerFirstTime',
+			listener: state => {
+				state.showDefaultImage();
+			},
+		},
+		{
+			on: 'SuccessToImageLoaded',
+			listener: state => {
+				state.showSvg();
+			},
+		},
+		{
+			on: 'ChangeImageSetting',
+			listener: state => {
+				if (!state.imageBlob) {
+					console.error('empty image blob');
+					return;
+				}
+				state.showImage(state.imageBlob);
+			},
+		},
+		{
+			on: 'ChangeSvgSetting',
+			listener: state => {
+				state.showSvg();
+			},
+		}
+	);
 
 	useEffect(() => {
 		if (!imageViewerRef.current) {
