@@ -1,4 +1,3 @@
-import logo from '@/assets/sevingu_logo.png';
 import { CanvasFilter } from '@/lib/canvas-filter/canvas-filter';
 import { SvgRenderer } from '@/lib/svg-renderers/svg-renderer';
 import {
@@ -68,7 +67,7 @@ const svgSetting: SvgSettingSvgurt = {
 };
 
 export const useStore = create<SevinguState>((set, get) => ({
-	curImage: logo,
+	curImage: '',
 	pastImages: [],
 	futureImages: [],
 	setCurImage: img =>

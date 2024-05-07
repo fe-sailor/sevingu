@@ -18,23 +18,25 @@ export default function MainPanel() {
 		changePanelState(key, value);
 	};
 	return (
-		<Accordion type="multiple">
-			<AccordionItem value="item-1">
-				<AccordionTrigger>이미지 컨트롤</AccordionTrigger>
-				<ImageControls />
-			</AccordionItem>
-			<AccordionItem value="item-2">
-				<AccordionTrigger>포스터화(Posterize)</AccordionTrigger>
-				<Posterize />
-			</AccordionItem>
-			<AccordionItem value="item-3">
-				<AccordionTrigger>가장자리 감지</AccordionTrigger>
-				<EdgeDetection />
-			</AccordionItem>
-			<AccordionItem value="item-4">
-				<AccordionTrigger>SVG 컨트롤</AccordionTrigger>
-				<SVGControls />
-			</AccordionItem>
-		</Accordion>
+		<div className={'bg-white w-1/3'}>
+			<Accordion type="multiple">
+				<AccordionItem value="item-1">
+					<AccordionTrigger>이미지 컨트롤</AccordionTrigger>
+					<ImageControls />
+				</AccordionItem>
+				<AccordionItem value="item-2">
+					<AccordionTrigger>포스터화(Posterize)</AccordionTrigger>
+					<Posterize />
+				</AccordionItem>
+				<AccordionItem value="item-3">
+					<AccordionTrigger>가장자리 감지</AccordionTrigger>
+					<EdgeDetection />
+				</AccordionItem>
+				<AccordionItem value="item-4">
+					<AccordionTrigger>SVG 컨트롤</AccordionTrigger>
+					<SVGControls />
+				</AccordionItem>
+			</Accordion>
+		</div>
 	);
 }
