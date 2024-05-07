@@ -14,16 +14,47 @@ import {
 } from '@/components/ui/resizable';
 import { useRef, useEffect } from 'react';
 import { useSvgViewerStore } from '@/stores/svg-viewer.store';
-import { useMessage } from '@/stores/message.store';
+import { useMessage, MessageListener } from '@/stores/message.store';
 import { useDropZone } from '@reactuses/core';
 import { cn } from '@/lib/utils';
 
+const mainViewerMessageListeners: MessageListener[] = [
+	{
+		on: 'SetImageViewerFirstTime',
+		listener: state => {
+			state.showDefaultImage();
+		},
+	},
+	{
+		on: 'SuccessToImageLoaded',
+		listener: state => {
+			state.showSvg();
+		},
+	},
+	{
+		on: 'ChangeImageSetting',
+		listener: state => {
+			if (!state.imageBlob) {
+				console.error('empty image blob');
+				return;
+			}
+			state.showImage(state.imageBlob);
+		},
+	},
+	{
+		on: 'ChangeSvgSetting',
+		listener: state => {
+			state.showSvg();
+		},
+	},
+];
+
 const MainViewer = () => {
 	const imageViewerRef = useRef<HTMLCanvasElement | null>(null);
-	const { setImageViewer, showImage, showDefaultImage } = useImageViewerStore();
+	const { setImageViewer, showImage } = useImageViewerStore();
 
 	const svgViewerRef = useRef<HTMLDivElement | null>(null);
-	const { showSvg, setSvgViewer } = useSvgViewerStore();
+	const { setSvgViewer } = useSvgViewerStore();
 
 	const dragOverRef = useRef<HTMLDivElement | null>(null);
 
@@ -47,13 +78,7 @@ const MainViewer = () => {
 		showImage(files[0]);
 	});
 
-	useMessage(
-		{ on: 'SuccessToImageLoaded', listener: () => showSvg() },
-		{
-			on: 'SetImageViewerFirstTime',
-			listener: () => showDefaultImage(),
-		}
-	);
+	useMessage(...mainViewerMessageListeners);
 
 	useEffect(() => {
 		if (!imageViewerRef.current) {

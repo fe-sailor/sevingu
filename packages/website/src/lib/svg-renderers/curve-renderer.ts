@@ -134,7 +134,9 @@ export class CurveRenderer implements RenderSvg {
 		const { scale } = this.adaptSetting(this.curveSetting);
 
 		const { x, y, controlPoints, strokeWidth, strokeColor } = curve;
-
+		if (controlPoints.length === 0) {
+			return '';
+		}
 		const curvePath = controlPoints.reduce(
 			(prevString, controlPoint, index) =>
 				(prevString +=

@@ -15,6 +15,7 @@ export const SevinguMessage = {
 	SuccessToImageLoaded: 'SuccessToImageLoaded',
 	SuccessToSvgRendered: 'SuccessToSvgRendered',
 	ChangeSvgSetting: 'ChangeSvgSetting',
+	ChangeImageSetting: 'ChangeImageSetting',
 	EndedGoogleAd: 'EndedGoogleAd',
 } as const;
 
@@ -26,12 +27,12 @@ export const useMessageStore = () =>
 		resetMessage: state.resetMessage,
 	}));
 
-export const useMessage = (
-	...listeners: {
-		on: keyof typeof SevinguMessage;
-		listener: (state: SevinguState, prevState: SevinguState) => void;
-	}[]
-) => {
+export type MessageListener = {
+	on: keyof typeof SevinguMessage;
+	listener: (state: SevinguState, prevState: SevinguState) => void;
+};
+
+export const useMessage = (...listeners: MessageListener[]) => {
 	useEffect(
 		() =>
 			useStore.subscribe((state, prevState) => {
@@ -41,6 +42,6 @@ export const useMessage = (
 					}
 				}
 			}),
-		[]
+		[listeners]
 	);
 };

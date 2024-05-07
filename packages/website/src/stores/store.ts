@@ -153,6 +153,7 @@ export const useStore = create<SevinguState>((set, get) => ({
 	htmlRenderedImage: new Image(),
 	imageUri: '',
 	defaultImageUri: '/sample_image.jpg',
+	imageBlob: null,
 	setImageViewer: (imageViewer: HTMLCanvasElement) => {
 		const prevViewer = get().imageViewer;
 
@@ -169,6 +170,7 @@ export const useStore = create<SevinguState>((set, get) => ({
 	},
 
 	showImage: async (imageBlob: Blob) => {
+		set(() => ({ imageBlob: imageBlob }));
 		const imagUri = await getFileUri(imageBlob);
 		set(() => ({ imageUri: imagUri }));
 		get().sendMessage('SuccessToGetImageUri');

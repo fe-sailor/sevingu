@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { SvgSetting, getPixelColorAtXY } from './svg-renderer-schema';
+import { SvgSetting } from './svg-renderer-schema';
 
 export const pixelPointSchema = z.object({
 	x: z.number().int(),
