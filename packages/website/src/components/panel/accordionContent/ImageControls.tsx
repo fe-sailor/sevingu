@@ -4,9 +4,9 @@ import { Controller } from '../panel';
 
 export default function ImageControls() {
 	const imageControls: Controller[] = [
-		{ id: 'grayscale', name: '흑백', style: 'switch' },
+		{ id: 'grayscale', name: '그레이스케일', style: 'switch' },
 		{ id: 'invert', name: '반전', style: 'switch' },
-		{ id: 'blur', name: '흐리게', style: 'slider' },
+		{ id: 'blur', name: '블러', style: 'slider' },
 	];
 
 	return (

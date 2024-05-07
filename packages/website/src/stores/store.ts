@@ -11,6 +11,12 @@ import { MessageStore, SevinguMessage } from './message.store';
 import { PanelState, PanelStateKey, SVGRenderTypes } from './storeType';
 import { SvgViewerStore } from './svg-viewer.store';
 
+type Entries<T> = {
+	[K in keyof T]: [K, T[K]];
+}[keyof T];
+
+export type svgControlValue = Entries<SvgSettingSvgurt>; // Entries<SvgRenderer>
+
 // prettier-ignore
 export type SevinguState =
   {
@@ -22,21 +28,16 @@ export type SevinguState =
     redo: () => void;
     download: () => void;
     /** controller 관련 */
-    panelState: PanelState;
+    panelState: SvgSettingSvgurt; // PanelState; // SvgRenderer
     changePanelState:  (
-        key: PanelStateKey,
-        value: boolean | number | string | keyof typeof SVGRenderTypes
+			[PanelStateKey, PanelEntries]
+        // key: PanelStateKey, // keyof SvgRenderer,
+        // value: PanelEntries // boolean | number | string | keyof typeof SVGRenderTypes
       ) => void;
   }
   & ImageViewerStore
   & SvgViewerStore
   & MessageStore;
-
-type Entries<T> = {
-	[K in keyof T]: [K, T[K]];
-}[keyof T];
-
-type PanelEntries = Entries<PanelState>;
 
 const svgSetting: SvgSettingSvgurt = {
 	scale: 1,
@@ -260,33 +261,35 @@ export const useStore = create<SevinguState>((set, get) => ({
 			return;
 		}
 
+		const panelState = get().panelState;
 		const renderer = new SvgRenderer(
 			{
+				...panelState,
 				scale: 1,
 				svgRenderType: SVG_RENDER_TYPES.enum.CURVE,
-				applyFractalDisplacement: '',
-				fill: true,
-				fillColor: '#000000',
-				stroke: true,
-				autoColor: true,
-				radius: 1,
-				radiusOnColor: true,
-				radiusRandomness: 1,
-				strokeColor: '',
-				strokeWidth: 20,
-				strokeWidthRandomness: 1,
-				renderEveryXPixels: 10,
-				renderEveryYPixels: 10,
-				minColorRecognized: 1,
-				maxColorRecognized: 256,
-				amplitude: 20,
-				amplitudeRandomness: 1,
-				direction: 1,
-				directionRandomness: 1,
-				wavelength: 10,
-				wavelengthRandomness: 1,
-				waves: 5,
-				wavesRandomness: 1,
+				// applyFractalDisplacement: '',
+				// fill: true,
+				// fillColor: '#000000',
+				// stroke: true,
+				// autoColor: true,
+				// radius: 1,
+				// radiusOnColor: true,
+				// radiusRandomness: 1,
+				// strokeColor: '',
+				// strokeWidth: 20,
+				// strokeWidthRandomness: 1,
+				// renderEveryXPixels: 10,
+				// renderEveryYPixels: 10,
+				// minColorRecognized: 1,
+				// maxColorRecognized: 256,
+				// amplitude: 20,
+				// amplitudeRandomness: 1,
+				// direction: 1,
+				// directionRandomness: 1,
+				// wavelength: 10,
+				// wavelengthRandomness: 1,
+				// waves: 5,
+				// wavesRandomness: 1,
 			},
 			canvasRef.width,
 			canvasRef.height,
@@ -299,16 +302,17 @@ export const useStore = create<SevinguState>((set, get) => ({
 
 	/** controller 관련 */
 	panelState: {
-		grayscale: false,
-		invert: false,
-		blur: 0,
-		posterize: false,
-		posterizeLevels: 5,
-		edgeDetection: false,
-		lowThreshold: 20,
-		highThreshold: 50,
+		// grayscale: false,
+		// invert: false,
+		// blur: 0,
+		// posterize: false,
+		// posterizeLevels: 5,
+		// edgeDetection: false,
+		// lowThreshold: 20,
+		// highThreshold: 50,
 		//svg관련
-		svgRenderType: SVGRenderTypes.CIRCLE,
+		scale: 1,
+		svgRenderType: SVGRenderTypes.CIRCLE, // SVG_RENDER_TYPES.enum.CIRCLE,
 		minColorRecognized: 50,
 		maxColorRecognized: 200,
 		renderEveryXPixels: 6,
@@ -319,15 +323,32 @@ export const useStore = create<SevinguState>((set, get) => ({
 		radius: 4,
 		radiusOnColor: true,
 		radiusRandomness: 0.2,
+		// 커브에서 추가된것
+		autoColor: true,
+		strokeColor: '',
+		strokeWidth: 20,
+		strokeWidthRandomness: 1,
+		amplitude: 20,
+		amplitudeRandomness: 1,
+		direction: 1,
+		directionRandomness: 1,
+		wavelength: 10,
+		wavelengthRandomness: 1,
+		waves: 5,
+		wavesRandomness: 1,
+		// 프렉탈
+		applyFractalDisplacement: '',
 	},
-	changePanelState: (key, value) =>
+	changePanelState: ([key, value]) => {
 		set(state => ({
 			...state,
 			panelState: {
 				...state.panelState,
 				[key]: value,
 			},
-		})),
+		}));
+		get().sendMessage('ChangeSvgSetting');
+	},
 
 	/** MessageStore */
 	message: SevinguMessage.Default,
