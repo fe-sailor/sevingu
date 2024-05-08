@@ -15,7 +15,7 @@ type Entries<T> = {
 	[K in keyof T]: [K, T[K]];
 }[keyof T];
 
-export type svgControlValue = Entries<SvgSettingSvgurt>; // Entries<SvgRenderer>
+export type PanelEntries = Entries<SvgSettingSvgurt>; // Entries<SvgRenderer>
 
 // prettier-ignore
 export type SevinguState =
