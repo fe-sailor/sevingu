@@ -5,7 +5,7 @@ import {
 	MAIN_VIEWER_PANEL_MIN_SIZE_IMG,
 	MAIN_VIEWER_PANEL_MIN_SIZE_SVG,
 } from '@/components/main-viewer/const';
-import { useImageViewerStore } from '@/stores/image-viewer.store';
+import { useImageViewerStore } from '@/stores/imageViewerStore';
 import type { PanelProps } from 'react-resizable-panels';
 import {
 	ResizableHandle,
@@ -13,8 +13,8 @@ import {
 	ResizablePanelGroup,
 } from '@/components/ui/resizable';
 import { useRef, useEffect } from 'react';
-import { useSvgViewerStore } from '@/stores/svg-viewer.store';
-import { useMessageListener } from '@/stores/message.store';
+import { useSvgViewerStore } from '@/stores/svgViewerStore';
+import { useMessageListener } from '@/stores/messageStore';
 import { useDropZone } from '@reactuses/core';
 import { cn } from '@/lib/utils';
 

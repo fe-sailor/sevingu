@@ -1,7 +1,7 @@
 // import { Button } from '@/components/ui/button';
 import logo from '@/assets/sevingu_logo.png';
-import { useImageViewerStore } from '@/stores/image-viewer.store';
-import { useMessageListener } from '@/stores/message.store';
+import { useImageViewerStore } from '@/stores/imageViewerStore';
+import { useMessageListener } from '@/stores/messageStore';
 import { Input } from '../ui/input';
 
 const MainHeader = () => {

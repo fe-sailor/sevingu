@@ -6,10 +6,10 @@ import {
 } from '@/lib/svg-renderers/svg-renderer-schema';
 import { getFileUri, getImageWidthAndHeight } from '@/lib/utils';
 import { create } from 'zustand';
-import { ImageViewerStore } from './image-viewer.store';
-import { MessageStore, SevinguMessage } from './message.store';
+import { ImageViewerStore } from './imageViewerStore';
+import { MessageStore, SevinguMessage } from './messageStore';
 import { PanelState, PanelStateKey, SVGRenderTypes } from './storeType';
-import { SvgViewerStore } from './svg-viewer.store';
+import { SvgViewerStore } from './svgViewerStore';
 
 type Entries<T> = {
 	[K in keyof T]: [K, T[K]];
