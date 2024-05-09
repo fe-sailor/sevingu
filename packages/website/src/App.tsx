@@ -4,6 +4,7 @@ import MainPanel from './components/panel/MainPanel';
 import { useStore } from '@/stores/store';
 import { cn } from './lib/utils';
 import DualProcessedImageViewer from './components/dual-processed-image-viewer/DualProcessedImageViewer';
+import { useMessageListener } from './stores/messageStore';
 
 function App() {
 	const [, setCurImage, undo, redo, originalDownload] = useStore(state => [
@@ -43,6 +44,13 @@ function App() {
 			reader.readAsDataURL(file);
 		}
 	};
+
+	useMessageListener({
+		on: 'Any',
+		listener: state => {
+			console.log(state.message);
+		},
+	});
 
 	return (
 		<>

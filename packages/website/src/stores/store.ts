@@ -4,12 +4,7 @@ import {
 	SVG_RENDER_TYPES,
 	SvgSettingSvgurt,
 } from '@/lib/svg-renderers/svg-renderer-schema';
-import {
-	getFileUri,
-	getImageWidthAndHeight,
-	getSvgUrl,
-	getImageDataFromImageUri,
-} from '@/lib/utils';
+import { getFileUri, getImageWidthAndHeight, getSvgUrl } from '@/lib/utils';
 import { create } from 'zustand';
 import { ImageViewerStore } from './imageViewerStore';
 import { MessageStore, SevinguMessage } from './messageStore';
@@ -217,11 +212,15 @@ export const useStore = create<SevinguState>((set, get) => ({
 	renderOnViewer: async (
 		imageUri: string,
 		canvasRef: HTMLCanvasElement,
-		sevinguMessage: keyof typeof SevinguMessage
+		willSendSevinguMessage: keyof typeof SevinguMessage
 	) => {
 		const { width, height } = await getImageWidthAndHeight(imageUri);
-		canvasRef.height = height;
-		canvasRef.width = width;
+		if (canvasRef.height !== height) {
+			canvasRef.height = height;
+		}
+		if (canvasRef.width !== width) {
+			canvasRef.width = width;
+		}
 
 		const canvas2dContext = canvasRef.getContext('2d', {
 			// NOTE: canvas 성능향상을 위한 코드 임
@@ -231,21 +230,36 @@ export const useStore = create<SevinguState>((set, get) => ({
 			console.error('canvas context empty');
 			return;
 		}
-		const canvasFilter = new CanvasFilter(imageUri, canvas2dContext, {
-			grayscale: false,
-			invert: false,
-			blur: 0,
-			posterize: false,
-			posterizeLevels: 5,
-			edgeDetection: false,
-			lowThreshold: 20,
-			highThreshold: 50,
-			postBlur: 1,
-		});
+		const canvasFilter = new CanvasFilter(
+			imageUri,
+			canvas2dContext,
+			willSendSevinguMessage === 'SuccessToSvgRendered'
+				? {
+						grayscale: false,
+						invert: false,
+						blur: 0,
+						posterize: false,
+						posterizeLevels: 5,
+						edgeDetection: false,
+						lowThreshold: 20,
+						highThreshold: 50,
+						postBlur: 0,
+					}
+				: {
+						grayscale: false,
+						invert: false,
+						blur: 0,
+						posterize: false,
+						posterizeLevels: 5,
+						edgeDetection: false,
+						lowThreshold: 20,
+						highThreshold: 50,
+						postBlur: 1,
+					}
+		);
 		const imageData = await canvasFilter.renderImage();
-
 		canvas2dContext.putImageData(imageData, 0, 0);
-		get().sendMessage(sevinguMessage);
+		get().sendMessage(willSendSevinguMessage);
 	},
 
 	/** SvgViewerStore */
