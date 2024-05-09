@@ -19,7 +19,7 @@ export default function PanelElement({ id, name, style }: Controller) {
 	);
 	const changePanelState = useStore(state => state.changePanelState);
 	const changePanelValue = (
-		value: PanelEntries // boolean | number | keyof typeof SVGRenderTypes
+		value // boolean | number | keyof typeof SVGRenderTypes
 	) => {
 		changePanelState([id, value]);
 	};
