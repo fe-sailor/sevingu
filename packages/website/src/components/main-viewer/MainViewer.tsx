@@ -13,17 +13,17 @@ import {
 	ResizablePanelGroup,
 } from '@/components/ui/resizable';
 import { useRef, useEffect } from 'react';
-import { useSvgViewerStore } from '@/stores/svgViewerStore';
 import { useMessageListener } from '@/stores/messageStore';
 import { useDropZone } from '@reactuses/core';
 import { cn } from '@/lib/utils';
+import { useStore } from '@/stores/store';
 
 const MainViewer = () => {
+	const { setState } = useStore;
 	const imageViewerRef = useRef<HTMLCanvasElement | null>(null);
 	const { setImageViewer, showImage } = useImageViewerStore();
 
-	const svgViewerRef = useRef<HTMLDivElement | null>(null);
-	const { setSvgViewer } = useSvgViewerStore();
+	const svgViewerRef = useRef<HTMLCanvasElement | null>(null);
 
 	const dragOverRef = useRef<HTMLDivElement | null>(null);
 
@@ -80,8 +80,8 @@ const MainViewer = () => {
 		if (!svgViewerRef.current) {
 			return;
 		}
-		setSvgViewer(svgViewerRef.current);
-	}, [setSvgViewer]);
+		setState({ svgViewer: svgViewerRef.current });
+	}, [setState]);
 
 	return (
 		<>
@@ -106,9 +106,7 @@ const MainViewer = () => {
 						defaultSize={MAIN_VIEWER_PANEL_DEFAULT_SIZE_SVG}
 						collapsible
 						minSize={MAIN_VIEWER_PANEL_MIN_SIZE_SVG}>
-						<div
-							className="flex justify-center items-center"
-							ref={svgViewerRef}></div>
+						<canvas className="mx-auto" ref={svgViewerRef}></canvas>
 					</ResizablePanel>
 				</ResizablePanelGroup>
 			</div>

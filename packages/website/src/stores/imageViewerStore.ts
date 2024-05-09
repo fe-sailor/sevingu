@@ -1,4 +1,5 @@
 import { useStore } from '@/stores/store';
+import { SevinguMessage } from '@/stores/messageStore';
 
 export type ImageConfiguration = { blur: number };
 
@@ -13,7 +14,11 @@ export type ImageViewerStore = {
 	showImage: (imageBlob: Blob) => void;
 	updateConfig: (imageConfig: ImageConfiguration) => void;
 	showDefaultImage: () => void;
-	renderOnViewer: (imageUri: string, canvasRef: HTMLCanvasElement) => void;
+	renderOnViewer: (
+		imageUri: string,
+		canvasRef: HTMLCanvasElement,
+		sevinguMessage: keyof typeof SevinguMessage
+	) => void;
 };
 
 // NOTE: component 내에서 다음과 같이 사용하여 image config 가 canvas에 반영되도록 할 수 있음

@@ -140,3 +140,9 @@ export const getImageWidthAndHeight = async (
 	imageElement.src = imageUri;
 	return await promise;
 };
+
+export const getSvgUrl = (svgString: string): string => {
+	const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+	const url = URL.createObjectURL(blob);
+	return url;
+};
