@@ -28,7 +28,7 @@ export const useMessageStore = () =>
 	}));
 
 export type MessageListener = {
-	on: keyof typeof SevinguMessage;
+	on: keyof typeof SevinguMessage | 'Any';
 	listener: (state: SevinguState, prevState: SevinguState) => void;
 };
 
@@ -37,6 +37,16 @@ export const useMessageListener = (...listeners: MessageListener[]) => {
 		() =>
 			useStore.subscribe((state, prevState) => {
 				for (const { on, listener } of listeners) {
+					const isOnAnyMessage =
+						on === 'Any' &&
+						state.message !== prevState.message &&
+						state.message !== 'Default';
+
+					if (isOnAnyMessage) {
+						listener(state, prevState);
+						continue;
+					}
+
 					if (state.message === on) {
 						listener(state, prevState);
 					}
