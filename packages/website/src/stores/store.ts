@@ -1,14 +1,19 @@
 import { CanvasFilter } from '@/lib/canvas-filter/canvas-filter';
 import { SvgRenderer } from '@/lib/svg-renderers/svg-renderer';
 import {
-	SvgSettingSvgurt,
 	SVG_RENDER_TYPES,
+	SvgSettingSvgurt,
 } from '@/lib/svg-renderers/svg-renderer-schema';
-import { getFileUri, getImageWidthAndHeight } from '@/lib/utils';
+import {
+	getFileUri,
+	getImageWidthAndHeight,
+	getSvgUrl,
+	getImageDataFromImageUri,
+} from '@/lib/utils';
 import { create } from 'zustand';
 import { ImageViewerStore } from './imageViewerStore';
 import { MessageStore, SevinguMessage } from './messageStore';
-import { PanelState, PanelStateKey, SVGRenderTypes } from './storeType';
+import { SVGRenderTypes } from './storeType';
 import { SvgViewerStore } from './svgViewerStore';
 
 type Entries<T> = {
@@ -181,7 +186,7 @@ export const useStore = create<SevinguState>((set, get) => ({
 			return;
 		}
 
-		get().renderOnViewer(imagUri, imageViewer);
+		get().renderOnViewer(imagUri, imageViewer, 'SuccessToImageLoaded');
 	},
 	updateConfig: imageConfig => {
 		const imageViewer = get().imageViewer;
@@ -193,7 +198,7 @@ export const useStore = create<SevinguState>((set, get) => ({
 
 		set(() => ({ imageConfig: imageConfig }));
 
-		get().renderOnViewer(get().imageUri, imageViewer);
+		get().renderOnViewer(get().imageUri, imageViewer, 'SuccessToImageLoaded');
 	},
 	showDefaultImage: async () => {
 		const imageViewer = get().imageViewer;
@@ -203,9 +208,17 @@ export const useStore = create<SevinguState>((set, get) => ({
 			return;
 		}
 
-		get().renderOnViewer(get().defaultImageUri, imageViewer);
+		get().renderOnViewer(
+			get().defaultImageUri,
+			imageViewer,
+			'SuccessToImageLoaded'
+		);
 	},
-	renderOnViewer: async (imageUri: string, canvasRef: HTMLCanvasElement) => {
+	renderOnViewer: async (
+		imageUri: string,
+		canvasRef: HTMLCanvasElement,
+		sevinguMessage: keyof typeof SevinguMessage
+	) => {
 		const { width, height } = await getImageWidthAndHeight(imageUri);
 		canvasRef.height = height;
 		canvasRef.width = width;
@@ -232,13 +245,12 @@ export const useStore = create<SevinguState>((set, get) => ({
 		const imageData = await canvasFilter.renderImage();
 
 		canvas2dContext.putImageData(imageData, 0, 0);
-		get().sendMessage('SuccessToImageLoaded');
+		get().sendMessage(sevinguMessage);
 	},
 
 	/** SvgViewerStore */
 	svgViewer: null,
-	setSvgViewer: (svgViewer: HTMLDivElement) => set(() => ({ svgViewer })),
-	showSvg: () => {
+	showSvg: async () => {
 		const canvasRef = get().imageViewer;
 		if (!canvasRef) {
 			return;
@@ -256,17 +268,13 @@ export const useStore = create<SevinguState>((set, get) => ({
 			canvasRef.width,
 			canvasRef.height
 		);
-		const svgViewer = get().svgViewer;
-		if (!svgViewer) {
-			return;
-		}
 
 		const panelState = get().panelState;
 		const renderer = new SvgRenderer(
 			{
 				...panelState,
 				scale: 1,
-				svgRenderType: SVG_RENDER_TYPES.enum.CIRCLE,
+				svgRenderType: SVG_RENDER_TYPES.enum.CURVE,
 				// applyFractalDisplacement: '',
 				// fill: true,
 				// fillColor: '#000000',
@@ -296,8 +304,16 @@ export const useStore = create<SevinguState>((set, get) => ({
 			imageData.data
 		);
 
-		console.warn(renderer.renderSvg());
-		svgViewer.innerHTML = renderer.renderSvg();
+		const svgViewer = get().svgViewer;
+		if (!svgViewer) {
+			return;
+		}
+
+		get().renderOnViewer(
+			getSvgUrl(renderer.renderSvg()),
+			svgViewer,
+			'SuccessToSvgRendered'
+		);
 	},
 
 	/** controller 관련 */
@@ -312,12 +328,12 @@ export const useStore = create<SevinguState>((set, get) => ({
 		// highThreshold: 50,
 		//svg관련
 		scale: 1,
-		svgRenderType: SVGRenderTypes.CIRCLE, // SVG_RENDER_TYPES.enum.CIRCLE,
+		svgRenderType: SVGRenderTypes.CURVE, // SVG_RENDER_TYPES.enum.CIRCLE,
 		minColorRecognized: 10,
 		maxColorRecognized: 250,
 		// TODO: 성능을 위해 최소값 설정 필요
-		renderEveryXPixels: 12,
-		renderEveryYPixels: 12,
+		renderEveryXPixels: 6,
+		renderEveryYPixels: 6,
 		fill: true,
 		fillColor: 'rgb(28,32,38)',
 		stroke: true,
