@@ -4,7 +4,7 @@ import {
 	MAIN_VIEWER_PANEL_DEFAULT_SIZE_SVG,
 	MAIN_VIEWER_PANEL_MIN_SIZE_IMG,
 	MAIN_VIEWER_PANEL_MIN_SIZE_SVG,
-} from '@/components/main-viewer/const';
+} from '@/components/dual-processed-image-viewer/const';
 import { useImageViewerStore } from '@/stores/imageViewerStore';
 import type { PanelProps } from 'react-resizable-panels';
 import {
@@ -18,7 +18,7 @@ import { useDropZone } from '@reactuses/core';
 import { cn } from '@/lib/utils';
 import { useStore } from '@/stores/store';
 
-const MainViewer = () => {
+const DualProcessedImageViewer = () => {
 	const { setState } = useStore;
 	const imageViewerRef = useRef<HTMLCanvasElement | null>(null);
 	const { setImageViewer, showImage } = useImageViewerStore();
@@ -114,4 +114,4 @@ const MainViewer = () => {
 	);
 };
 
-export default MainViewer;
+export default DualProcessedImageViewer;

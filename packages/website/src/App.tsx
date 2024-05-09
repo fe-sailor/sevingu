@@ -1,9 +1,9 @@
 import { useRef, useCallback } from 'react'; // useCallback 추가
 import MainHeader from './components/header/MainHeader';
-import MainViewer from './components/main-viewer/MainViewer';
 import MainPanel from './components/panel/MainPanel';
 import { useStore } from '@/stores/store';
 import { cn } from './lib/utils';
+import DualProcessedImageViewer from './components/dual-processed-image-viewer/DualProcessedImageViewer';
 
 function App() {
 	const [, setCurImage, undo, redo, originalDownload] = useStore(state => [
@@ -48,7 +48,7 @@ function App() {
 		<>
 			<MainHeader />
 			<div className={cn('flex')}>
-				<MainViewer />
+				<DualProcessedImageViewer />
 				<MainPanel />
 			</div>
 		</>
