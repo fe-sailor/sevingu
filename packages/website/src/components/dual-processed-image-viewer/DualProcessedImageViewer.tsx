@@ -1,9 +1,10 @@
 import {
-	MAIN_VIEWER_HEIGHT,
-	MAIN_VIEWER_PANEL_DEFAULT_SIZE_IMG,
-	MAIN_VIEWER_PANEL_DEFAULT_SIZE_SVG,
-	MAIN_VIEWER_PANEL_MIN_SIZE_IMG,
-	MAIN_VIEWER_PANEL_MIN_SIZE_SVG,
+	HEIGHT,
+	PANEL_DEFAULT_SIZE_IMG,
+	PANEL_DEFAULT_SIZE_SVG,
+	PANEL_MIN_SIZE_IMG,
+	PANEL_MIN_SIZE_SVG,
+	SVG_VIEWER_ID,
 } from '@/components/dual-processed-image-viewer/const';
 import { useImageViewerStore } from '@/stores/imageViewerStore';
 import type { PanelProps } from 'react-resizable-panels';
@@ -92,21 +93,24 @@ const DualProcessedImageViewer = () => {
 						'border-lime-400 border-dashed bg-lime-50': isOver,
 					})}
 					style={{
-						height: MAIN_VIEWER_HEIGHT,
+						height: HEIGHT,
 					}}>
 					<ResizablePanel
-						defaultSize={MAIN_VIEWER_PANEL_DEFAULT_SIZE_IMG}
+						defaultSize={PANEL_DEFAULT_SIZE_IMG}
 						onResize={handleResizeImage}
 						collapsible
-						minSize={MAIN_VIEWER_PANEL_MIN_SIZE_IMG}>
+						minSize={PANEL_MIN_SIZE_IMG}>
 						<canvas className="mx-auto" ref={imageViewerRef}></canvas>
 					</ResizablePanel>
 					<ResizableHandle withHandle />
 					<ResizablePanel
-						defaultSize={MAIN_VIEWER_PANEL_DEFAULT_SIZE_SVG}
+						defaultSize={PANEL_DEFAULT_SIZE_SVG}
 						collapsible
-						minSize={MAIN_VIEWER_PANEL_MIN_SIZE_SVG}>
-						<canvas className="mx-auto" ref={svgViewerRef}></canvas>
+						minSize={PANEL_MIN_SIZE_SVG}>
+						<canvas
+							className="mx-auto"
+							ref={svgViewerRef}
+							id={SVG_VIEWER_ID}></canvas>
 					</ResizablePanel>
 				</ResizablePanelGroup>
 			</div>
