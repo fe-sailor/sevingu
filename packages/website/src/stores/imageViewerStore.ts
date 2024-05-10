@@ -11,7 +11,7 @@ export type ImageViewerStore = {
 	defaultImageUri: string;
 	imageBlob: Blob | null;
 	setImageViewer: (imageViewer: HTMLCanvasElement) => void;
-	showImage: (imageBlob: Blob) => void;
+	showImage: (imageBlob: Blob, isUndoRedoAction?: boolean) => void;
 	updateConfig: (imageConfig: ImageConfiguration) => void;
 	showDefaultImage: () => void;
 	renderOnViewer: (
