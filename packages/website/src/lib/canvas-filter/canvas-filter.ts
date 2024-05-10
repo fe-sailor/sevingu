@@ -18,6 +18,7 @@ export class CanvasFilter {
 
 	async renderImage(): Promise<ImageData> {
 		const { width, height, imageElement } = await this.getImageWidthAndHeight();
+		this.canvas2dContext.clearRect(0, 0, width, height);
 
 		this.canvas2dContext.drawImage(imageElement, 0, 0, width, height);
 		const imageData = this.canvas2dContext.getImageData(0, 0, width, height);
