@@ -23,21 +23,23 @@ export type SevinguImage = { imageBlob: Blob; setting: SvgSettingSvgurt };
 export type SevinguState =
   {
     undoRedoStack: SevinguImage[];
-	/**undo, redo pointer index*/
-	currentIndex: number;
-	hasShownDefaultImage: boolean;
-	getCurImage: () => SevinguImage | undefined;
+
+    /**undo, redo pointer index*/
+    currentIndex: number;
+    hasShownDefaultImage: boolean;
+    getCurImage: () => SevinguImage | undefined;
     setCurImage: (imageUri: Blob, isUndoRedoAction?: boolean) => void;
     undo: () => void;
     redo: () => void;
     download: () => void;
+
     /** controller 관련 */
     panelState: SvgSettingSvgurt; // PanelState; // SvgRenderer
     changePanelState:  (
-			[PanelStateKey, PanelEntries]
-        // key: PanelStateKey, // keyof SvgRenderer,
-        // value: PanelEntries // boolean | number | string | keyof typeof SVGRenderTypes
-      ) => void;
+      [PanelStateKey, PanelEntries] 
+      // key: PanelStateKey, // keyof SvgRenderer,
+      // value: PanelEntries // boolean | number | string | keyof typeof SVGRenderTypes
+    ) => void;
   }
   & ImageViewerStore
   & SvgViewerStore
@@ -279,6 +281,7 @@ export const useStore = create<SevinguState>(
 							postBlur: 1,
 						}
 			);
+
 			const imageData = await canvasFilter.renderImage();
 			canvas2dContext.putImageData(imageData, 0, 0);
 			get().sendMessage(willSendSevinguMessage);
