@@ -16,9 +16,11 @@ export const catchStoreError =
 				...prev,
 				[key]:
 					typeof value === 'function'
-						? async (...args: unknown[]) => {
+						? (...args: unknown[]) => {
 								try {
-									await value(...args);
+									value(...args)?.catch(error =>
+										errorHandler(error, ...parametersStateCreator)
+									);
 								} catch (error) {
 									errorHandler(error, ...parametersStateCreator);
 								}
