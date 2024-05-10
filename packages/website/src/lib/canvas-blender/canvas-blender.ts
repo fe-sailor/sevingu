@@ -33,7 +33,9 @@ export class ImageDataBlender {
 		this.blendAmount = elapsedTime / this.duration;
 		if (this.blendAmount > 1) this.blendAmount = 1; // 최대 블렌드 비율을 1로 제한
 
-		this.blendImageData(this.easeOutCubic(this.blendAmount));
+		this.blendImageData(
+			this.easeOutCubic(this.clamp({ from: 0, to: 1 }, this.blendAmount))
+		);
 
 		if (this.blendAmount < 1) {
 			requestAnimationFrame(this.updateFrame.bind(this));
@@ -50,14 +52,14 @@ export class ImageDataBlender {
 
 		for (let i = 0; i < blendedData.data.length; i += 4) {
 			blendedData.data[i] =
-				(blend * this.imgDataTo.data[i] || 255) +
-				(1 - blend) * this.imgDataFrom.data[i]; // Red
+				blend * (this.imgDataTo.data[i] || 255) +
+				(1 - blend) * (this.imgDataFrom.data[i] || 255); // Red
 			blendedData.data[i + 1] =
-				(blend * this.imgDataTo.data[i + 1] || 255) +
-				(1 - blend) * this.imgDataFrom.data[i + 1]; // Green
+				blend * (this.imgDataTo.data[i + 1] || 255) +
+				(1 - blend) * (this.imgDataFrom.data[i + 1] || 255); // Green
 			blendedData.data[i + 2] =
-				(blend * this.imgDataTo.data[i + 2] || 255) +
-				(1 - blend) * this.imgDataFrom.data[i + 2]; // Blue
+				blend * (this.imgDataTo.data[i + 2] || 255) +
+				(1 - blend) * (this.imgDataFrom.data[i + 2] || 255); // Blue
 			blendedData.data[i + 3] = 255; // Alpha
 		}
 
@@ -66,5 +68,22 @@ export class ImageDataBlender {
 
 	private easeOutCubic(x: number): number {
 		return 1 - Math.pow(1 - x, 3);
+	}
+
+	private clamp = (
+		{ from, to }: { from: number; to: number },
+		value: number
+	) => {
+		if (value < from) {
+			return from;
+		}
+		if (to < value) {
+			return to;
+		}
+		return value;
+	};
+
+	private clearRect() {
+		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 	}
 }
