@@ -30,7 +30,7 @@ export type SevinguState =
     /** controller 관련 */
     panelState: SvgSettingSvgurt; // PanelState; // SvgRenderer
     changePanelState:  (
-			[PanelStateKey, PanelEntries]
+			[PanelStateKey, PanelEntries]: [keyof SvgSettingSvgurt, SvgSettingSvgurt[keyof SvgSettingSvgurt]]
         // key: PanelStateKey, // keyof SvgRenderer,
         // value: PanelEntries // boolean | number | string | keyof typeof SVGRenderTypes
       ) => void;

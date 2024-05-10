@@ -10,10 +10,10 @@ export default function ImageControls() {
 	];
 
 	return (
-		<AccordionContent>
+		<>
 			{imageControls.map(imageControl => (
 				<PanelElement key={imageControl.id} {...imageControl} />
 			))}
-		</AccordionContent>
+		</>
 	);
 }

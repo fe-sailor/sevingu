@@ -21,6 +21,8 @@ import { Label } from '../ui/label';
 import { createElement, useState } from 'react';
 import CURVE from './accordionContent/svgControls/CURVE';
 
+const ACCORDION_TITLE = 'p-2 bg-[#c5f6fa] font-bold';
+
 export default function MainPanel() {
 	const checkPanelState = useStore(state => state.panelState);
 	const changePanelState = useStore(state => state.changePanelState);
@@ -69,26 +71,45 @@ export default function MainPanel() {
 	};
 
 	return (
-		<div className={'bg-white w-1/3'}>
+		<div className="bg-white w-1/3 ">
 			<Accordion type="multiple">
 				<AccordionItem value="item-1">
-					<AccordionTrigger>이미지 컨트롤</AccordionTrigger>
-					<ImageControls />
+					<AccordionTrigger className={ACCORDION_TITLE}>
+						이미지 컨트롤
+					</AccordionTrigger>
+					<AccordionContent className="p-4">
+						<ImageControls />
+					</AccordionContent>
 				</AccordionItem>
+
 				<AccordionItem value="item-2">
-					<AccordionTrigger>포스터화(Posterize)</AccordionTrigger>
-					<Posterize />
+					<AccordionTrigger className={ACCORDION_TITLE}>
+						포스터화(Posterize)
+					</AccordionTrigger>
+					<AccordionContent className="p-4">
+						<Posterize />
+					</AccordionContent>
 				</AccordionItem>
+
 				<AccordionItem value="item-3">
-					<AccordionTrigger>가장자리 감지</AccordionTrigger>
-					<EdgeDetection />
+					<AccordionTrigger className={ACCORDION_TITLE}>
+						가장자리 감지
+					</AccordionTrigger>
+					<AccordionContent className="p-4">
+						<EdgeDetection />
+					</AccordionContent>
 				</AccordionItem>
+
 				<AccordionItem value="item-4">
-					<AccordionTrigger>SVG 컨트롤</AccordionTrigger>
-					<AccordionContent>
+					<AccordionTrigger className={ACCORDION_TITLE}>
+						SVG 컨트롤
+					</AccordionTrigger>
+					<AccordionContent className="p-4">
 						{/* svg 타입 선택 */}
-						<div className="flex items-center space-x-2">
-							<Label htmlFor={'svgRenderType'}>svg렌더타입</Label>
+						<div className="flex items-center items-center space-x-2 mb-4">
+							<Label htmlFor={'svgRenderType'} className="block mb-2">
+								svg렌더타입
+							</Label>
 							<Select
 								onValueChange={(value: keyof typeof SVGRenderTypes) =>
 									changePanelValue(value)

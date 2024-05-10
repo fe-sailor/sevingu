@@ -11,8 +11,17 @@ import {
 	SelectValue,
 } from '../ui/select';
 import { PanelState, PanelStateKey } from '@/stores/storeType';
+import { RgbaColorPicker } from 'react-colorful';
+import ColorPicker from './feature/ColorPicker';
 
-export default function PanelElement({ id, name, style }: Controller) {
+export default function PanelElement({
+	id,
+	name,
+	style,
+	min = 0,
+	max = 100,
+	step = 1,
+}: Controller) {
 	const checkPanelIdState = useStore(
 		// (state: { panelState: PanelState }) => state.panelState[id as PanelStateKey]
 		state => state.panelState[id]
@@ -50,16 +59,26 @@ export default function PanelElement({ id, name, style }: Controller) {
 			name: '동심원',
 		},
 	];
+
 	return (
-		<>
-			<Label htmlFor={id}>{name}</Label>
+		<div className="mb-4 last:m-0 ">
+			<Label htmlFor={id} className="block mb-2">
+				{name}
+			</Label>
 			{style === 'switch' && (
-				<Switch id={id} onCheckedChange={value => changePanelValue(value)} />
+				<Switch
+					id={id}
+					// className="h-3"
+					onCheckedChange={value => changePanelValue(value)}
+				/>
 			)}
 			{style === 'slider' && (
-				<div className="w-full">
+				<div className="w-full flex">
 					<Slider
 						id={id}
+						min={min}
+						max={max}
+						step={step}
 						defaultValue={[checkPanelIdState as number]}
 						onValueChange={value => changePanelValue(value[0])}
 					/>
@@ -84,6 +103,7 @@ export default function PanelElement({ id, name, style }: Controller) {
 					</SelectContent>
 				</Select>
 			)}
-		</>
+			{style === 'color' && <ColorPicker />}
+		</div>
 	);
 }

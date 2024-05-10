@@ -17,4 +17,7 @@ export type Controller = {
 	id: PanelStateKey;
 	name: string;
 	style: ElementStyle;
+	min?: number;
+	max?: number;
+	step?: number;
 };
