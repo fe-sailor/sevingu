@@ -1,11 +1,11 @@
-// import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import logo from '@/assets/sevingu_logo.png';
-import { useImageViewerStore } from '@/stores/imageViewerStore';
+import { useStore } from '@/stores/store';
 import { useMessageListener } from '@/stores/messageStore';
 import { Input } from '../ui/input';
 
 const MainHeader = () => {
-	const { showImage } = useImageViewerStore();
+	const { showImage, undo, redo } = useStore();
 	const handleImageChange: React.ChangeEventHandler<
 		HTMLInputElement
 	> = event => {
@@ -24,6 +24,12 @@ const MainHeader = () => {
 				onChange={handleImageChange}
 				type="file"
 			/>
+			<Button variant="destructive" onClick={undo}>
+				undo
+			</Button>
+			<Button variant="destructive" onClick={redo}>
+				redo
+			</Button>
 		</div>
 	);
 };

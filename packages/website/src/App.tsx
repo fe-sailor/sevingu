@@ -7,14 +7,7 @@ import DualProcessedImageViewer from './components/dual-processed-image-viewer/D
 import { useMessageListener } from './stores/messageStore';
 
 function App() {
-	const [, setCurImage, undo, redo, originalDownload] = useStore(state => [
-		state.curImage,
-		state.setCurImage,
-		state.undo,
-		state.redo,
-		state.download,
-	]);
-	const fileInputRef = useRef<HTMLInputElement>(null);
+	const [originalDownload] = useStore(state => [state.download]);
 
 	// 광고를 표시하고 5초 후에 다운로드를 실행
 	const downloadWithAd = useCallback(() => {
@@ -25,25 +18,6 @@ function App() {
 			originalDownload();
 		}, 5000); // 5초 대기
 	}, [originalDownload]);
-
-	const handleUploadButtonClick = () => {
-		if (fileInputRef.current) {
-			fileInputRef.current.click();
-		}
-	};
-
-	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const file = e.target.files?.[0];
-		const reader = new FileReader();
-
-		reader.onloadend = () => {
-			setCurImage(reader.result as string);
-		};
-
-		if (file) {
-			reader.readAsDataURL(file);
-		}
-	};
 
 	useMessageListener({
 		on: 'Any',
