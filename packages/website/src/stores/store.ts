@@ -22,7 +22,7 @@ export type SevinguImage = { imageBlob: Blob; setting: SvgSettingSvgurt };
 // prettier-ignore
 export type SevinguState =
   {
-    images: SevinguImage[];
+    undoRedoStack: SevinguImage[];
 	/**undo, redo pointer index*/
 	currentIndex: number;
 	hasShownDefaultImage: boolean;
@@ -73,22 +73,22 @@ const svgSetting: SvgSettingSvgurt = {
 
 export const useStore = create<SevinguState>(
 	catchStoreError<SevinguState>(error => console.warn(error))((set, get) => ({
-		images: [],
+		undoRedoStack: [],
 		currentIndex: -1,
 		hasShownDefaultImage: true,
 		getCurImage: () => {
 			const idx = get().currentIndex;
 			if (idx === -1) return;
-			return get().images.at(idx);
+			return get().undoRedoStack.at(idx);
 		},
 
 		setCurImage: (imageBlob, isUndoRedoAction) =>
 			set(state => {
 				if (isUndoRedoAction !== true) {
-					const newImages = state.images.slice(0, state.currentIndex + 1);
-					newImages.push({ imageBlob, setting: state.panelState });
+					const newStack = state.undoRedoStack.slice(0, state.currentIndex + 1);
+					newStack.push({ imageBlob, setting: state.panelState });
 					return {
-						images: newImages,
+						undoRedoStack: newStack,
 						hasShownDefaultImage: false,
 						currentIndex: state.currentIndex + 1,
 					};
@@ -124,7 +124,7 @@ export const useStore = create<SevinguState>(
 		},
 
 		redo: () => {
-			if (get().images.length - 1 === get().currentIndex) return;
+			if (get().undoRedoStack.length - 1 === get().currentIndex) return;
 
 			set(state => {
 				return { currentIndex: state.currentIndex + 1 };
