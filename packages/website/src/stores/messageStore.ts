@@ -47,7 +47,6 @@ export const useMessageListener = (...listeners: MessageListener[]) => {
 						try {
 							listener(state, prevState);
 						} catch (error) {
-							console.log('?');
 							onError?.(error) ?? console.error(error);
 						}
 					}
