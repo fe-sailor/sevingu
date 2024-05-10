@@ -11,6 +11,8 @@ import { MessageStore, SevinguMessage } from './messageStore';
 import { SVGRenderTypes } from './storeType';
 import { SvgViewerStore } from './svgViewerStore';
 import { catchStoreError } from '@/stores/middleware';
+import { ImageDataBlender } from '@/lib/canvas-blender/canvas-blender';
+import { SVG_VIEWER_ID } from '@/components/dual-processed-image-viewer/const';
 
 type Entries<T> = {
 	[K in keyof T]: [K, T[K]];
@@ -177,6 +179,7 @@ export const useStore = create<SevinguState>(
 		imageUri: '',
 		defaultImageUri: '/sample_image.jpg',
 		imageBlob: null,
+		currentImageData: null,
 		setImageViewer: (imageViewer: HTMLCanvasElement) => {
 			const prevViewer = get().imageViewer;
 
@@ -282,9 +285,18 @@ export const useStore = create<SevinguState>(
 						}
 			);
 
-			const imageData = await canvasFilter.renderImage();
-			canvas2dContext.putImageData(imageData, 0, 0);
-			get().sendMessage(willSendSevinguMessage);
+			if (!get().currentImageData) {
+				set({
+					currentImageData: await canvasFilter.renderImage(),
+				});
+				canvas2dContext.putImageData(get().currentImageData!, 0, 0);
+				get().sendMessage(willSendSevinguMessage);
+				return;
+			}
+			const imageDataFrom = get().currentImageData!;
+			const imageDataTo = await canvasFilter.renderImage();
+			new ImageDataBlender(SVG_VIEWER_ID, imageDataFrom, imageDataTo, 200);
+			set({ currentImageData: imageDataTo });
 		},
 
 		/** SvgViewerStore */
