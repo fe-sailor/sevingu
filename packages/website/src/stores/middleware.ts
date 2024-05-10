@@ -18,9 +18,13 @@ export const catchStoreError =
 					typeof value === 'function'
 						? (...args: unknown[]) => {
 								try {
-									value(...args)?.catch(error =>
-										errorHandler(error, ...parametersStateCreator)
-									);
+									const result = value(...args);
+									if (result instanceof Promise) {
+										return result.catch(error =>
+											errorHandler(error, ...parametersStateCreator)
+										);
+									}
+									return result;
 								} catch (error) {
 									errorHandler(error, ...parametersStateCreator);
 								}
