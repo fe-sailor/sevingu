@@ -39,7 +39,7 @@ jobs:
           aws-region: ap-northeast-2
 
       - name: Deploy to S3
-        run: aws s3 sync --region ap-northeast-2 ./packages/website/dist/ s3://sevingu-bucket --delete
+        run: aws s3 sync --region ap-northeast-2 ./packages/website/dist/ ${{ secrets.AWS_SECRET_BUCKET_NAME }} --delete
 
       - name: invalidate cloudfront cache
         run: aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_SECRET_DISTRIBUTION_ID }} --paths "/*"
