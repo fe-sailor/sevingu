@@ -288,7 +288,7 @@ export const useStore = create<SevinguState>(
 							highThreshold: 50,
 							postBlur: 0,
 						}
-					: { ...ImagePanelState }
+					: ImagePanelState
 				// {
 				// 		grayscale: false,
 				// 		invert: false,
@@ -449,7 +449,6 @@ export const useStore = create<SevinguState>(
 						[key]: value,
 					},
 				}));
-				console.log(get().ImagePanelState, get().SvgPanelState);
 				const message =
 					panelType === 'Image' ? 'ChangeImageSetting' : 'ChangeSvgSetting';
 				get().sendMessage(message);
