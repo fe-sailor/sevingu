@@ -7,6 +7,7 @@ import {
 import * as StackBlur from 'stackblur-canvas';
 import { z } from 'zod';
 import jsfeat from 'jsfeat';
+
 export class CanvasFilter {
 	constructor(
 		private imageUri: string,
