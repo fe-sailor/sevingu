@@ -10,14 +10,18 @@ export type ImageViewerStore = {
 	imageUri: string;
 	defaultImageUri: string;
 	imageBlob: Blob | null;
+	currentImageData: ImageData | null;
 	setImageViewer: (imageViewer: HTMLCanvasElement) => void;
-	showImage: (imageBlob: Blob) => void;
+	showImage: (imageBlob: Blob, isUndoRedoAction?: boolean) => void;
 	updateConfig: (imageConfig: ImageConfiguration) => void;
 	showDefaultImage: () => void;
 	renderOnViewer: (
 		imageUri: string,
 		canvasRef: HTMLCanvasElement,
-		sevinguMessage: keyof typeof SevinguMessage
+		sevinguMessage: Extract<
+			keyof typeof SevinguMessage,
+			'SuccessToSvgRendered' | 'SuccessToImageLoaded'
+		>
 	) => void;
 };
 
@@ -44,6 +48,7 @@ export const useImageViewerStore = () =>
 		imageUri: state.imageUri,
 		defaultImageUri: state.defaultImageUri,
 		imageBlob: state.imageBlob,
+		currentImageData: state.currentImageData,
 		setImageViewer: state.setImageViewer,
 		showImage: state.showImage,
 		updateConfig: state.updateConfig,

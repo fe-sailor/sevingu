@@ -30,25 +30,25 @@ export const useMessageStore = () =>
 export type MessageListener = {
 	on: keyof typeof SevinguMessage | 'Any';
 	listener: (state: SevinguState, prevState: SevinguState) => void;
+	onError?: (error: unknown) => void;
 };
 
 export const useMessageListener = (...listeners: MessageListener[]) => {
 	useEffect(
 		() =>
 			useStore.subscribe((state, prevState) => {
-				for (const { on, listener } of listeners) {
+				for (const { on, listener, onError } of listeners) {
 					const isOnAnyMessage =
 						on === 'Any' &&
 						state.message !== prevState.message &&
 						state.message !== 'Default';
 
-					if (isOnAnyMessage) {
-						listener(state, prevState);
-						continue;
-					}
-
-					if (state.message === on) {
-						listener(state, prevState);
+					if (isOnAnyMessage || state.message === on) {
+						try {
+							listener(state, prevState);
+						} catch (error) {
+							onError?.(error) ?? console.error(error);
+						}
 					}
 				}
 			}),
