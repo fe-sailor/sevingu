@@ -60,7 +60,9 @@ export class ImageDataBlender {
 			blendedData.data[i + 2] =
 				blend * (this.imgDataTo.data[i + 2] || 255) +
 				(1 - blend) * (this.imgDataFrom.data[i + 2] || 255); // Blue
-			blendedData.data[i + 3] = 255; // Alpha
+			blendedData.data[i + 3] =
+				blend * (this.imgDataTo.data[i + 3] || 255) +
+				(1 - blend) * (this.imgDataFrom.data[i + 3] || 255); //Alpha
 		}
 
 		this.ctx.putImageData(blendedData, 0, 0);
@@ -82,8 +84,4 @@ export class ImageDataBlender {
 		}
 		return value;
 	};
-
-	private clearRect() {
-		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-	}
 }

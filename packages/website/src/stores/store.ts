@@ -295,7 +295,7 @@ export const useStore = create<SevinguState>(
 			}
 			const imageDataFrom = get().currentImageData!;
 			const imageDataTo = await canvasFilter.renderImage();
-			new ImageDataBlender(SVG_VIEWER_ID, imageDataFrom, imageDataTo, 200);
+			new ImageDataBlender(SVG_VIEWER_ID, imageDataFrom, imageDataTo, 300);
 			set({ currentImageData: imageDataTo });
 		},
 
