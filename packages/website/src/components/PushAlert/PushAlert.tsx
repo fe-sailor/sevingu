@@ -1,7 +1,6 @@
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useMessageListener } from '@/stores/messageStore';
 import { useStore } from '@/stores/store';
-import { Terminal } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export type PushMessage = {

@@ -19,9 +19,11 @@ import { useDropZone } from '@reactuses/core';
 import { cn } from '@/lib/utils';
 import { useStore } from '@/stores/store';
 import { ImageDataBlender } from '@/lib/canvas-blender/canvas-blender';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const DualProcessedImageViewer = () => {
 	const { setState } = useStore;
+	const [isShowViewers, setIsShowViewers] = useState(false);
 	const imageViewerRef = useRef<HTMLCanvasElement | null>(null);
 	const { setImageViewer, showImage } = useImageViewerStore();
 
@@ -31,14 +33,14 @@ const DualProcessedImageViewer = () => {
 	const [isImagePanelMinSize, setIsImagePanelMinSize] = useState(false);
 	const [isSvgPanelMinSize, setIsSvgPanelMinSize] = useState(false);
 
-	const handleResizeImage: PanelProps['onResize'] = (currentSize, b) => {
+	const handleResizeImage: PanelProps['onResize'] = currentSize => {
 		if (currentSize === PANEL_MIN_SIZE_IMG) {
 			setIsImagePanelMinSize(true);
 			return;
 		}
 		setIsImagePanelMinSize(false);
 	};
-	const handleResizeSvg: PanelProps['onResize'] = (currentSize, b) => {
+	const handleResizeSvg: PanelProps['onResize'] = currentSize => {
 		if (currentSize === PANEL_MIN_SIZE_SVG) {
 			setIsSvgPanelMinSize(true);
 			return;
@@ -64,6 +66,12 @@ const DualProcessedImageViewer = () => {
 			on: 'SuccessToImageLoaded',
 			listener: state => {
 				state.showSvg();
+			},
+		},
+		{
+			on: 'ReadyToShowDefaultImage',
+			listener: state => {
+				setIsShowViewers(true);
 			},
 		},
 		{
@@ -125,7 +133,17 @@ const DualProcessedImageViewer = () => {
 										'bg-slate-900/20': isImagePanelMinSize,
 									}
 								)}></div>
-							<canvas ref={imageViewerRef}></canvas>
+							<canvas
+								className={cn('invisible', { visible: isShowViewers })}
+								ref={imageViewerRef}></canvas>
+							{isShowViewers ? null : (
+								<Skeleton
+									className={cn(
+										'absolute h-[600px] w-4/5 min-w-64 max-w-96 rounded-lg bg-slate-200',
+										{}
+									)}
+								/>
+							)}
 						</div>
 					</ResizablePanel>
 					<ResizableHandle withHandle />
@@ -142,7 +160,18 @@ const DualProcessedImageViewer = () => {
 										'bg-slate-900/20': isSvgPanelMinSize,
 									}
 								)}></div>
-							<canvas ref={svgViewerRef} id={SVG_VIEWER_ID}></canvas>
+							<canvas
+								className={cn('invisible ', { visible: isShowViewers })}
+								ref={svgViewerRef}
+								id={SVG_VIEWER_ID}></canvas>
+							{isShowViewers ? null : (
+								<Skeleton
+									className={cn(
+										'absolute h-[600px] w-4/5 min-w-64 max-w-96 rounded-lg bg-slate-200',
+										{}
+									)}
+								/>
+							)}
 						</div>
 					</ResizablePanel>
 				</ResizablePanelGroup>

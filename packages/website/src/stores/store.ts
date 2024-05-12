@@ -318,11 +318,16 @@ export const useStore = create<SevinguState>(
 			svgImageBlender.startBlending();
 			set({ currentImageData: imageDataTo });
 			get().sendMessage(willSendSevinguMessage);
+			if (!get().isViewerInit) {
+				set({ isViewerInit: true });
+				get().sendMessage('ReadyToShowDefaultImage');
+			}
 		},
 
 		/** SvgViewerStore */
 		svgViewer: null,
 		svgImageBlender: null,
+		isViewerInit: false,
 		showSvg: async () => {
 			const canvasRef = get().imageViewer;
 			if (!canvasRef) {
