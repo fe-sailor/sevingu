@@ -3,7 +3,7 @@ import DualProcessedImageViewer from './components/dual-processed-image-viewer/D
 import MainHeader from './components/header/MainHeader';
 import MainPanel from './components/panel/MainPanel';
 import { useMessageListener } from './stores/messageStore';
-import PushAlert from './components/PushAlert/PushAlert';
+import PushAlert from './components/push-alert/PushAlert';
 
 function App() {
 	useMessageListener({

@@ -14,7 +14,7 @@ import { SvgViewerStore } from './svgViewerStore';
 import {
 	PushMessage,
 	PushMessageStore,
-} from '@/components/PushAlert/PushAlert';
+} from '@/components/push-alert/PushAlert';
 
 type Entries<T> = {
 	[K in keyof T]: [K, T[K]];
