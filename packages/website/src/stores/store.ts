@@ -9,8 +9,9 @@ import { catchStoreError } from '@/stores/middleware';
 import { create } from 'zustand';
 import { ImageViewerStore } from './imageViewerStore';
 import { MessageStore, SevinguMessage } from './messageStore';
-import { SVGRenderTypes } from './storeType';
 import { SvgViewerStore } from './svgViewerStore';
+import { CanvasSettingSvgurt } from '@/lib/canvas-filter/canvas-filter-schema';
+import { PanelType } from '@/components/panel/panel';
 import {
 	PushMessage,
 	PushMessageStore,
@@ -38,12 +39,13 @@ export type SevinguState =
     download: () => void;
 
     /** controller 관련 */
-    panelState: SvgSettingSvgurt; // PanelState; // SvgRenderer
-    changePanelState:  (
-      [PanelStateKey, PanelEntries] 
-      // key: PanelStateKey, // keyof SvgRenderer,
-      // value: PanelEntries // boolean | number | string | keyof typeof SVGRenderTypes
-    ) => void;
+		ImagePanelState: CanvasSettingSvgurt;
+    SvgPanelState: SvgSettingSvgurt; // PanelState; // SvgRenderer
+		changePanelState:  (
+			panelType: PanelType ,[PanelStateKey, PanelEntries]: [keyof SvgSettingSvgurt, SvgSettingSvgurt[keyof SvgSettingSvgurt]]
+				// key: PanelStateKey, // keyof SvgRenderer,
+				// value: PanelEntries // boolean | number | string | keyof typeof SVGRenderTypes
+			) => void;
   }
   & ImageViewerStore
   & SvgViewerStore
@@ -107,7 +109,7 @@ export const useStore = create<SevinguState>(
 			set(state => {
 				if (isUndoRedoAction !== true) {
 					const newStack = state.undoRedoStack.slice(0, state.currentIndex + 1);
-					newStack.push({ imageBlob, setting: state.panelState });
+					newStack.push({ imageBlob, setting: state.SvgPanelState });
 					return {
 						undoRedoStack: newStack,
 						hasShownDefaultImage: false,
@@ -270,6 +272,7 @@ export const useStore = create<SevinguState>(
 				console.error('canvas context empty');
 				return;
 			}
+			const ImagePanelState = get().ImagePanelState;
 			const canvasFilter = new CanvasFilter(
 				imageUri,
 				canvas2dContext,
@@ -285,17 +288,18 @@ export const useStore = create<SevinguState>(
 							highThreshold: 50,
 							postBlur: 0,
 						}
-					: {
-							grayscale: false,
-							invert: false,
-							blur: 0,
-							posterize: false,
-							posterizeLevels: 5,
-							edgeDetection: false,
-							lowThreshold: 20,
-							highThreshold: 50,
-							postBlur: 1,
-						}
+					: ImagePanelState
+				// {
+				// 		grayscale: false,
+				// 		invert: false,
+				// 		blur: 0,
+				// 		posterize: false,
+				// 		posterizeLevels: 5,
+				// 		edgeDetection: false,
+				// 		lowThreshold: 20,
+				// 		highThreshold: 50,
+				// 		postBlur: 1,
+				// 	}
 			);
 
 			if (!get().currentImageData) {
@@ -346,12 +350,12 @@ export const useStore = create<SevinguState>(
 				canvasRef.height
 			);
 
-			const panelState = get().panelState;
+			const SVGpanelState = get().SvgPanelState;
 			const renderer = new SvgRenderer(
 				{
-					...panelState,
-					scale: 1,
-					svgRenderType: SVG_RENDER_TYPES.enum.CURVE,
+					...SVGpanelState,
+					// scale: 1,
+					// svgRenderType: SVG_RENDER_TYPES.enum.CURVE,
 					// applyFractalDisplacement: '',
 					// fill: true,
 					// fillColor: '#000000',
@@ -394,18 +398,21 @@ export const useStore = create<SevinguState>(
 		},
 
 		/** controller 관련 */
-		panelState: {
-			// grayscale: false,
-			// invert: false,
-			// blur: 0,
-			// posterize: false,
-			// posterizeLevels: 5,
-			// edgeDetection: false,
-			// lowThreshold: 20,
-			// highThreshold: 50,
+		ImagePanelState: {
+			grayscale: false,
+			invert: false,
+			blur: 0,
+			posterize: false,
+			posterizeLevels: 5,
+			edgeDetection: false,
+			lowThreshold: 20,
+			highThreshold: 50,
+			postBlur: 0,
+		},
+		SvgPanelState: {
 			//svg관련
 			scale: 1,
-			svgRenderType: SVGRenderTypes.CURVE, // SVG_RENDER_TYPES.enum.CIRCLE,
+			svgRenderType: SVG_RENDER_TYPES.enum.CIRCLE, // SVGRenderTypes.CURVE, // SVG_RENDER_TYPES.enum.CIRCLE,
 			minColorRecognized: 10,
 			maxColorRecognized: 250,
 			// TODO: 성능을 위해 최소값 설정 필요
@@ -433,16 +440,32 @@ export const useStore = create<SevinguState>(
 			// 프렉탈
 			applyFractalDisplacement: '',
 		},
-		changePanelState: ([key, value]) => {
-			set(state => ({
-				...state,
-				panelState: {
-					...state.panelState,
-					[key]: value,
-				},
-			}));
-			get().sendMessage('ChangeSvgSetting');
+		changePanelState: (panelType, [key, value]) => {
+			if (panelType === 'Image' || panelType === 'Svg') {
+				set(state => ({
+					...state,
+					[`${panelType}panelState`]: {
+						...state[`${panelType}panelState`],
+						[key]: value,
+					},
+				}));
+				const message =
+					panelType === 'Image' ? 'ChangeImageSetting' : 'ChangeSvgSetting';
+				get().sendMessage(message);
+			} else {
+				console.error('Invalid panel type. Must be "Image" or "Svg".');
+			}
 		},
+		// changePanelState: ([key, value]) => {
+		// 	set(state => ({
+		// 		...state,
+		// 		SVGpanelState: {
+		// 			...state.SVGpanelState,
+		// 			[key]: value,
+		// 		},
+		// 	}));
+		// 	get().sendMessage('ChangeSvgSetting');
+		// },
 
 		/** MessageStore */
 		message: SevinguMessage.Default,

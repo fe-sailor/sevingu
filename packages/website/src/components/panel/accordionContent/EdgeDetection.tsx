@@ -12,7 +12,11 @@ export default function EdgeDetection() {
 	return (
 		<AccordionContent>
 			{imageControls.map(imageControl => (
-				<PanelElement key={imageControl.id} {...imageControl} />
+				<PanelElement
+					key={imageControl.id}
+					panelType={'Image'}
+					{...imageControl}
+				/>
 			))}
 		</AccordionContent>
 	);

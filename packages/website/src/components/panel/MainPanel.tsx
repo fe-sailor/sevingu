@@ -21,19 +21,30 @@ import { Label } from '../ui/label';
 import { createElement, useState } from 'react';
 import CURVE from './accordionContent/svgControls/CURVE';
 import { Rnd } from 'react-rnd';
+import PanelElement from './panelElement';
+
+const ACCORDION_TITLE = 'p-2 bg-[#c5f6fa] font-bold';
 
 export default function MainPanel() {
-	const checkPanelState = useStore(state => state.panelState);
+	const checkSvgPanelState = useStore(state => state.SvgPanelState);
 	const changePanelState = useStore(state => state.changePanelState);
-	console.log(checkPanelState);
+	console.log(checkSvgPanelState);
 
 	const [svgSelect, setSvgSelect] = useState<keyof typeof SVGRenderTypes>(
-		checkPanelState.svgRenderType
+		checkSvgPanelState.svgRenderType
 	);
 
 	const changePanelValue = (value: keyof typeof SVGRenderTypes) => {
-		changePanelState(['svgRenderType', value]);
+		changePanelState('Svg', ['svgRenderType', value]);
 		setSvgSelect(value);
+	};
+
+	const postBlur = {
+		id: 'postBlur',
+		name: '후처리 블러',
+		style: 'slider',
+		min: 0,
+		max: 30,
 	};
 
 	const svgSelectList = [
@@ -85,23 +96,54 @@ export default function MainPanel() {
 			<div className="bg-white">
 				<Accordion type="multiple">
 					<AccordionItem value="item-1">
-						<AccordionTrigger>이미지 컨트롤</AccordionTrigger>
-						<ImageControls />
-					</AccordionItem>
-					<AccordionItem value="item-2">
-						<AccordionTrigger>포스터화(Posterize)</AccordionTrigger>
-						<Posterize />
-					</AccordionItem>
-					<AccordionItem value="item-3">
-						<AccordionTrigger>가장자리 감지</AccordionTrigger>
-						<EdgeDetection />
-					</AccordionItem>
-					<AccordionItem value="item-4">
-						<AccordionTrigger>SVG 컨트롤</AccordionTrigger>
+						<AccordionTrigger className={ACCORDION_TITLE}>
+							이미지 컨트롤
+						</AccordionTrigger>
 						<AccordionContent>
+							<ImageControls />
+							{/* 테스트 */}
+							{/* <AccordionItem value="item-1-1">
+								<AccordionTrigger className={ACCORDION_TITLE}>
+									이미지 컨트롤
+								</AccordionTrigger>
+								<AccordionContent className="p-4">
+									<ImageControls />
+								</AccordionContent>
+							</AccordionItem> */}
+							{/* 테스트 */}
+
+							<AccordionItem value="item-2">
+								<AccordionTrigger className={ACCORDION_TITLE}>
+									포스터화(Posterize)
+								</AccordionTrigger>
+								<AccordionContent className="p-4">
+									<Posterize />
+								</AccordionContent>
+							</AccordionItem>
+
+							<AccordionItem value="item-3">
+								<AccordionTrigger className={ACCORDION_TITLE}>
+									가장자리 감지
+								</AccordionTrigger>
+								<AccordionContent className="p-4">
+									<EdgeDetection />
+								</AccordionContent>
+							</AccordionItem>
+
+							<PanelElement panelType={'Image'} {...postBlur} />
+						</AccordionContent>
+					</AccordionItem>
+
+					<AccordionItem value="item-4">
+						<AccordionTrigger className={ACCORDION_TITLE}>
+							SVG 컨트롤
+						</AccordionTrigger>
+						<AccordionContent className="p-4">
 							{/* svg 타입 선택 */}
-							<div className="flex items-center space-x-2">
-								<Label htmlFor={'svgRenderType'}>svg렌더타입</Label>
+							<div className="flex items-center space-x-2 mb-4">
+								<Label htmlFor={'svgRenderType'} className="block mb-2">
+									svg렌더타입
+								</Label>
 								<Select
 									onValueChange={(value: keyof typeof SVGRenderTypes) =>
 										changePanelValue(value)
