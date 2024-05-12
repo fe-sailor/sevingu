@@ -236,11 +236,7 @@ export const useStore = create<SevinguState>(
 				'SuccessToImageLoaded'
 			);
 		},
-		renderOnViewer: async (
-			imageUri: string,
-			canvasRef: HTMLCanvasElement,
-			willSendSevinguMessage: keyof typeof SevinguMessage
-		) => {
+		renderOnViewer: async (imageUri, canvasRef, willSendSevinguMessage) => {
 			const { width, height } = await getImageWidthAndHeight(imageUri);
 			if (canvasRef.height !== height) {
 				canvasRef.height = height;
@@ -295,12 +291,21 @@ export const useStore = create<SevinguState>(
 			}
 			const imageDataFrom = get().currentImageData!;
 			const imageDataTo = await canvasFilter.renderImage();
-			new ImageDataBlender(SVG_VIEWER_ID, imageDataFrom, imageDataTo, 200);
+
+			const svgImageBlender = get().svgImageBlender!;
+			svgImageBlender.stopBlending();
+			svgImageBlender.setImages(
+				svgImageBlender.currentImgData ?? imageDataFrom,
+				imageDataTo
+			);
+			svgImageBlender.startBlending();
 			set({ currentImageData: imageDataTo });
+			get().sendMessage(willSendSevinguMessage);
 		},
 
 		/** SvgViewerStore */
 		svgViewer: null,
+		svgImageBlender: null,
 		showSvg: async () => {
 			const canvasRef = get().imageViewer;
 			if (!canvasRef) {

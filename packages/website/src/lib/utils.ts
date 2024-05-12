@@ -146,3 +146,5 @@ export const getSvgUrl = (svgString: string): string => {
 	const url = URL.createObjectURL(blob);
 	return url;
 };
+
+export const isProd = () => location.protocol.includes('https');

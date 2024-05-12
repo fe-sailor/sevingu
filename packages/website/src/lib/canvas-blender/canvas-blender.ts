@@ -1,36 +1,70 @@
+const DEFAULT_BASE_DURATION = 200;
+
+export const BlenderState = {
+	Idle: 'Idle',
+	Blending: 'Blending',
+} as const;
+
 export class ImageDataBlender {
+	public currentImgData: ImageData | null = null;
 	private canvas: HTMLCanvasElement;
 	private ctx: CanvasRenderingContext2D;
-	private imgDataFrom: ImageData;
-	private imgDataTo: ImageData;
+	private imgDataFrom: ImageData | null = null;
+	private imgDataTo: ImageData | null = null;
 	private startTime: number | null;
 	private blendAmount: number;
+	private baseDuration: number;
+	private state: keyof typeof BlenderState = 'Idle';
 
 	constructor(
 		canvasId: string,
-		imgDataFrom: ImageData,
-		imgDataTo: ImageData,
-		private duration: number
+		private duration?: number
 	) {
-		this.canvas = document.getElementById(canvasId) as HTMLCanvasElement;
-		this.ctx = this.canvas.getContext('2d')!;
-		this.imgDataFrom = imgDataFrom;
-		this.imgDataTo = imgDataTo;
+		const canvas = document.getElementById(canvasId);
+		if (!canvas) {
+			throw new Error(
+				`Cannot find canvas: No element with ID '${canvasId}' exists in the document.`
+			);
+		}
+		if (!(canvas instanceof HTMLCanvasElement)) {
+			throw new Error(
+				`Cannot find canvas: The element with ID '${canvasId}' is not a canvas.`
+			);
+		}
+		this.canvas = canvas;
+		this.ctx = this.canvas.getContext('2d', { willReadFrequently: false })!;
 		this.startTime = null;
 		this.blendAmount = 0;
-
-		this.startBlending();
+		this.baseDuration = this.duration ?? DEFAULT_BASE_DURATION;
 	}
 
-	private startBlending(): void {
+	startBlending(duration?: number): void {
+		if (!this.imgDataFrom || !this.imgDataTo) {
+			console.error(`Cannot find images to blend`);
+			return;
+		}
+		this.state = BlenderState.Blending;
+		this.duration = duration;
 		this.startTime = performance.now();
-		this.updateFrame(performance.now()); // 애니메이션 시작
+		requestAnimationFrame(() => this.updateFrame(performance.now())); // 애니메이션 시작
+	}
+
+	stopBlending(): void {
+		this.state = BlenderState.Idle;
+	}
+
+	setImages(imgDataFrom: ImageData, imgDataTo: ImageData): void {
+		this.imgDataFrom = imgDataFrom;
+		this.imgDataTo = imgDataTo;
 	}
 
 	private updateFrame(timestamp: number): void {
+		if (this.state !== BlenderState.Blending) {
+			return;
+		}
 		if (!this.startTime) this.startTime = timestamp; // 시작 시간 초기화
 		const elapsedTime = timestamp - this.startTime;
-		this.blendAmount = elapsedTime / this.duration;
+		this.blendAmount = elapsedTime / (this.duration ?? this.baseDuration);
 		if (this.blendAmount > 1) this.blendAmount = 1; // 최대 블렌드 비율을 1로 제한
 
 		this.blendImageData(
@@ -40,7 +74,9 @@ export class ImageDataBlender {
 		if (this.blendAmount < 1) {
 			requestAnimationFrame(this.updateFrame.bind(this));
 		} else {
-			this.ctx.putImageData(this.imgDataTo, 0, 0); // 최종 이미지 표시
+			this.ctx.putImageData(this.imgDataTo!, 0, 0); // 최종 이미지 표시
+			this.currentImgData = null;
+			this.state = BlenderState.Idle;
 		}
 	}
 
@@ -52,17 +88,20 @@ export class ImageDataBlender {
 
 		for (let i = 0; i < blendedData.data.length; i += 4) {
 			blendedData.data[i] =
-				blend * (this.imgDataTo.data[i] || 255) +
-				(1 - blend) * (this.imgDataFrom.data[i] || 255); // Red
+				blend * (this.imgDataTo!.data[i] || 255) +
+				(1 - blend) * (this.imgDataFrom!.data[i] || 255); // Red
 			blendedData.data[i + 1] =
-				blend * (this.imgDataTo.data[i + 1] || 255) +
-				(1 - blend) * (this.imgDataFrom.data[i + 1] || 255); // Green
+				blend * (this.imgDataTo!.data[i + 1] || 255) +
+				(1 - blend) * (this.imgDataFrom!.data[i + 1] || 255); // Green
 			blendedData.data[i + 2] =
-				blend * (this.imgDataTo.data[i + 2] || 255) +
-				(1 - blend) * (this.imgDataFrom.data[i + 2] || 255); // Blue
-			blendedData.data[i + 3] = 255; // Alpha
+				blend * (this.imgDataTo!.data[i + 2] || 255) +
+				(1 - blend) * (this.imgDataFrom!.data[i + 2] || 255); // Blue
+			blendedData.data[i + 3] =
+				blend * this.imgDataTo!.data[i + 3] +
+				(1 - blend) * this.imgDataFrom!.data[i + 3]; //Alpha
 		}
 
+		this.currentImgData = blendedData;
 		this.ctx.putImageData(blendedData, 0, 0);
 	}
 
@@ -82,8 +121,4 @@ export class ImageDataBlender {
 		}
 		return value;
 	};
-
-	private clearRect() {
-		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-	}
 }

@@ -18,6 +18,7 @@ import { useMessageListener } from '@/stores/messageStore';
 import { useDropZone } from '@reactuses/core';
 import { cn } from '@/lib/utils';
 import { useStore } from '@/stores/store';
+import { ImageDataBlender } from '@/lib/canvas-blender/canvas-blender';
 
 const DualProcessedImageViewer = () => {
 	const { setState } = useStore;
@@ -81,7 +82,10 @@ const DualProcessedImageViewer = () => {
 		if (!svgViewerRef.current) {
 			return;
 		}
-		setState({ svgViewer: svgViewerRef.current });
+		setState({
+			svgViewer: svgViewerRef.current,
+			svgImageBlender: new ImageDataBlender(SVG_VIEWER_ID),
+		});
 	}, [setState]);
 
 	return (
