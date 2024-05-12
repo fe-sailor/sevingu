@@ -63,14 +63,6 @@ const DualProcessedImageViewer = () => {
 		{
 			on: 'SetImageViewerFirstTime',
 			listener: state => {
-				Promise.resolve().then(() =>
-					state.svgImageBlender?.onBlendingFinished(() => {
-						if (!state.isViewerInit) {
-							state.setIsViewerInit(true);
-							state.sendMessage('ReadyToShowDefaultImage');
-						}
-					})
-				);
 				state.showDefaultImage();
 			},
 		},
