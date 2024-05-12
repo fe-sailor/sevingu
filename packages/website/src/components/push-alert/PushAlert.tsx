@@ -39,8 +39,8 @@ const PushAlert = () => {
 	return isShowing ? (
 		<div
 			onAnimationEnd={handleAnimationEnd}
-			className="relative w-screen animate-push-alert opacity-0">
-			<Alert className="absolute left-1/2 -translate-x-1/2 h-20 w-80 bottom-0 bg-slate-50">
+			className="relative w-screen animate-push-alert opacity-0 z-20">
+			<Alert className="absolute left-1/2 -translate-x-1/2 h-20 w-80 bottom-0 bg-slate-50 border-2 border-slate-700">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					fill="none"
