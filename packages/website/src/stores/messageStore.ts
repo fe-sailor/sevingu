@@ -17,6 +17,8 @@ export const SevinguMessage = {
 	ChangeSvgSetting: 'ChangeSvgSetting',
 	ChangeImageSetting: 'ChangeImageSetting',
 	EndedGoogleAd: 'EndedGoogleAd',
+	ShowPushAlert: 'ShowPushAlert',
+	ReadyToShowDefaultImage: 'ReadyToShowDefaultImage',
 } as const;
 
 export const useMessageStore = () =>

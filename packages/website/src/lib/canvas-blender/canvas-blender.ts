@@ -15,6 +15,7 @@ export class ImageDataBlender {
 	private blendAmount: number;
 	private baseDuration: number;
 	private state: keyof typeof BlenderState = 'Idle';
+	private onBlendingListeners: Set<() => void> = new Set();
 
 	constructor(
 		canvasId: string,
@@ -58,6 +59,13 @@ export class ImageDataBlender {
 		this.imgDataTo = imgDataTo;
 	}
 
+	onBlendingFinished(callback: () => void) {
+		this.onBlendingListeners.add(callback);
+		return () => {
+			this.onBlendingListeners.delete(callback);
+		};
+	}
+
 	private updateFrame(timestamp: number): void {
 		if (this.state !== BlenderState.Blending) {
 			return;
@@ -77,6 +85,9 @@ export class ImageDataBlender {
 			this.ctx.putImageData(this.imgDataTo!, 0, 0); // 최종 이미지 표시
 			this.currentImgData = null;
 			this.state = BlenderState.Idle;
+			this.onBlendingListeners.forEach(listener => {
+				listener();
+			});
 		}
 	}
 

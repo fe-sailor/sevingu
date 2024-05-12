@@ -5,13 +5,17 @@ import {
 	SvgSettingSvgurt,
 } from '@/lib/svg-renderers/svg-renderer-schema';
 import { getFileUri, getImageWidthAndHeight, getSvgUrl } from '@/lib/utils';
+import { catchStoreError } from '@/stores/middleware';
 import { create } from 'zustand';
 import { ImageViewerStore } from './imageViewerStore';
 import { MessageStore, SevinguMessage } from './messageStore';
 import { SvgViewerStore } from './svgViewerStore';
-import { catchStoreError } from '@/stores/middleware';
 import { CanvasSettingSvgurt } from '@/lib/canvas-filter/canvas-filter-schema';
 import { PanelType } from '@/components/panel/panel';
+import {
+	PushMessage,
+	PushMessageStore,
+} from '@/components/push-alert/PushAlert';
 
 type Entries<T> = {
 	[K in keyof T]: [K, T[K]];
@@ -45,7 +49,8 @@ export type SevinguState =
   }
   & ImageViewerStore
   & SvgViewerStore
-  & MessageStore;
+  & MessageStore
+  & PushMessageStore;
 
 const svgSetting: SvgSettingSvgurt = {
 	scale: 1,
@@ -76,7 +81,21 @@ const svgSetting: SvgSettingSvgurt = {
 };
 
 export const useStore = create<SevinguState>(
-	catchStoreError<SevinguState>(error => console.warn(error))((set, get) => ({
+	catchStoreError<SevinguState>((error, set, get) => {
+		console.warn(error);
+		if (!(error instanceof Error)) {
+			return;
+		}
+		if (error.message.includes('Failed to load image')) {
+			set({
+				pushMessage: {
+					title: '이미지 파일이 맞는지 확인해주세요',
+					description: '에러가 발생했습니다',
+				},
+			});
+			get().sendMessage('ShowPushAlert');
+		}
+	})((set, get) => ({
 		undoRedoStack: [],
 		currentIndex: -1,
 		hasShownDefaultImage: true,
@@ -308,6 +327,10 @@ export const useStore = create<SevinguState>(
 		/** SvgViewerStore */
 		svgViewer: null,
 		svgImageBlender: null,
+		isViewerInit: false,
+		setIsViewerInit: (isViewerInit: boolean) => {
+			set({ isViewerInit: isViewerInit });
+		},
 		showSvg: async () => {
 			const canvasRef = get().imageViewer;
 			if (!canvasRef) {
@@ -451,6 +474,16 @@ export const useStore = create<SevinguState>(
 		sendMessage: message => {
 			get().setMessage(message);
 			get().resetMessage();
+		},
+
+		/** PushAlert */
+		pushMessage: {
+			title: '제목입니다',
+			description: '설명설명설명설명설명설명설명설명',
+		},
+		pushMessageQueue: [],
+		enqueuePushMessage: (pushMessage: PushMessage) => {
+			set({ pushMessageQueue: [...get().pushMessageQueue, pushMessage] });
 		},
 	}))
 );

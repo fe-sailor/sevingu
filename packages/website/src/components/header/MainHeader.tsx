@@ -1,8 +1,8 @@
-import { Button } from '@/components/ui/button';
 import logo from '@/assets/sevingu_logo.png';
+import { Button } from '@/components/ui/button';
 import { useStore } from '@/stores/store';
-import { Input } from '../ui/input';
 import { useCallback } from 'react';
+import { Input } from '../ui/input';
 
 const MainHeader = () => {
 	const { showImage, undo, redo, download } = useStore();
@@ -29,12 +29,17 @@ const MainHeader = () => {
 	return (
 		<div className={'flex gap-9'}>
 			<img className="w-10 h-10" src={logo} alt="logo" />
-			<Input
-				className={'basis-1/4'}
-				accept="image/*"
-				onChange={handleImageChange}
-				type="file"
-			/>
+
+			<Button variant="destructive" onClick={undo}>
+				<label>
+					<span>upload</span>
+					<input
+						className="hidden"
+						accept="image/*"
+						onChange={handleImageChange}
+						type="file"></input>
+				</label>
+			</Button>
 			<Button variant="destructive" onClick={undo}>
 				undo
 			</Button>
