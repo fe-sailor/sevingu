@@ -25,16 +25,7 @@ function App() {
 			<MainHeader />
 			<div className={cn('flex')}>
 				<DualProcessedImageViewer />
-				{/* ref: https://github.com/bokuweb/react-rnd */}
-				<Rnd
-					default={{
-						x: 0,
-						y: 0,
-						width: 320,
-						height: 200,
-					}}>
-					<MainPanel />
-				</Rnd>
+				<MainPanel />
 			</div>
 		</>
 	);
