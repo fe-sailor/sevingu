@@ -28,7 +28,6 @@ const ACCORDION_TITLE = 'p-2 bg-[#c5f6fa] font-bold';
 export default function MainPanel() {
 	const checkSvgPanelState = useStore(state => state.SvgPanelState);
 	const changePanelState = useStore(state => state.changePanelState);
-	console.log(checkSvgPanelState);
 
 	const [svgSelect, setSvgSelect] = useState<keyof typeof SVGRenderTypes>(
 		checkSvgPanelState.svgRenderType

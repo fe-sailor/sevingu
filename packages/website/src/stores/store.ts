@@ -413,17 +413,17 @@ export const useStore = create<SevinguState>(
 			//svg관련
 			scale: 1,
 			svgRenderType: SVG_RENDER_TYPES.enum.CIRCLE, // SVGRenderTypes.CURVE, // SVG_RENDER_TYPES.enum.CIRCLE,
-			minColorRecognized: 10,
-			maxColorRecognized: 250,
+			minColorRecognized: 50,
+			maxColorRecognized: 200,
 			// TODO: 성능을 위해 최소값 설정 필요
 			renderEveryXPixels: 6,
 			renderEveryYPixels: 6,
 			fill: true,
 			fillColor: 'rgb(28,32,38)',
 			stroke: true,
-			radius: 2,
+			radius: 4,
 			radiusOnColor: true,
-			radiusRandomness: 1,
+			radiusRandomness: 0.2,
 			// 커브에서 추가된것
 			autoColor: true,
 			strokeColor: '',
@@ -444,8 +444,8 @@ export const useStore = create<SevinguState>(
 			if (panelType === 'Image' || panelType === 'Svg') {
 				set(state => ({
 					...state,
-					[`${panelType}panelState`]: {
-						...state[`${panelType}panelState`],
+					[`${panelType}PanelState`]: {
+						...state[`${panelType}PanelState`],
 						[key]: value,
 					},
 				}));
@@ -456,16 +456,6 @@ export const useStore = create<SevinguState>(
 				console.error('Invalid panel type. Must be "Image" or "Svg".');
 			}
 		},
-		// changePanelState: ([key, value]) => {
-		// 	set(state => ({
-		// 		...state,
-		// 		SVGpanelState: {
-		// 			...state.SVGpanelState,
-		// 			[key]: value,
-		// 		},
-		// 	}));
-		// 	get().sendMessage('ChangeSvgSetting');
-		// },
 
 		/** MessageStore */
 		message: SevinguMessage.Default,

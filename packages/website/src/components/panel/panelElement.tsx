@@ -13,6 +13,7 @@ import {
 import { PanelState, PanelStateKey } from '@/stores/storeType';
 import { RgbaColorPicker } from 'react-colorful';
 import ColorPicker from './feature/ColorPicker';
+import { SvgSettingSvgurt } from '@/lib/svg-renderers/svg-renderer-schema';
 
 type Props = {
 	panelType: PanelType;
@@ -36,6 +37,7 @@ export default function PanelElement({
 				return state.SvgPanelState[id];
 		}
 	});
+
 	const changePanelState = useStore(state => state.changePanelState);
 	const changePanelValue = (
 		value // boolean | number | keyof typeof SVGRenderTypes
