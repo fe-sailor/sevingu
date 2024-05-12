@@ -84,7 +84,7 @@ const DualProcessedImageViewer = () => {
 		},
 		{
 			on: 'ReadyToShowDefaultImage',
-			listener: state => {
+			listener: () => {
 				setIsShowViewers(true);
 				svgBlender.current.unsubscribe?.();
 			},
