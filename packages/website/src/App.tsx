@@ -1,9 +1,9 @@
-import { useRef, useCallback } from 'react'; // useCallback 추가
+import { useStore } from '@/stores/store';
+import { useCallback } from 'react'; // useCallback 추가
+import DualProcessedImageViewer from './components/dual-processed-image-viewer/DualProcessedImageViewer';
 import MainHeader from './components/header/MainHeader';
 import MainPanel from './components/panel/MainPanel';
-import { useStore } from '@/stores/store';
 import { cn } from './lib/utils';
-import DualProcessedImageViewer from './components/dual-processed-image-viewer/DualProcessedImageViewer';
 import { useMessageListener } from './stores/messageStore';
 
 function App() {
@@ -22,7 +22,9 @@ function App() {
 	useMessageListener({
 		on: 'Any',
 		listener: state => {
-			console.log(state.message);
+			console.groupCollapsed('MESSAGE : ', state.message);
+			console.trace('RECENT FRAMES : ');
+			console.groupEnd();
 		},
 	});
 
