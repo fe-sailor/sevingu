@@ -291,19 +291,21 @@ export const useStore = create<SevinguState>(
 			}
 			const imageDataFrom = get().currentImageData!;
 			const imageDataTo = await canvasFilter.renderImage();
-			const imageBlender = new ImageDataBlender(
-				SVG_VIEWER_ID,
-				imageDataFrom,
-				imageDataTo,
-				300
+
+			const svgImageBlender = get().svgImageBlender!;
+			svgImageBlender.stopBlending();
+			svgImageBlender.setImages(
+				svgImageBlender.currentImgData ?? imageDataFrom,
+				imageDataTo
 			);
-			imageBlender.startBlending();
+			svgImageBlender.startBlending();
 			set({ currentImageData: imageDataTo });
 			get().sendMessage(willSendSevinguMessage);
 		},
 
 		/** SvgViewerStore */
 		svgViewer: null,
+		svgImageBlender: null,
 		showSvg: async () => {
 			const canvasRef = get().imageViewer;
 			if (!canvasRef) {
