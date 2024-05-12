@@ -2,7 +2,7 @@ import { PanelEntries, useStore } from '@/stores/store';
 import { Label } from '../ui/label';
 import { Switch } from '../ui/switch';
 import { Slider } from '../ui/slider';
-import { Controller, SVGRenderTypes } from './panel';
+import { Controller, ElementStyle, PanelType, SVGRenderTypes } from './panel';
 import {
 	Select,
 	SelectContent,
@@ -14,23 +14,33 @@ import { PanelState, PanelStateKey } from '@/stores/storeType';
 import { RgbaColorPicker } from 'react-colorful';
 import ColorPicker from './feature/ColorPicker';
 
+type Props = {
+	panelType: PanelType;
+} & Controller;
+
 export default function PanelElement({
+	panelType,
 	id,
 	name,
 	style,
 	min = 0,
 	max = 100,
 	step = 1,
-}: Controller) {
-	const checkPanelIdState = useStore(
-		// (state: { panelState: PanelState }) => state.panelState[id as PanelStateKey]
-		state => state.panelState[id]
-	);
+}: Props) {
+	const checkPanelIdState = useStore(state => {
+		switch (panelType) {
+			case 'Image':
+				return state.ImagePanelState[id];
+			case 'Svg':
+			default:
+				return state.SvgPanelState[id];
+		}
+	});
 	const changePanelState = useStore(state => state.changePanelState);
 	const changePanelValue = (
 		value // boolean | number | keyof typeof SVGRenderTypes
 	) => {
-		changePanelState([id, value]);
+		changePanelState(panelType, [id, value]);
 	};
 
 	const selectList = [

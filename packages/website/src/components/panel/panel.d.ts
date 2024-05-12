@@ -13,6 +13,9 @@ export const ElementStyle = {
 	slider: 'slider',
 	select: 'select',
 } as const;
+
+export type PanelType = 'Image' | 'Svg';
+
 export type Controller = {
 	id: PanelStateKey;
 	name: string;

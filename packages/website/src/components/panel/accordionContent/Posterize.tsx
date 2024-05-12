@@ -17,7 +17,11 @@ export default function Posterize() {
 	return (
 		<>
 			{imageControls.map(imageControl => (
-				<PanelElement key={imageControl.id} {...imageControl} />
+				<PanelElement
+					key={imageControl.id}
+					panelType={'Image'}
+					{...imageControl}
+				/>
 			))}
 		</>
 	);
