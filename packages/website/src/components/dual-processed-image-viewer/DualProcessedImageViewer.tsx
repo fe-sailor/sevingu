@@ -13,7 +13,7 @@ import {
 	ResizablePanel,
 	ResizablePanelGroup,
 } from '@/components/ui/resizable';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { useMessageListener } from '@/stores/messageStore';
 import { useDropZone } from '@reactuses/core';
 import { cn } from '@/lib/utils';
@@ -28,9 +28,22 @@ const DualProcessedImageViewer = () => {
 	const svgViewerRef = useRef<HTMLCanvasElement | null>(null);
 
 	const dragOverRef = useRef<HTMLDivElement | null>(null);
+	const [isImagePanelMinSize, setIsImagePanelMinSize] = useState(false);
+	const [isSvgPanelMinSize, setIsSvgPanelMinSize] = useState(false);
 
-	const handleResizeImage: PanelProps['onResize'] = (a, b) => {
-		a && b;
+	const handleResizeImage: PanelProps['onResize'] = (currentSize, b) => {
+		if (currentSize === PANEL_MIN_SIZE_IMG) {
+			setIsImagePanelMinSize(true);
+			return;
+		}
+		setIsImagePanelMinSize(false);
+	};
+	const handleResizeSvg: PanelProps['onResize'] = (currentSize, b) => {
+		if (currentSize === PANEL_MIN_SIZE_SVG) {
+			setIsSvgPanelMinSize(true);
+			return;
+		}
+		setIsSvgPanelMinSize(false);
 	};
 
 	const isOver = useDropZone(dragOverRef, files => {
@@ -90,10 +103,10 @@ const DualProcessedImageViewer = () => {
 
 	return (
 		<>
-			<div ref={dragOverRef}>
+			<div className="w-screen" ref={dragOverRef}>
 				<ResizablePanelGroup
 					direction="horizontal"
-					className={cn('rounded-lg border-4 border-solid', {
+					className={cn('rounded-lg border-4 border-solid mx-auto', {
 						'border-lime-400 border-dashed bg-lime-50': isOver,
 					})}
 					style={{
@@ -104,17 +117,36 @@ const DualProcessedImageViewer = () => {
 						onResize={handleResizeImage}
 						collapsible
 						minSize={PANEL_MIN_SIZE_IMG}>
-						<canvas className="mx-auto" ref={imageViewerRef}></canvas>
+						<div className="w-full relative">
+							<div
+								className={cn(
+									'absolute w-full h-full bg-transparent transition-colors',
+									{
+										'bg-slate-900/20': isImagePanelMinSize,
+									}
+								)}></div>
+							<canvas className="mx-auto" ref={imageViewerRef}></canvas>
+						</div>
 					</ResizablePanel>
 					<ResizableHandle withHandle />
 					<ResizablePanel
 						defaultSize={PANEL_DEFAULT_SIZE_SVG}
+						onResize={handleResizeSvg}
 						collapsible
 						minSize={PANEL_MIN_SIZE_SVG}>
-						<canvas
-							className="mx-auto"
-							ref={svgViewerRef}
-							id={SVG_VIEWER_ID}></canvas>
+						<div className="w-full relative">
+							<div
+								className={cn(
+									'absolute w-full h-full bg-transparent transition-colors',
+									{
+										'bg-slate-900/20': isSvgPanelMinSize,
+									}
+								)}></div>
+							<canvas
+								className="mx-auto"
+								ref={svgViewerRef}
+								id={SVG_VIEWER_ID}></canvas>
+						</div>
 					</ResizablePanel>
 				</ResizablePanelGroup>
 			</div>

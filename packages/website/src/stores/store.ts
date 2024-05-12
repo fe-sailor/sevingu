@@ -5,14 +5,12 @@ import {
 	SvgSettingSvgurt,
 } from '@/lib/svg-renderers/svg-renderer-schema';
 import { getFileUri, getImageWidthAndHeight, getSvgUrl } from '@/lib/utils';
+import { catchStoreError } from '@/stores/middleware';
 import { create } from 'zustand';
 import { ImageViewerStore } from './imageViewerStore';
 import { MessageStore, SevinguMessage } from './messageStore';
 import { SVGRenderTypes } from './storeType';
 import { SvgViewerStore } from './svgViewerStore';
-import { catchStoreError } from '@/stores/middleware';
-import { ImageDataBlender } from '@/lib/canvas-blender/canvas-blender';
-import { SVG_VIEWER_ID } from '@/components/dual-processed-image-viewer/const';
 
 type Entries<T> = {
 	[K in keyof T]: [K, T[K]];
