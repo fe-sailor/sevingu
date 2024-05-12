@@ -1,9 +1,8 @@
-import { Button } from '@/components/ui/button';
 import logo from '@/assets/sevingu_logo.png';
+import { Button } from '@/components/ui/button';
 import { useStore } from '@/stores/store';
-import { useMessageListener } from '@/stores/messageStore';
-import { Input } from '../ui/input';
 import { useCallback } from 'react';
+import { Input } from '../ui/input';
 
 const MainHeader = () => {
 	const { showImage, undo, redo, download } = useStore();
