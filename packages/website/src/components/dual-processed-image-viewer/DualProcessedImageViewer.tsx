@@ -117,7 +117,7 @@ const DualProcessedImageViewer = () => {
 						onResize={handleResizeImage}
 						collapsible
 						minSize={PANEL_MIN_SIZE_IMG}>
-						<div className="w-full relative">
+						<div className="w-full h-full relative flex justify-center items-center">
 							<div
 								className={cn(
 									'absolute w-full h-full bg-transparent transition-colors',
@@ -125,7 +125,7 @@ const DualProcessedImageViewer = () => {
 										'bg-slate-900/20': isImagePanelMinSize,
 									}
 								)}></div>
-							<canvas className="mx-auto" ref={imageViewerRef}></canvas>
+							<canvas ref={imageViewerRef}></canvas>
 						</div>
 					</ResizablePanel>
 					<ResizableHandle withHandle />
@@ -134,7 +134,7 @@ const DualProcessedImageViewer = () => {
 						onResize={handleResizeSvg}
 						collapsible
 						minSize={PANEL_MIN_SIZE_SVG}>
-						<div className="w-full relative">
+						<div className="w-full h-full relative flex justify-center items-center">
 							<div
 								className={cn(
 									'absolute w-full h-full bg-transparent transition-colors',
@@ -142,10 +142,7 @@ const DualProcessedImageViewer = () => {
 										'bg-slate-900/20': isSvgPanelMinSize,
 									}
 								)}></div>
-							<canvas
-								className="mx-auto"
-								ref={svgViewerRef}
-								id={SVG_VIEWER_ID}></canvas>
+							<canvas ref={svgViewerRef} id={SVG_VIEWER_ID}></canvas>
 						</div>
 					</ResizablePanel>
 				</ResizablePanelGroup>
