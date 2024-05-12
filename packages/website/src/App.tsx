@@ -1,11 +1,10 @@
-import { useStore } from '@/stores/store';
-import { useCallback } from 'react'; // useCallback 추가
+import { isProd } from '@/lib/utils';
 import DualProcessedImageViewer from './components/dual-processed-image-viewer/DualProcessedImageViewer';
 import MainHeader from './components/header/MainHeader';
 import MainPanel from './components/panel/MainPanel';
 import { cn } from './lib/utils';
 import { useMessageListener } from './stores/messageStore';
-import { isProd } from '@/lib/utils';
+import { Rnd } from 'react-rnd';
 
 function App() {
 	useMessageListener({
@@ -19,6 +18,7 @@ function App() {
 			console.groupEnd();
 		},
 	});
+	console.log('Rnd', <Rnd />);
 
 	return (
 		<>

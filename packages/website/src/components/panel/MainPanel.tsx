@@ -20,6 +20,7 @@ import {
 import { Label } from '../ui/label';
 import { createElement, useState } from 'react';
 import CURVE from './accordionContent/svgControls/CURVE';
+import { Rnd } from 'react-rnd';
 
 export default function MainPanel() {
 	const checkPanelState = useStore(state => state.panelState);
@@ -69,49 +70,62 @@ export default function MainPanel() {
 	};
 
 	return (
-		<div className={'bg-white w-1/3'}>
-			<Accordion type="multiple">
-				<AccordionItem value="item-1">
-					<AccordionTrigger>이미지 컨트롤</AccordionTrigger>
-					<ImageControls />
-				</AccordionItem>
-				<AccordionItem value="item-2">
-					<AccordionTrigger>포스터화(Posterize)</AccordionTrigger>
-					<Posterize />
-				</AccordionItem>
-				<AccordionItem value="item-3">
-					<AccordionTrigger>가장자리 감지</AccordionTrigger>
-					<EdgeDetection />
-				</AccordionItem>
-				<AccordionItem value="item-4">
-					<AccordionTrigger>SVG 컨트롤</AccordionTrigger>
-					<AccordionContent>
-						{/* svg 타입 선택 */}
-						<div className="flex items-center space-x-2">
-							<Label htmlFor={'svgRenderType'}>svg렌더타입</Label>
-							<Select
-								onValueChange={(value: keyof typeof SVGRenderTypes) =>
-									changePanelValue(value)
-								}
-								defaultValue={svgSelectList[1].id}>
-								<SelectTrigger className="w-[180px]">
-									<SelectValue />
-								</SelectTrigger>
-								<SelectContent>
-									{svgSelectList.map(({ id, name }) => (
-										<SelectItem key={id} value={id}>
-											{name}
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
-						</div>
+		<Rnd
+			// ref: https://github.com/bokuweb/react-rnd
+			default={{
+				x: 0,
+				y: 0,
+				width: 320,
+				height: 20,
+			}}
+			enableResizing={false}
+			className="bg-slate-200 z-10 rounded-t-xl">
+			<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-1.5 w-16 bg-slate-100 rounded-full"></div>
+			<div className="h-5"></div>
+			<div className="bg-white">
+				<Accordion type="multiple">
+					<AccordionItem value="item-1">
+						<AccordionTrigger>이미지 컨트롤</AccordionTrigger>
+						<ImageControls />
+					</AccordionItem>
+					<AccordionItem value="item-2">
+						<AccordionTrigger>포스터화(Posterize)</AccordionTrigger>
+						<Posterize />
+					</AccordionItem>
+					<AccordionItem value="item-3">
+						<AccordionTrigger>가장자리 감지</AccordionTrigger>
+						<EdgeDetection />
+					</AccordionItem>
+					<AccordionItem value="item-4">
+						<AccordionTrigger>SVG 컨트롤</AccordionTrigger>
+						<AccordionContent>
+							{/* svg 타입 선택 */}
+							<div className="flex items-center space-x-2">
+								<Label htmlFor={'svgRenderType'}>svg렌더타입</Label>
+								<Select
+									onValueChange={(value: keyof typeof SVGRenderTypes) =>
+										changePanelValue(value)
+									}
+									defaultValue={svgSelectList[1].id}>
+									<SelectTrigger className="w-[180px]">
+										<SelectValue />
+									</SelectTrigger>
+									<SelectContent>
+										{svgSelectList.map(({ id, name }) => (
+											<SelectItem key={id} value={id}>
+												{name}
+											</SelectItem>
+										))}
+									</SelectContent>
+								</Select>
+							</div>
 
-						{SVG_COMPONENTS[svgSelect] &&
-							createElement(SVG_COMPONENTS[svgSelect])}
-					</AccordionContent>
-				</AccordionItem>
-			</Accordion>
-		</div>
+							{SVG_COMPONENTS[svgSelect] &&
+								createElement(SVG_COMPONENTS[svgSelect])}
+						</AccordionContent>
+					</AccordionItem>
+				</Accordion>
+			</div>
+		</Rnd>
 	);
 }
