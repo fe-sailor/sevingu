@@ -18,7 +18,10 @@ export type ImageViewerStore = {
 	renderOnViewer: (
 		imageUri: string,
 		canvasRef: HTMLCanvasElement,
-		sevinguMessage: keyof typeof SevinguMessage
+		sevinguMessage: Extract<
+			keyof typeof SevinguMessage,
+			'SuccessToSvgRendered' | 'SuccessToImageLoaded'
+		>
 	) => void;
 };
 
