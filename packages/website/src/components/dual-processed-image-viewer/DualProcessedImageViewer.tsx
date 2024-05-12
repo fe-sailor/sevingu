@@ -14,18 +14,22 @@ import {
 	ResizablePanelGroup,
 } from '@/components/ui/resizable';
 import { useRef, useEffect, useState } from 'react';
-import { useMessageListener } from '@/stores/messageStore';
+import { useMessageListener, useMessageStore } from '@/stores/messageStore';
 import { useDropZone } from '@reactuses/core';
 import { cn } from '@/lib/utils';
 import { useStore } from '@/stores/store';
 import { ImageDataBlender } from '@/lib/canvas-blender/canvas-blender';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useSvgViewerStore } from '@/stores/svgViewerStore';
 
 const DualProcessedImageViewer = () => {
 	const { setState } = useStore;
 	const [isShowViewers, setIsShowViewers] = useState(false);
 	const imageViewerRef = useRef<HTMLCanvasElement | null>(null);
 	const { setImageViewer, showImage } = useImageViewerStore();
+	const { isViewerInit, setIsViewerInit } = useSvgViewerStore();
+	const { sendMessage } = useMessageStore();
+	const svgBlender = useRef<{ unsubscribe?: () => void }>({});
 
 	const svgViewerRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -59,6 +63,16 @@ const DualProcessedImageViewer = () => {
 		{
 			on: 'SetImageViewerFirstTime',
 			listener: state => {
+				console.log(state.svgImageBlender);
+				Promise.resolve().then(() =>
+					state.svgImageBlender?.onBlendingFinished(() => {
+						console.log('adf');
+						if (!state.isViewerInit) {
+							state.setIsViewerInit(true);
+							state.sendMessage('ReadyToShowDefaultImage');
+						}
+					})
+				);
 				state.showDefaultImage();
 			},
 		},
@@ -72,6 +86,7 @@ const DualProcessedImageViewer = () => {
 			on: 'ReadyToShowDefaultImage',
 			listener: state => {
 				setIsShowViewers(true);
+				svgBlender.current.unsubscribe?.();
 			},
 		},
 		{
@@ -103,11 +118,18 @@ const DualProcessedImageViewer = () => {
 		if (!svgViewerRef.current) {
 			return;
 		}
+		const imageblender = new ImageDataBlender(SVG_VIEWER_ID);
+		svgBlender.current.unsubscribe = imageblender.onBlendingFinished(() => {
+			if (!isViewerInit) {
+				setIsViewerInit(true);
+				sendMessage('ReadyToShowDefaultImage');
+			}
+		});
 		setState({
 			svgViewer: svgViewerRef.current,
-			svgImageBlender: new ImageDataBlender(SVG_VIEWER_ID),
+			svgImageBlender: imageblender,
 		});
-	}, [setState]);
+	}, [setState, setIsViewerInit, sendMessage, isViewerInit]);
 
 	return (
 		<>

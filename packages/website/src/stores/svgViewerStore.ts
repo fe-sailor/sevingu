@@ -5,6 +5,7 @@ export type SvgViewerStore = {
 	svgViewer: HTMLCanvasElement | null;
 	svgImageBlender: ImageDataBlender | null;
 	isViewerInit: boolean;
+	setIsViewerInit: (isViewerInit: boolean) => void;
 	showSvg: () => void;
 };
 
@@ -13,5 +14,6 @@ export const useSvgViewerStore = () =>
 		svgViewer: state.svgViewer,
 		svgImageBlender: state.svgImageBlender,
 		isViewerInit: state.isViewerInit,
+		setIsViewerInit: state.setIsViewerInit,
 		showSvg: state.showSvg,
 	}));
