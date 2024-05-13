@@ -83,11 +83,12 @@ export default function MainPanel() {
 		<Rnd
 			// ref: https://github.com/bokuweb/react-rnd
 			default={{
-				x: 0,
-				y: 0,
+				x: 1192,
+				y: 64,
 				width: 320,
 				height: 20,
 			}}
+			bounds={'.w-screen'}
 			enableResizing={false}
 			className="bg-slate-200 z-10 rounded-t-xl">
 			<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-1.5 w-16 bg-slate-100 rounded-full"></div>
