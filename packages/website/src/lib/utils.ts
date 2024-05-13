@@ -148,3 +148,16 @@ export const getSvgUrl = (svgString: string): string => {
 };
 
 export const isProd = () => location.protocol.includes('https');
+
+export const loadImageAsBlob = async (imagePath: string) => {
+	try {
+		const response = await fetch(imagePath);
+		if (!response.ok) {
+			throw new Error(`Failed to fetch image: ${response.statusText}`);
+		}
+		const imageBlob = await response.blob(); // 이미지 데이터를 Blob으로 변환
+		return imageBlob;
+	} catch (error) {
+		console.error('Error fetching the image:', error);
+	}
+};
