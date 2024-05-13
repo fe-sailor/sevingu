@@ -16,14 +16,15 @@ import {
 import { useRef, useEffect, useState } from 'react';
 import { useMessageListener, useMessageStore } from '@/stores/messageStore';
 import { useDropZone } from '@reactuses/core';
-import { cn } from '@/lib/utils';
+import { cn, loadImageAsBlob } from '@/lib/utils';
 import { useStore } from '@/stores/store';
 import { ImageDataBlender } from '@/lib/canvas-blender/canvas-blender';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useSvgViewerStore } from '@/stores/svgViewerStore';
+import { DEFAULT_IMAGE_URI } from '@/consts';
 
 const DualProcessedImageViewer = () => {
-	const { setState } = useStore;
+	const { setState, getState } = useStore;
 	const [isShowViewers, setIsShowViewers] = useState(false);
 	const imageViewerRef = useRef<HTMLCanvasElement | null>(null);
 	const { setImageViewer, showImage } = useImageViewerStore();
@@ -120,6 +121,15 @@ const DualProcessedImageViewer = () => {
 			svgImageBlender: imageblender,
 		});
 	}, [setState, setIsViewerInit, sendMessage, isViewerInit]);
+
+	useEffect(() => {
+		if (getState().imageBlob) {
+			return;
+		}
+		loadImageAsBlob(DEFAULT_IMAGE_URI).then(imageBlob =>
+			setState({ imageBlob: imageBlob })
+		);
+	}, [setState, getState]);
 
 	return (
 		<>

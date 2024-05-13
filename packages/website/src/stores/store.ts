@@ -16,6 +16,8 @@ import {
 	PushMessage,
 	PushMessageStore,
 } from '@/components/push-alert/PushAlert';
+import { DEFAULT_IMAGE_URI } from '@/consts';
+import { debounce } from 'lodash';
 
 type Entries<T> = {
 	[K in keyof T]: [K, T[K]];
@@ -196,7 +198,6 @@ export const useStore = create<SevinguState>(
 		imageConfig: { blur: 20 },
 		htmlRenderedImage: new Image(),
 		imageUri: '',
-		defaultImageUri: '/sample_image.jpg',
 		imageBlob: null,
 		currentImageData: null,
 		setImageViewer: (imageViewer: HTMLCanvasElement) => {
@@ -250,7 +251,7 @@ export const useStore = create<SevinguState>(
 			}
 
 			get().renderOnViewer(
-				get().defaultImageUri,
+				DEFAULT_IMAGE_URI,
 				imageViewer,
 				'SuccessToImageLoaded'
 			);
@@ -461,10 +462,10 @@ export const useStore = create<SevinguState>(
 		message: SevinguMessage.Default,
 		setMessage: message => set(() => ({ message: message })),
 		resetMessage: () => set(() => ({ message: SevinguMessage.Default })),
-		sendMessage: message => {
+		sendMessage: debounce(message => {
 			get().setMessage(message);
 			get().resetMessage();
-		},
+		}, 100),
 
 		/** PushAlert */
 		pushMessage: {

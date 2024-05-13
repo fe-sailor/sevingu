@@ -2,8 +2,8 @@ import { isProd } from '@/lib/utils';
 import DualProcessedImageViewer from './components/dual-processed-image-viewer/DualProcessedImageViewer';
 import MainHeader from './components/header/MainHeader';
 import MainPanel from './components/panel/MainPanel';
-import { useMessageListener } from './stores/messageStore';
 import PushAlert from './components/push-alert/PushAlert';
+import { useMessageListener } from './stores/messageStore';
 
 function App() {
 	useMessageListener({
