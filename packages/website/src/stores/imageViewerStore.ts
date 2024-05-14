@@ -8,10 +8,10 @@ export type ImageViewerStore = {
 	imageConfig: ImageConfiguration;
 	htmlRenderedImage: HTMLImageElement;
 	imageUri: string;
-	image: SevinguImage | null;
+	sevinguImage: SevinguImage | null;
 	currentImageData: ImageData | null;
 	setImageViewer: (imageViewer: HTMLCanvasElement) => void;
-	showImage: (image: SevinguImage, isUndoRedoAction?: boolean) => void;
+	showImage: (sevinguImage: SevinguImage, isUndoRedoAction?: boolean) => void;
 	updateConfig: (imageConfig: ImageConfiguration) => void;
 	showDefaultImage: () => void;
 	renderOnViewer: (
@@ -45,7 +45,7 @@ export const useImageViewerStore = () =>
 		imageConfig: state.imageConfig,
 		htmlRenderedImage: state.htmlRenderedImage,
 		imageUri: state.imageUri,
-		image: state.image,
+		sevinguImage: state.sevinguImage,
 		currentImageData: state.currentImageData,
 		setImageViewer: state.setImageViewer,
 		showImage: state.showImage,

@@ -1,3 +1,4 @@
+import { throttle } from 'lodash';
 import {
 	Accordion,
 	AccordionContent,
@@ -18,13 +19,65 @@ import {
 	SelectValue,
 } from '../ui/select';
 import { Label } from '../ui/label';
-import { createElement, useState } from 'react';
+import { createElement, useState, useEffect, useRef } from 'react';
 import CURVE from './accordionContent/svgControls/CURVE';
 import { Rnd } from 'react-rnd';
 
 const ACCORDION_TITLE = 'p-1 bg-[#c5f6fa] text-sm font-bold';
 
 export default function MainPanel() {
+	const { defaultWidth, defaultHeight } = {
+		defaultWidth: 280,
+		defaultHeight: 20,
+	} as const;
+	const [position, setPosition] = useState({ x: 1232, y: 64 });
+	const positionRef = useRef(position);
+	const screenSizeRef = useRef({ width: 0, height: 0 });
+
+	useEffect(() => {
+		const viewerElement = document.querySelector('.w-screen') as HTMLElement;
+		if (viewerElement) {
+			screenSizeRef.current = {
+				width: viewerElement.offsetWidth,
+				height: viewerElement.offsetHeight,
+			};
+
+			const handleResize = throttle(() => {
+				const deltaX = viewerElement.offsetWidth - screenSizeRef.current.width;
+				const deltaY =
+					viewerElement.offsetHeight - screenSizeRef.current.height;
+
+				const newPos = {
+					x: positionRef.current.x + deltaX,
+					y: positionRef.current.y + deltaY,
+				};
+
+				// viewerElement 내에서 패널이 벗어나지 않도록 조정
+				newPos.x = Math.max(
+					0,
+					Math.min(newPos.x, viewerElement.offsetWidth - defaultWidth)
+				);
+				newPos.y = Math.max(
+					0,
+					Math.min(newPos.y, viewerElement.offsetHeight - defaultHeight)
+				);
+
+				setPosition(newPos);
+				positionRef.current = newPos;
+				screenSizeRef.current = {
+					width: viewerElement.offsetWidth,
+					height: viewerElement.offsetHeight,
+				};
+			}, 50);
+
+			handleResize();
+
+			window.addEventListener('resize', handleResize);
+			return () => window.removeEventListener('resize', handleResize);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
 	const checkSvgPanelState = useStore(state => state.svgPanelState);
 	const changePanelState = useStore(state => state.changePanelState);
 
@@ -73,14 +126,17 @@ export default function MainPanel() {
 	return (
 		<Rnd
 			// ref: https://github.com/bokuweb/react-rnd
-			default={{
-				x: 1192,
-				y: 64,
-				width: 280,
-				height: 20,
+			size={{
+				width: defaultWidth,
+				height: defaultHeight,
 			}}
+			position={position}
 			bounds={'.w-screen'}
 			enableResizing={false}
+			onDragStop={(e, d) => {
+				setPosition({ x: d.x, y: d.y });
+				positionRef.current = { x: d.x, y: d.y };
+			}}
 			className="bg-slate-200 z-10 rounded-t-xl">
 			<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-1.5 w-16 bg-slate-100 rounded-full"></div>
 			<div className="h-5"></div>
