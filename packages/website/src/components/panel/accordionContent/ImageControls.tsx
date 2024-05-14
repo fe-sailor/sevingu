@@ -1,4 +1,3 @@
-import { AccordionContent } from '../../ui/accordion';
 import PanelElement from '../panelElement';
 import { Controller } from '../panel';
 

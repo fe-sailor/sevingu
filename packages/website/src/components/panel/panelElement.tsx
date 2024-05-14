@@ -1,8 +1,8 @@
-import { PanelEntries, useStore } from '@/stores/store';
+import { useStore } from '@/stores/store';
 import { Label } from '../ui/label';
 import { Switch } from '../ui/switch';
 import { Slider } from '../ui/slider';
-import { Controller, ElementStyle, PanelType, SVGRenderTypes } from './panel';
+import { Controller, PanelType, SVGRenderTypes } from './panel';
 import {
 	Select,
 	SelectContent,
@@ -10,19 +10,9 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '../ui/select';
-import { PanelState, PanelStateKey } from '@/stores/storeType';
-import { RgbaColorPicker } from 'react-colorful';
 import ColorPicker from './feature/ColorPicker';
 import { debounce } from 'lodash';
-import { SvgSettingSvgurt } from '@/lib/svg-renderers/svg-renderer-schema';
-import { CanvasSettingSvgurt } from '@/lib/canvas-filter/canvas-filter-schema';
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from '../ui/tooltip';
-import LabelTooltip from './LabelTooltip';
+import LabelTooltip from './feature/LabelTooltip';
 
 type Props = {
 	panelType: PanelType;
@@ -81,11 +71,11 @@ export default function PanelElement({
 
 	return (
 		<div className="mb-1 flex items-center last:m-0 ">
-			<div className="w-16">
+			<div className="w-20">
 				<LabelTooltip name={name}>
 					<Label
 						htmlFor={id}
-						className="w-16 text-left text-xs tracking-tighter block overflow-hidden overflow-ellipsis whitespace-nowrap">
+						className="w-20 text-left text-xs tracking-tighter block overflow-hidden overflow-ellipsis whitespace-nowrap">
 						{name}
 					</Label>
 				</LabelTooltip>

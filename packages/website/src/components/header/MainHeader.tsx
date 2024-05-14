@@ -27,11 +27,14 @@ const MainHeader = () => {
 	}, [download]);
 
 	return (
-		<div className={'flex gap-9'}>
-			<img className="w-10 h-10" src={logo} alt="logo" />
+		<div className={'flex gap-9 items-center'}>
+			<div className={'flex justify-center items-center'}>
+				<img className={'w-16 h-16 ml-4'} src={logo} alt="logo" />
+				<span className={'font-sans text-lg font-bold'}>Sevingu</span>
+			</div>
 
 			<Button variant="destructive" onClick={undo}>
-				<label>
+				<label className="cursor-pointer">
 					<span>upload</span>
 					<input
 						className="hidden"
