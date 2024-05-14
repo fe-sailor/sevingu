@@ -57,7 +57,7 @@ const DualProcessedImageViewer = () => {
 		if (!files) {
 			return;
 		}
-		showImage(files[0]);
+		showImage({ imageBlob: files[0] });
 	});
 
 	useMessageListener(
@@ -82,12 +82,12 @@ const DualProcessedImageViewer = () => {
 		},
 		{
 			on: 'ChangeImageSetting',
-			listener: state => {
-				if (!state.imageBlob) {
+			listener: (state, prevState) => {
+				if (!state.image?.imageBlob) {
 					console.error('empty image blob');
 					return;
 				}
-				state.showImage(state.imageBlob);
+				state.showImage(state.image);
 			},
 		},
 		{
@@ -123,12 +123,12 @@ const DualProcessedImageViewer = () => {
 	}, [setState, setIsViewerInit, sendMessage, isViewerInit]);
 
 	useEffect(() => {
-		if (getState().imageBlob) {
+		if (getState().image?.imageBlob) {
 			return;
 		}
-		loadImageAsBlob(DEFAULT_IMAGE_URI).then(imageBlob =>
-			setState({ imageBlob: imageBlob })
-		);
+		loadImageAsBlob(DEFAULT_IMAGE_URI).then(imageBlob => {
+			if (imageBlob !== undefined) setState({ image: { imageBlob } });
+		});
 	}, [setState, getState]);
 
 	return (

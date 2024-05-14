@@ -24,7 +24,11 @@ type Entries<T> = {
 }[keyof T];
 
 export type PanelEntries = Entries<SvgSettingSvgurt>; // Entries<SvgRenderer>
-export type SevinguImage = { imageBlob: Blob; setting: SvgSettingSvgurt };
+export type SevinguImage = {
+	imageBlob: Blob;
+	setting?: SvgSettingSvgurt;
+	timeStamp?: number;
+};
 
 // prettier-ignore
 export type SevinguState =
@@ -35,7 +39,7 @@ export type SevinguState =
     currentIndex: number;
     hasShownDefaultImage: boolean;
     getCurImage: () => SevinguImage | undefined;
-    setCurImage: (imageUri: Blob, isUndoRedoAction?: boolean) => void;
+    setCurImage: (image: SevinguImage, isUndoRedoAction?: boolean) => void;
     undo: () => void;
     redo: () => void;
     download: () => void;
@@ -107,11 +111,16 @@ export const useStore = create<SevinguState>(
 			return get().undoRedoStack.at(idx);
 		},
 
-		setCurImage: (imageBlob, isUndoRedoAction) =>
+		setCurImage: (image, isUndoRedoAction) =>
 			set(state => {
 				if (isUndoRedoAction !== true) {
 					const newStack = state.undoRedoStack.slice(0, state.currentIndex + 1);
-					newStack.push({ imageBlob, setting: state.SvgPanelState });
+					const imageObj: SevinguImage = {
+						...image,
+						setting: get().SvgPanelState,
+						timeStamp: Date.now(),
+					};
+					newStack.push(imageObj);
 					return {
 						undoRedoStack: newStack,
 						hasShownDefaultImage: false,
@@ -144,7 +153,7 @@ export const useStore = create<SevinguState>(
 				return;
 			}
 
-			get().showImage(imageObj.imageBlob, true);
+			get().showImage(imageObj, true);
 			console.log('execute redo');
 		},
 
@@ -160,7 +169,7 @@ export const useStore = create<SevinguState>(
 				console.error('empty image object');
 				return;
 			}
-			get().showImage(imageObj.imageBlob, true);
+			get().showImage(imageObj, true);
 			console.log('execute undo');
 		},
 
@@ -198,7 +207,7 @@ export const useStore = create<SevinguState>(
 		imageConfig: { blur: 20 },
 		htmlRenderedImage: new Image(),
 		imageUri: '',
-		imageBlob: null,
+		image: null,
 		currentImageData: null,
 		setImageViewer: (imageViewer: HTMLCanvasElement) => {
 			const prevViewer = get().imageViewer;
@@ -215,10 +224,11 @@ export const useStore = create<SevinguState>(
 			}
 		},
 
-		showImage: async (imageBlob: Blob, isUndoRedoAction) => {
-			const imagUri = await getFileUri(imageBlob);
-			set(() => ({ imageBlob: imageBlob }));
-			get().setCurImage(imageBlob, isUndoRedoAction);
+		showImage: async (image: SevinguImage, isUndoRedoAction) => {
+			if (image === null) return;
+			const imagUri = await getFileUri(image.imageBlob);
+			set(() => ({ image }));
+			get().setCurImage(image, isUndoRedoAction);
 			set(() => ({ imageUri: imagUri }));
 			get().sendMessage('SuccessToGetImageUri');
 			const imageViewer = get().imageViewer;
