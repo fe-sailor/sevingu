@@ -83,11 +83,11 @@ const DualProcessedImageViewer = () => {
 		{
 			on: 'ChangeImageSetting',
 			listener: (state, prevState) => {
-				if (!state.image?.imageBlob) {
+				if (!state.sevinguImage?.imageBlob) {
 					console.error('empty image blob');
 					return;
 				}
-				state.showImage(state.image);
+				state.showImage(state.sevinguImage);
 			},
 		},
 		{
@@ -123,11 +123,11 @@ const DualProcessedImageViewer = () => {
 	}, [setState, setIsViewerInit, sendMessage, isViewerInit]);
 
 	useEffect(() => {
-		if (getState().image?.imageBlob) {
+		if (getState().sevinguImage?.imageBlob) {
 			return;
 		}
 		loadImageAsBlob(DEFAULT_IMAGE_URI).then(imageBlob => {
-			if (imageBlob !== undefined) setState({ image: { imageBlob } });
+			if (imageBlob !== undefined) setState({ sevinguImage: { imageBlob } });
 		});
 	}, [setState, getState]);
 
