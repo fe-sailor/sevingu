@@ -13,7 +13,7 @@ const MainHeader = () => {
 		if (!event.target.files?.length) {
 			return;
 		}
-		showImage(event.target.files[0]);
+		showImage({ imageBlob: event.target.files[0] });
 	};
 
 	// 광고를 표시하고 5초 후에 다운로드를 실행

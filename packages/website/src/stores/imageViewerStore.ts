@@ -1,4 +1,4 @@
-import { useStore } from '@/stores/store';
+import { SevinguImage, useStore } from '@/stores/store';
 import { SevinguMessage } from '@/stores/messageStore';
 
 export type ImageConfiguration = { blur: number };
@@ -8,10 +8,10 @@ export type ImageViewerStore = {
 	imageConfig: ImageConfiguration;
 	htmlRenderedImage: HTMLImageElement;
 	imageUri: string;
-	imageBlob: Blob | null;
+	image: SevinguImage | null;
 	currentImageData: ImageData | null;
 	setImageViewer: (imageViewer: HTMLCanvasElement) => void;
-	showImage: (imageBlob: Blob, isUndoRedoAction?: boolean) => void;
+	showImage: (image: SevinguImage, isUndoRedoAction?: boolean) => void;
 	updateConfig: (imageConfig: ImageConfiguration) => void;
 	showDefaultImage: () => void;
 	renderOnViewer: (
@@ -45,7 +45,7 @@ export const useImageViewerStore = () =>
 		imageConfig: state.imageConfig,
 		htmlRenderedImage: state.htmlRenderedImage,
 		imageUri: state.imageUri,
-		imageBlob: state.imageBlob,
+		image: state.image,
 		currentImageData: state.currentImageData,
 		setImageViewer: state.setImageViewer,
 		showImage: state.showImage,
