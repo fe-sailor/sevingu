@@ -50,7 +50,7 @@ export default function CIRCLE() {
 			{imageControls.map(imageControl => (
 				<PanelElement
 					key={imageControl.id}
-					panelType={'Svg'}
+					panelType={'svg'}
 					{...imageControl}
 				/>
 			))}

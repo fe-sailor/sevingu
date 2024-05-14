@@ -80,7 +80,7 @@ export default function CURVE() {
 			{imageControls.map(imageControl => (
 				<PanelElement
 					key={imageControl.id}
-					panelType={'Svg'}
+					panelType={'svg'}
 					{...imageControl}
 				/>
 			))}
