@@ -216,8 +216,8 @@ export const useStore = create<SevinguState>(
 		},
 
 		showImage: async (imageBlob: Blob, isUndoRedoAction) => {
-			set(() => ({ imageBlob: imageBlob }));
 			const imagUri = await getFileUri(imageBlob);
+			set(() => ({ imageBlob: imageBlob }));
 			get().setCurImage(imageBlob, isUndoRedoAction);
 			set(() => ({ imageUri: imagUri }));
 			get().sendMessage('SuccessToGetImageUri');
