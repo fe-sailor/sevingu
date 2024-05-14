@@ -230,7 +230,8 @@ export const useStore = create<SevinguState>(
 			set(() => ({ imageUri: imagUri }));
 			get().sendMessage('SuccessToGetImageUri');
 			const imageViewer = get().imageViewer;
-
+			console.log('image viewer', imageViewer);
+			console.log('svg viewer', get().svgViewer);
 			if (!imageViewer) {
 				console.error('image view empty');
 				return;
@@ -298,20 +299,9 @@ export const useStore = create<SevinguState>(
 							postBlur: 0,
 						}
 					: imagePanelState
-				// {
-				// 		grayscale: false,
-				// 		invert: false,
-				// 		blur: 0,
-				// 		posterize: false,
-				// 		posterizeLevels: 5,
-				// 		edgeDetection: false,
-				// 		lowThreshold: 20,
-				// 		highThreshold: 50,
-				// 		postBlur: 1,
-				// 	}
 			);
 
-			if (!get().currentImageData) {
+			if (willSendSevinguMessage === 'SuccessToImageLoaded') {
 				set({
 					currentImageData: await canvasFilter.renderImage(),
 				});
@@ -321,7 +311,6 @@ export const useStore = create<SevinguState>(
 			}
 			const imageDataFrom = get().currentImageData!;
 			const imageDataTo = await canvasFilter.renderImage();
-
 			const svgImageBlender = get().svgImageBlender!;
 			svgImageBlender.stopBlending();
 			svgImageBlender.setImages(
