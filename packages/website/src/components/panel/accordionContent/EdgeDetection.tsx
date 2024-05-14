@@ -14,7 +14,7 @@ export default function EdgeDetection() {
 			{imageControls.map(imageControl => (
 				<PanelElement
 					key={imageControl.id}
-					panelType={'Image'}
+					panelType={'image'}
 					{...imageControl}
 				/>
 			))}

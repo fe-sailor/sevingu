@@ -21,12 +21,11 @@ import { Label } from '../ui/label';
 import { createElement, useState } from 'react';
 import CURVE from './accordionContent/svgControls/CURVE';
 import { Rnd } from 'react-rnd';
-import PanelElement from './panelElement';
 
-const ACCORDION_TITLE = 'p-2 bg-[#c5f6fa] font-bold';
+const ACCORDION_TITLE = 'p-1 bg-[#c5f6fa] text-sm font-bold';
 
 export default function MainPanel() {
-	const checkSvgPanelState = useStore(state => state.SvgPanelState);
+	const checkSvgPanelState = useStore(state => state.svgPanelState);
 	const changePanelState = useStore(state => state.changePanelState);
 
 	const [svgSelect, setSvgSelect] = useState<keyof typeof SVGRenderTypes>(
@@ -34,16 +33,8 @@ export default function MainPanel() {
 	);
 
 	const changePanelValue = (value: keyof typeof SVGRenderTypes) => {
-		changePanelState('Svg', ['svgRenderType', value]);
+		changePanelState('svg', ['svgRenderType', value]);
 		setSvgSelect(value);
-	};
-
-	const postBlur = {
-		id: 'postBlur',
-		name: '후처리 블러',
-		style: 'slider',
-		min: 0,
-		max: 30,
 	};
 
 	const svgSelectList = [
@@ -85,7 +76,7 @@ export default function MainPanel() {
 			default={{
 				x: 1192,
 				y: 64,
-				width: 320,
+				width: 280,
 				height: 20,
 			}}
 			bounds={'.w-screen'}
@@ -99,7 +90,7 @@ export default function MainPanel() {
 						<AccordionTrigger className={ACCORDION_TITLE}>
 							이미지 컨트롤
 						</AccordionTrigger>
-						<AccordionContent>
+						<AccordionContent className="p-2">
 							<ImageControls />
 							{/* 테스트 */}
 							{/* <AccordionItem value="item-1-1">
@@ -116,7 +107,7 @@ export default function MainPanel() {
 								<AccordionTrigger className={ACCORDION_TITLE}>
 									포스터화(Posterize)
 								</AccordionTrigger>
-								<AccordionContent className="p-4">
+								<AccordionContent className="p-2">
 									<Posterize />
 								</AccordionContent>
 							</AccordionItem>
@@ -125,12 +116,10 @@ export default function MainPanel() {
 								<AccordionTrigger className={ACCORDION_TITLE}>
 									가장자리 감지
 								</AccordionTrigger>
-								<AccordionContent className="p-4">
+								<AccordionContent className="p-2">
 									<EdgeDetection />
 								</AccordionContent>
 							</AccordionItem>
-
-							<PanelElement panelType={'Image'} {...postBlur} />
 						</AccordionContent>
 					</AccordionItem>
 
@@ -138,10 +127,10 @@ export default function MainPanel() {
 						<AccordionTrigger className={ACCORDION_TITLE}>
 							SVG 컨트롤
 						</AccordionTrigger>
-						<AccordionContent className="p-4">
+						<AccordionContent className="p-2">
 							{/* svg 타입 선택 */}
-							<div className="flex items-center space-x-2 mb-4">
-								<Label htmlFor={'svgRenderType'} className="block mb-2">
+							<div className="flex items-center space-x-2 mb-21">
+								<Label htmlFor={'svgRenderType'} className="block mb-2 text-xs">
 									svg렌더타입
 								</Label>
 								<Select
@@ -149,7 +138,7 @@ export default function MainPanel() {
 										changePanelValue(value)
 									}
 									defaultValue={svgSelectList[1].id}>
-									<SelectTrigger className="w-[180px]">
+									<SelectTrigger className="w-[40%]">
 										<SelectValue />
 									</SelectTrigger>
 									<SelectContent>

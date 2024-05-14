@@ -14,7 +14,7 @@ export const ElementStyle = {
 	select: 'select',
 } as const;
 
-export type PanelType = 'Image' | 'Svg';
+export type PanelType = 'image' | 'svg';
 
 export type Controller = {
 	id: PanelStateKey;

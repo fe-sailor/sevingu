@@ -1,8 +1,8 @@
-import { PanelEntries, useStore } from '@/stores/store';
+import { useStore } from '@/stores/store';
 import { Label } from '../ui/label';
 import { Switch } from '../ui/switch';
 import { Slider } from '../ui/slider';
-import { Controller, ElementStyle, PanelType, SVGRenderTypes } from './panel';
+import { Controller, PanelType, SVGRenderTypes } from './panel';
 import {
 	Select,
 	SelectContent,
@@ -10,10 +10,9 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '../ui/select';
-import { PanelState, PanelStateKey } from '@/stores/storeType';
-import { RgbaColorPicker } from 'react-colorful';
 import ColorPicker from './feature/ColorPicker';
-import { SvgSettingSvgurt } from '@/lib/svg-renderers/svg-renderer-schema';
+import { debounce } from 'lodash';
+import LabelTooltip from './feature/LabelTooltip';
 
 type Props = {
 	panelType: PanelType;
@@ -30,20 +29,18 @@ export default function PanelElement({
 }: Props) {
 	const checkPanelIdState = useStore(state => {
 		switch (panelType) {
-			case 'Image':
-				return state.ImagePanelState[id];
-			case 'Svg':
+			case 'image':
+				return state.imagePanelState[id];
+			case 'svg':
 			default:
-				return state.SvgPanelState[id];
+				return state.svgPanelState[id];
 		}
 	});
 
 	const changePanelState = useStore(state => state.changePanelState);
-	const changePanelValue = (
-		value // boolean | number | keyof typeof SVGRenderTypes
-	) => {
+	const changePanelValue = debounce(value => {
 		changePanelState(panelType, [id, value]);
-	};
+	}, 300);
 
 	const selectList = [
 		{
@@ -73,16 +70,19 @@ export default function PanelElement({
 	];
 
 	return (
-		<div className="mb-4 last:m-0 ">
-			<Label htmlFor={id} className="block mb-2">
-				{name}
-			</Label>
+		<div className="mb-1 flex items-center last:m-0 ">
+			<div className="w-20">
+				<LabelTooltip name={name}>
+					<Label
+						htmlFor={id}
+						className="w-20 text-left text-xs tracking-tighter block overflow-hidden overflow-ellipsis whitespace-nowrap">
+						{name}
+					</Label>
+				</LabelTooltip>
+			</div>
+
 			{style === 'switch' && (
-				<Switch
-					id={id}
-					// className="h-3"
-					onCheckedChange={value => changePanelValue(value)}
-				/>
+				<Switch id={id} onCheckedChange={value => changePanelValue(value)} />
 			)}
 			{style === 'slider' && (
 				<div className="w-full flex">
