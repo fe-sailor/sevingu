@@ -6,8 +6,9 @@ import {
 	PixelData,
 } from '@/lib/svg-renderers/circle-renderer-schema';
 import { CurveSetting } from '@/lib/svg-renderers/curve-renderer-schema';
+import { LineSetting } from '@/lib/svg-renderers/line-renderer-schema';
 
-export const SVG_RENDER_TYPES = z.enum(['CIRCLE', 'CURVE']);
+export const SVG_RENDER_TYPES = z.enum(['CIRCLE', 'CURVE', 'LINE']);
 
 export const svgRendererSettingSchema = z.object({
 	renderType: SVG_RENDER_TYPES,
@@ -15,7 +16,12 @@ export const svgRendererSettingSchema = z.object({
 });
 
 export type SvgRendererSetting = z.infer<typeof svgRendererSettingSchema>;
-export type SvgSetting = SvgRendererSetting & CircleSetting & CurveSetting;
+
+// prettier-ignore
+export type SvgSetting = SvgRendererSetting
+  & CircleSetting
+  & CurveSetting
+  & LineSetting;
 
 export type SvgSettingSvgurt = {
 	scale: number;
