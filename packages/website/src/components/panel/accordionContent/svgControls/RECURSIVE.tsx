@@ -3,8 +3,6 @@ import { Controller } from '../../panel';
 import PanelElement from '../../PanelElement';
 
 export default function RECURSIVE() {
-	const storeState = useStore(state => state.svgPanelState);
-
 	const imageControls: Controller[] = [
 		{
 			id: 'minColorRecognized',

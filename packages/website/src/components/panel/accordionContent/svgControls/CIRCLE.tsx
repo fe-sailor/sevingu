@@ -53,8 +53,10 @@ export default function CIRCLE() {
 			id: 'strokeColor',
 			name: '선 색상',
 			style: 'color',
-			dependentOn: 'autoColor',
-			isShowDependentState: false,
+			dependentOn: 'stroke',
+			dependentOn2: 'autoColor',
+			isShowDependentState: true,
+			isShowDependent2State: false,
 		},
 		{
 			id: 'strokeWidth',
@@ -87,26 +89,33 @@ export default function CIRCLE() {
 	return (
 		<>
 			{imageControls.map(imageControl => {
-				const { dependentOn, isShowDependentState, ...otherProps } =
-					imageControl;
-				// dependentOn이 있으면
-				// isShowDependentState가 스토어값과 같을 때, 해당 값을 렌더합니다.
-				if (dependentOn) {
-					if (isShowDependentState === storeState[dependentOn]) {
-						return (
-							<PanelElement
-								key={otherProps.id}
-								panelType={'svg'}
-								{...otherProps}
-							/>
-						);
-					}
-				} else {
+				const {
+					dependentOn,
+					isShowDependentState,
+					dependentOn2,
+					isShowDependent2State,
+					...otherProps
+				} = imageControl;
+
+				const dependencies = [
+					{ dependentOn, isShowDependentState },
+					{
+						dependentOn: dependentOn2,
+						isShowDependentState: isShowDependent2State,
+					},
+				];
+
+				const shouldRender = dependencies.every(
+					({ dependentOn, isShowDependentState }) =>
+						!dependentOn || isShowDependentState === storeState[dependentOn]
+				);
+
+				if (shouldRender) {
 					return (
 						<PanelElement
-							key={imageControl.id}
+							key={otherProps.id}
 							panelType={'svg'}
-							{...imageControl}
+							{...otherProps}
 						/>
 					);
 				}
