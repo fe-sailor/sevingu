@@ -1,4 +1,4 @@
-import PanelElement from '../PanelElement';
+import PanelElement from '../panelElement';
 import { Controller } from '../panel';
 
 export default function ImageControls() {

@@ -1,6 +1,6 @@
 import { useStore } from '@/stores/store';
 import { Controller } from '../../panel';
-import PanelElement from '../../PanelElement';
+import PanelElement from '../../panelElement';
 
 export default function CURVE() {
 	const storeState = useStore(state => state.svgPanelState);
