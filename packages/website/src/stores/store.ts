@@ -1,4 +1,11 @@
+import { PanelType } from '@/components/panel/panel';
+import {
+	PushMessage,
+	PushMessageStore,
+} from '@/components/push-alert/PushAlert';
+import { DEFAULT_IMAGE_URI } from '@/constants';
 import { CanvasFilter } from '@/lib/canvas-filter/canvas-filter';
+import { CanvasSettingSvgurt } from '@/lib/canvas-filter/canvas-filter-schema';
 import { SvgRenderer } from '@/lib/svg-renderers/svg-renderer';
 import {
 	SVG_RENDER_TYPES,
@@ -6,18 +13,11 @@ import {
 } from '@/lib/svg-renderers/svg-renderer-schema';
 import { getFileUri, getImageWidthAndHeight, getSvgUrl } from '@/lib/utils';
 import { catchStoreError } from '@/stores/middleware';
+import { debounce } from 'lodash';
 import { create } from 'zustand';
 import { ImageViewerStore } from './imageViewerStore';
 import { MessageStore, SevinguMessage } from './messageStore';
 import { SvgViewerStore } from './svgViewerStore';
-import { CanvasSettingSvgurt } from '@/lib/canvas-filter/canvas-filter-schema';
-import { PanelType } from '@/components/panel/panel';
-import {
-	PushMessage,
-	PushMessageStore,
-} from '@/components/push-alert/PushAlert';
-import { DEFAULT_IMAGE_URI } from '@/constants';
-import { debounce } from 'lodash';
 
 type Entries<T> = {
 	[K in keyof T]: [K, T[K]];
@@ -48,41 +48,13 @@ export type SevinguState =
 		imagePanelState: CanvasSettingSvgurt;
     svgPanelState: SvgSettingSvgurt; // PanelState; // SvgRenderer
 		changePanelState:  (
-			panelType: PanelType ,[PanelStateKey, PanelEntries]: [keyof SvgSettingSvgurt, SvgSettingSvgurt[keyof SvgSettingSvgurt]]
+			panelType: PanelType ,[PanelStateKey, PanelEntries]: [keyof SvgSettingSvgurt | keyof CanvasSettingSvgurt , SvgSettingSvgurt[keyof SvgSettingSvgurt] | CanvasSettingSvgurt[keyof CanvasSettingSvgurt] ]
 			) => void;
   }
   & ImageViewerStore
   & SvgViewerStore
   & MessageStore
   & PushMessageStore;
-
-const svgSetting: SvgSettingSvgurt = {
-	scale: 1,
-	svgRenderType: SVG_RENDER_TYPES.Enum.CURVE,
-	applyFractalDisplacement: '',
-	fill: true,
-	fillColor: '#000000',
-	stroke: true,
-	autoColor: true,
-	radius: 1,
-	radiusOnColor: true,
-	radiusRandomness: 1,
-	strokeColor: '',
-	strokeWidth: 1,
-	strokeWidthRandomness: 1,
-	renderEveryXPixels: 10,
-	renderEveryYPixels: 10,
-	minColorRecognized: 1,
-	maxColorRecognized: 256,
-	amplitude: 1,
-	amplitudeRandomness: 1,
-	direction: 1,
-	directionRandomness: 1,
-	wavelength: 1,
-	wavelengthRandomness: 1,
-	waves: 1,
-	wavesRandomness: 1,
-};
 
 export const useStore = create<SevinguState>(
 	catchStoreError<SevinguState>((error, set, get) => {
@@ -421,8 +393,8 @@ export const useStore = create<SevinguState>(
 			stroke: false,
 			autoColor: false,
 			strokeColor: 'rgb(28,32,38)',
-			strokeWidth: 30,
-			strokeWidthRandomness: 1,
+			strokeWidth: 1,
+			strokeWidthRandomness: 0.1,
 			radius: 4,
 			radiusOnColor: true,
 			radiusRandomness: 0.2,
@@ -435,15 +407,19 @@ export const useStore = create<SevinguState>(
 			wavelengthRandomness: 1,
 			waves: 5,
 			wavesRandomness: 1,
-			// 라인에서 추가된것
+			// LINE
 			continuous: false,
-			minLineLength: 1,
+			minlineLength: 6,
 			crossHatch: false,
 			amountOfLines: 150,
 			lineLength: 6,
 			lengthOnColor: true,
 			lengthRandomness: 0.2,
-			// 프렉탈
+			// RECURSIVE
+			autoStrokeColor: true,
+			recursiveAlgorithm: 'E',
+			maxRecursiveDepth: 150,
+			// fractal
 			applyFractalDisplacement: '',
 		},
 		changePanelState: (panelType, [key, value]) => {

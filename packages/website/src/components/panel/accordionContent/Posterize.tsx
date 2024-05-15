@@ -1,5 +1,5 @@
 import { AccordionContent } from '../../ui/accordion';
-import PanelElement from '../panelElement';
+import PanelElement from '../PanelElement';
 import { Controller } from '../panel';
 
 export default function Posterize() {

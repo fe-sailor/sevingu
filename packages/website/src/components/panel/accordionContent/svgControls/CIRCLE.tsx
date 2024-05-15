@@ -1,6 +1,6 @@
 import { useStore } from '@/stores/store';
 import { Controller } from '../../panel';
-import PanelElement from '../../panelElement';
+import PanelElement from '../../PanelElement';
 
 export default function CIRCLE() {
 	const storeState = useStore(state => state.svgPanelState);

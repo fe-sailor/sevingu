@@ -3,8 +3,13 @@ import './colorPicker.css';
 import { useState } from 'react';
 import { useStore } from '@/stores/store';
 import { debounce } from 'lodash';
+import { SvgSettingSvgurt } from '@/lib/svg-renderers/svg-renderer-schema';
 
-export default function ColorPicker() {
+type Props = {
+	id: keyof SvgSettingSvgurt;
+};
+
+export default function ColorPicker({ id }: Props) {
 	const changePanelState = useStore(state => state.changePanelState);
 	const [color, setColor] = useState({ r: 28, g: 32, b: 28, a: 1 });
 	const [isPickerVisible, setPickerVisible] = useState(false);
@@ -18,7 +23,8 @@ export default function ColorPicker() {
 	}
 
 	const changePanelValue = debounce(() => {
-		changePanelState('svg', ['fillColor', rgb(color.r, color.g, color.b)]);
+		changePanelState('svg', [id, rgb(color.r, color.g, color.b)]);
+		console;
 	}, 300);
 
 	return (

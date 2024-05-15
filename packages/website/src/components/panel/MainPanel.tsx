@@ -24,6 +24,7 @@ import Posterize from './accordionContent/Posterize';
 import CIRCLE from './accordionContent/svgControls/CIRCLE';
 import CURVE from './accordionContent/svgControls/CURVE';
 import LINE from './accordionContent/svgControls/LINE';
+import RECURSIVE from './accordionContent/svgControls/RECURSIVE';
 
 const ACCORDION_TITLE = 'p-1 bg-[#c5f6fa] text-sm font-bold';
 
@@ -123,6 +124,7 @@ export default function MainPanel() {
 		[SVGRenderTypes.CIRCLE]: CIRCLE,
 		[SVGRenderTypes.CURVE]: CURVE,
 		[SVGRenderTypes.LINE]: LINE,
+		[SVGRenderTypes.RECURSIVE]: RECURSIVE,
 		// 다른 SVGRenderTypes에 대한 컴포넌트를 여기에 추가하세요.
 	};
 
@@ -150,19 +152,9 @@ export default function MainPanel() {
 							<AccordionTrigger className={ACCORDION_TITLE}>
 								이미지 컨트롤
 							</AccordionTrigger>
+
 							<AccordionContent className="p-2">
 								<ImageControls />
-								{/* 테스트 */}
-								{/* <AccordionItem value="item-1-1">
-								<AccordionTrigger className={ACCORDION_TITLE}>
-									이미지 컨트롤
-								</AccordionTrigger>
-								<AccordionContent className="p-4">
-									<ImageControls />
-								</AccordionContent>
-							</AccordionItem> */}
-								{/* 테스트 */}
-
 								<AccordionItem
 									value="item-2"
 									className="rounded-t overflow-hidden">

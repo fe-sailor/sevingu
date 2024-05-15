@@ -1,6 +1,6 @@
 import { useStore } from '@/stores/store';
 import { Controller } from '../../panel';
-import PanelElement from '../../panelElement';
+import PanelElement from '../../PanelElement';
 
 export default function LINE() {
 	const storeState = useStore(state => state.svgPanelState);
@@ -53,7 +53,7 @@ export default function LINE() {
 		{ id: 'continuous', name: '연속적', style: 'switch' },
 		// continuous가 true일 때만 렌더링
 		{
-			id: 'minLineLength',
+			id: 'minlineLength',
 			name: '최소 선 길이',
 			style: 'slider',
 			min: 1,

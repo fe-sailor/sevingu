@@ -6,7 +6,14 @@ import { Controller, PanelType } from './panel';
 import ColorPicker from './feature/ColorPicker';
 import { debounce } from 'lodash';
 import LabelTooltip from './feature/LabelTooltip';
-import { useEffect } from 'react';
+import { SvgSettingSvgurt } from '@/lib/svg-renderers/svg-renderer-schema';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '../ui/select';
 
 type Props = {
 	panelType: PanelType;
@@ -20,6 +27,7 @@ export default function PanelElement({
 	min = 0,
 	max = 100,
 	step = 1,
+	selectList = [{ id: 'default', name: 'default' }],
 }: Props) {
 	const checkPanelIdState = useStore(state => {
 		switch (panelType) {
@@ -68,7 +76,23 @@ export default function PanelElement({
 					<div>{checkPanelIdState}</div>
 				</div>
 			)}
-			{style === 'color' && <ColorPicker />}
+			{style === 'select' && (
+				<Select
+					onValueChange={value => changePanelValue(value)}
+					defaultValue={checkPanelIdState}>
+					<SelectTrigger className="w-[40%]">
+						<SelectValue />
+					</SelectTrigger>
+					<SelectContent>
+						{selectList.map(({ id, name }) => (
+							<SelectItem key={id} value={id}>
+								{name}
+							</SelectItem>
+						))}
+					</SelectContent>
+				</Select>
+			)}
+			{style === 'color' && <ColorPicker id={id as keyof SvgSettingSvgurt} />}
 		</div>
 	);
 }

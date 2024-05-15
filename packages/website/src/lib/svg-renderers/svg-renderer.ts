@@ -14,6 +14,8 @@ import {
 import { exhaustiveTypeCheck, stringJoin } from '@/lib/utils';
 import pick from 'lodash/pick';
 import { CurveRenderer } from '@/lib/svg-renderers/curve-renderer';
+import { LineRenderer } from './line-renderer';
+import { RecursiveRenderer } from './recursive-renderer';
 
 export class SvgRenderer
 	implements RenderSvg, SetSetting, SetRenderSize, SetPixelRawData
@@ -73,6 +75,20 @@ export class SvgRenderer
 				);
 			case 'CURVE':
 				return new CurveRenderer(
+					this.setting,
+					this.width,
+					this.height,
+					this.pixelRawData
+				);
+			case 'LINE':
+				return new LineRenderer(
+					this.setting,
+					this.width,
+					this.height,
+					this.pixelRawData
+				);
+			case 'RECURSIVE':
+				return new RecursiveRenderer(
 					this.setting,
 					this.width,
 					this.height,
