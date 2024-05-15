@@ -26,6 +26,7 @@ import CURVE from './accordionContent/svgControls/CURVE';
 import LINE from './accordionContent/svgControls/LINE';
 import RECURSIVE from './accordionContent/svgControls/RECURSIVE';
 
+
 const ACCORDION_TITLE = 'p-1 bg-[#c5f6fa] text-sm font-bold';
 
 export default function MainPanel() {

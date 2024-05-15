@@ -33,7 +33,7 @@ const MainHeader = () => {
 				<span className={'font-sans text-lg font-bold'}>Sevingu</span>
 			</div>
 
-			<Button variant="destructive" onClick={undo}>
+			<Button variant="destructive">
 				<label className="cursor-pointer">
 					<span>upload</span>
 					<input
