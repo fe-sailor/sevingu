@@ -1,16 +1,16 @@
-import { throttle } from 'lodash';
 import {
 	Accordion,
 	AccordionContent,
 	AccordionItem,
 	AccordionTrigger,
 } from '@/components/ui/accordion';
-import { PanelEntries, useStore } from '@/stores/store';
-import { PanelStateKey, SVGRenderTypes } from '@/stores/storeType';
-import EdgeDetection from './accordionContent/EdgeDetection';
-import ImageControls from './accordionContent/ImageControls';
-import Posterize from './accordionContent/Posterize';
-import CIRCLE from './accordionContent/svgControls/CIRCLE';
+import { CONTROLLER_BOUNDARY_SELECTOR } from '@/constants';
+import { useStore } from '@/stores/store';
+import { SVGRenderTypes } from '@/stores/storeType';
+import { throttle } from 'lodash';
+import { createElement, useEffect, useRef, useState } from 'react';
+import { Rnd } from 'react-rnd';
+import { Label } from '../ui/label';
 import {
 	Select,
 	SelectContent,
@@ -18,10 +18,11 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '../ui/select';
-import { Label } from '../ui/label';
-import { createElement, useState, useEffect, useRef } from 'react';
+import EdgeDetection from './accordionContent/EdgeDetection';
+import ImageControls from './accordionContent/ImageControls';
+import Posterize from './accordionContent/Posterize';
+import CIRCLE from './accordionContent/svgControls/CIRCLE';
 import CURVE from './accordionContent/svgControls/CURVE';
-import { Rnd } from 'react-rnd';
 
 const ACCORDION_TITLE = 'p-1 bg-[#c5f6fa] text-sm font-bold';
 
@@ -131,7 +132,7 @@ export default function MainPanel() {
 				height: defaultHeight,
 			}}
 			position={position}
-			bounds={'.w-screen'}
+			bounds={CONTROLLER_BOUNDARY_SELECTOR}
 			enableResizing={false}
 			onDragStop={(e, d) => {
 				setPosition({ x: d.x, y: d.y });
