@@ -92,16 +92,6 @@ export default function MainPanel() {
 						</AccordionTrigger>
 						<AccordionContent className="p-2">
 							<ImageControls />
-							{/* 테스트 */}
-							{/* <AccordionItem value="item-1-1">
-								<AccordionTrigger className={ACCORDION_TITLE}>
-									이미지 컨트롤
-								</AccordionTrigger>
-								<AccordionContent className="p-4">
-									<ImageControls />
-								</AccordionContent>
-							</AccordionItem> */}
-							{/* 테스트 */}
 
 							<AccordionItem value="item-2">
 								<AccordionTrigger className={ACCORDION_TITLE}>
