@@ -6,22 +6,22 @@ import {
 	PANEL_MIN_SIZE_SVG,
 	SVG_VIEWER_ID,
 } from '@/components/dual-processed-image-viewer/const';
-import { useImageViewerStore } from '@/stores/imageViewerStore';
-import type { PanelProps } from 'react-resizable-panels';
 import {
 	ResizableHandle,
 	ResizablePanel,
 	ResizablePanelGroup,
 } from '@/components/ui/resizable';
-import { useRef, useEffect, useState } from 'react';
-import { useMessageListener, useMessageStore } from '@/stores/messageStore';
-import { useDropZone } from '@reactuses/core';
-import { cn, loadImageAsBlob } from '@/lib/utils';
-import { useStore } from '@/stores/store';
-import { ImageDataBlender } from '@/lib/canvas-blender/canvas-blender';
 import { Skeleton } from '@/components/ui/skeleton';
+import { CONTROLLER_BOUNDARY_SELECTOR, DEFAULT_IMAGE_URI } from '@/constants';
+import { ImageDataBlender } from '@/lib/canvas-blender/canvas-blender';
+import { cn, loadImageAsBlob } from '@/lib/utils';
+import { useImageViewerStore } from '@/stores/imageViewerStore';
+import { useMessageListener, useMessageStore } from '@/stores/messageStore';
+import { useStore } from '@/stores/store';
 import { useSvgViewerStore } from '@/stores/svgViewerStore';
-import { DEFAULT_IMAGE_URI, CONTROLLER_BOUNDARY } from '@/constants';
+import { useDropZone } from '@reactuses/core';
+import { useEffect, useRef, useState } from 'react';
+import type { PanelProps } from 'react-resizable-panels';
 
 const DualProcessedImageViewer = () => {
 	const { setState, getState } = useStore;
@@ -133,7 +133,10 @@ const DualProcessedImageViewer = () => {
 
 	return (
 		<>
-			<div id={CONTROLLER_BOUNDARY} className="w-screen" ref={dragOverRef}>
+			<div
+				id={CONTROLLER_BOUNDARY_SELECTOR}
+				className="w-screen"
+				ref={dragOverRef}>
 				<ResizablePanelGroup
 					direction="horizontal"
 					className={cn('rounded-lg border-4 border-solid mx-auto', {
