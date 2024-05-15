@@ -44,6 +44,7 @@ const MainHeader = () => {
 			setOpen(false); // 다운로드 시작 후 모달 닫기
 		}, 5000); // 5초 대기
 	}, [download]);
+
 	return (
 		<div>
 			<div className="p-10 flex justify-center w-full">
