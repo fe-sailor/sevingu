@@ -1,39 +1,39 @@
 {
-	"name": "sevingu",
-	"version": "0.0.1",
-	"description": "",
-	"main": "",
-	"scripts": {
-		"test:all": "pnpm -r test",
-		"postinstall": "husky install",
-		"format": "pnpm -r format",
-		"web:dev": "pnpm --filter website dev",
-		"web:lint": "pnpm --filter website lint",
-		"web:shadcn:add": "pnpm --filter website shadcn:add ",
-		"web:add": "pnpm --filter website add",
-		"build": "pnpm -r --parallel run build"
-	},
-	"dependencies": {
-		"react": "^18.2.0",
-		"react-dom": "^18.2.0"
-	},
-	"keywords": [],
-	"author": "fe-sailor",
-	"license": "ISC",
-	"devDependencies": {
-		"@commitlint/cli": "^19.2.2",
-		"@commitlint/config-conventional": "^19.2.2",
-		"husky": "^9.0.11",
-		"lint-staged": "^15.2.2",
-		"prettier": "^3.2.5"
-	},
-	"lint-staged": {
-		"packages/website/**/*.{js,jsx,ts,tsx}": [
-			"eslint --cache --fix --config packages/website/.eslintrc.cjs",
-			"prettier --write"
-		],
-		"packages/core/**/*.{js,jsx,ts,tsx}": [
-			"prettier --write"
-		]
-	}
+    "name": "sevingu",
+    "version": "0.0.2",
+    "description": "",
+    "main": "",
+    "scripts": {
+        "test:all": "pnpm -r test",
+        "postinstall": "husky install",
+        "format": "pnpm -r format",
+        "web:dev": "pnpm --filter website dev",
+        "web:lint": "pnpm --filter website lint",
+        "web:shadcn:add": "pnpm --filter website shadcn:add ",
+        "web:add": "pnpm --filter website add",
+        "build": "pnpm -r --parallel run build"
+    },
+    "dependencies": {
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0"
+    },
+    "keywords": [],
+    "author": "fe-sailor",
+    "license": "ISC",
+    "devDependencies": {
+        "@commitlint/cli": "^19.2.2",
+        "@commitlint/config-conventional": "^19.2.2",
+        "husky": "^9.0.11",
+        "lint-staged": "^15.2.2",
+        "prettier": "^3.2.5"
+    },
+    "lint-staged": {
+        "packages/website/**/*.{js,jsx,ts,tsx}": [
+            "eslint --cache --fix --config packages/website/.eslintrc.cjs",
+            "prettier --write"
+        ],
+        "packages/core/**/*.{js,jsx,ts,tsx}": [
+            "prettier --write"
+        ]
+    }
 }
