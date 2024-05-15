@@ -12,7 +12,12 @@ import {
 	RECURSIVE_ALGORITHM,
 } from '@/lib/svg-renderers/recursive-renderer-schema';
 
-export const SVG_RENDER_TYPES = z.enum(['CIRCLE', 'CURVE', 'LINE']);
+export const SVG_RENDER_TYPES = z.enum([
+	'CIRCLE',
+	'CURVE',
+	'LINE',
+	'RECURSIVE',
+]);
 
 export const svgRendererSettingSchema = z.object({
 	renderType: SVG_RENDER_TYPES,
