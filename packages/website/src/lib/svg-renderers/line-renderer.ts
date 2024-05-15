@@ -156,7 +156,7 @@ export class LineRenderer implements RenderSvg {
 
 			// NOTE: 일단 추후 추가
 			// useContinuous: setting.continuous,
-			// minlineLength: setting.minlienLength,
+			// minlineLength: setting.minlineLength,
 			// useCrossHatch: setting.crossHatch,
 			// amountOfLines: setting.amountOfLines,
 

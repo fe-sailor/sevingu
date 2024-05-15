@@ -57,7 +57,7 @@ export type SvgSettingSvgurt = {
 	wavesRandomness: number;
 
 	continuous: boolean;
-	minlienLength: number;
+	minlineLength: number;
 	crossHatch: boolean;
 	amountOfLines: number;
 	lineLength: number;
