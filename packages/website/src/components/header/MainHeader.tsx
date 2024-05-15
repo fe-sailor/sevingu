@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { useStore } from '@/stores/store';
 import { useCallback } from 'react';
 import { Input } from '../ui/input';
+import { SevinguImage } from '@/lib/SevinguImage';
 
 const MainHeader = () => {
 	const { showImage, undo, redo, download } = useStore();
@@ -13,7 +14,7 @@ const MainHeader = () => {
 		if (!event.target.files?.length) {
 			return;
 		}
-		showImage({ imageBlob: event.target.files[0] });
+		showImage(new SevinguImage(event.target.files[0]));
 	};
 
 	// 광고를 표시하고 5초 후에 다운로드를 실행

@@ -1,5 +1,6 @@
-import { SevinguImage, useStore } from '@/stores/store';
+import { useStore } from '@/stores/store';
 import { SevinguMessage } from '@/stores/messageStore';
+import { SevinguImage } from '@/lib/SevinguImage';
 
 export type ImageConfiguration = { blur: number };
 
