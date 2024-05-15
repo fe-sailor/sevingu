@@ -54,7 +54,7 @@ jobs:
             COMMIT_MESSAGE=$(git log -1 --pretty=%B)
             if echo "$COMMIT_MESSAGE" | grep -q "MAJOR"; then
               echo "::set-output name=version_type::major"
-            elif echo "$COMMIT_MESSAGE" | grep -iq "feature"; then
+            elif echo "$COMMIT_MESSAGE" | grep -iq "feature feat"; then
               echo "::set-output name=version_type::minor"
             elif echo "$COMMIT_MESSAGE" | grep -iq "fix bug"; then
               echo "::set-output name=version_type::patch"
