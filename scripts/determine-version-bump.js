@@ -4,7 +4,7 @@ const fs = require('fs');
 const { execSync } = require('child_process');
 
 const keywords = JSON.parse(
-	fs.readFileSync('../version-bump-keywords.json', 'utf8')
+	fs.readFileSync('version-bump-keywords.json', 'utf8')
 );
 
 const commitMessage = execSync('git log -1 --pretty=%B').toString().trim();
