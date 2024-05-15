@@ -5,16 +5,6 @@ import React, { useEffect, useCallback, useState } from 'react';
 //import { Input } from '../ui/input';
 import Modal from '../header/Modal';
 
-// global.d.ts
-
-declare global {
-	interface Window {
-		adsbygoogle: { [key: string]: unknown }[];
-	}
-}
-
-export {};
-
 const MainHeader = () => {
 	const { showImage, undo, redo, download } = useStore();
 
@@ -54,7 +44,7 @@ const MainHeader = () => {
 			setOpen(false); // 다운로드 시작 후 모달 닫기
 		}, 5000); // 5초 대기
 	}, [download]);
-
+	console.log('logo', logo);
 	return (
 		<div>
 			<div className="p-10 flex justify-center w-full">
