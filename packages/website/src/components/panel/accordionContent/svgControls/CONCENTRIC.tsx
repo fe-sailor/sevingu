@@ -1,5 +1,5 @@
 import { Controller } from '../../panel';
-import PanelElement from '../../PanelElements';
+import PanelElement from '../../PanelElement';
 
 export default function CONCENTRIC() {
 	const imageControls: Controller[] = [
