@@ -1,4 +1,11 @@
+import { PanelType } from '@/components/panel/panel';
+import {
+	PushMessage,
+	PushMessageStore,
+} from '@/components/push-alert/PushAlert';
+import { DEFAULT_IMAGE_URI } from '@/constants';
 import { CanvasFilter } from '@/lib/canvas-filter/canvas-filter';
+import { CanvasSettingSvgurt } from '@/lib/canvas-filter/canvas-filter-schema';
 import { SvgRenderer } from '@/lib/svg-renderers/svg-renderer';
 import {
 	SVG_RENDER_TYPES,
@@ -6,20 +13,11 @@ import {
 } from '@/lib/svg-renderers/svg-renderer-schema';
 import { getFileUri, getImageWidthAndHeight, getSvgUrl } from '@/lib/utils';
 import { catchStoreError } from '@/stores/middleware';
+import { debounce } from 'lodash';
 import { create } from 'zustand';
 import { ImageViewerStore } from './imageViewerStore';
 import { MessageStore, SevinguMessage } from './messageStore';
 import { SvgViewerStore } from './svgViewerStore';
-import { CanvasSettingSvgurt } from '@/lib/canvas-filter/canvas-filter-schema';
-import { PanelType } from '@/components/panel/panel';
-import {
-	PushMessage,
-	PushMessageStore,
-} from '@/components/push-alert/PushAlert';
-import { DEFAULT_IMAGE_URI } from '@/constants';
-import { debounce } from 'lodash';
-import { z } from 'zod';
-import { RECURSIVE_ALGORITHM } from '@/lib/svg-renderers/recursive-renderer-schema';
 
 type Entries<T> = {
 	[K in keyof T]: [K, T[K]];
