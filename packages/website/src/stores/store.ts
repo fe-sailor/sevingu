@@ -18,6 +18,8 @@ import {
 } from '@/components/push-alert/PushAlert';
 import { DEFAULT_IMAGE_URI } from '@/constants';
 import { debounce } from 'lodash';
+import { z } from 'zod';
+import { RECURSIVE_ALGORITHM } from '@/lib/svg-renderers/recursive-renderer-schema';
 
 type Entries<T> = {
 	[K in keyof T]: [K, T[K]];
@@ -55,34 +57,6 @@ export type SevinguState =
   & SvgViewerStore
   & MessageStore
   & PushMessageStore;
-
-const svgSetting: SvgSettingSvgurt = {
-	scale: 1,
-	svgRenderType: SVG_RENDER_TYPES.Enum.CURVE,
-	applyFractalDisplacement: '',
-	fill: true,
-	fillColor: '#000000',
-	stroke: true,
-	autoColor: true,
-	radius: 1,
-	radiusOnColor: true,
-	radiusRandomness: 1,
-	strokeColor: '',
-	strokeWidth: 1,
-	strokeWidthRandomness: 1,
-	renderEveryXPixels: 10,
-	renderEveryYPixels: 10,
-	minColorRecognized: 1,
-	maxColorRecognized: 256,
-	amplitude: 1,
-	amplitudeRandomness: 1,
-	direction: 1,
-	directionRandomness: 1,
-	wavelength: 1,
-	wavelengthRandomness: 1,
-	waves: 1,
-	wavesRandomness: 1,
-};
 
 export const useStore = create<SevinguState>(
 	catchStoreError<SevinguState>((error, set, get) => {
@@ -437,6 +411,18 @@ export const useStore = create<SevinguState>(
 			wavesRandomness: 1,
 			// 프렉탈
 			applyFractalDisplacement: '',
+			// LINE
+			continuous: false,
+			minlineLength: 6,
+			crossHatch: false,
+			amountOfLines: 150,
+			lineLength: 6,
+			lengthOnColor: true,
+			lengthRandomness: 0.2,
+			// RECURSIVE
+			autoStrokeColor: true,
+			recursiveAlgorithm: 'E',
+			maxRecursiveDepth: 150,
 		},
 		changePanelState: (panelType, [key, value]) => {
 			if (panelType === 'image' || panelType === 'svg') {
