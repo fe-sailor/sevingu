@@ -19,43 +19,128 @@ export type PixelData = {
 	betweenY: number;
 };
 
+export const RECURSIVE_ALGORITHM = z.enum(['A', 'B', 'C', 'D', 'E']);
+
 export const recursiveSettingSchema = z.object({
 	scale: z.number().min(0).max(3),
 
 	minColorRecognized: z.number().min(0).max(255),
 	maxColorRecognized: z.number().min(0).max(255),
 
-	useStroke: z.boolean(),
-	useAutoStrokeColor: z.boolean(),
-	strokeWidth: z.number().min(1).max(100),
-	strokeWidthRandomness: z.number().min(0).max(1),
-	useAutoColor: z.boolean(),
-	strokeColor: z.string(),
-
-	// useContinuous: z.boolean(),
-	// minrecursiveLength: z.number().min(0).max(300),
-	// useCrossHatch: z.boolean(),
-	// amountOfRecursives: z.number().int().min(1).max(5000),
-
 	renderEveryXPixels: z.number().min(1).max(100),
 	renderEveryYPixels: z.number().min(1).max(100),
-	lineLength: z.number().min(0).max(300),
-	useLengthOnColor: z.boolean(),
-	lengthRandomness: z.number().min(0).max(1),
 
-	direction: z.number().int().min(0).max(360),
-	directionRandomness: z.number().min(0).max(1),
+	useAutoColor: z.boolean(),
+	strokeColor: z.string(),
+	strokeWidth: z.number().min(1).max(100),
+	strokeWidthRandomness: z.number().min(0).max(1),
+
+	recursiveAlgorithm: z.enum(['A', 'B', 'C', 'D', 'E']),
+	maxRecursiveDepth: z.number().int().min(1).max(1000),
 });
 
 export type RecursiveSetting = z.infer<typeof recursiveSettingSchema>;
 
 export class Recursive {
 	constructor(
-		public x1: number,
-		public y1: number,
-		public x2: number,
-		public y2: number,
+		private x: number,
+		private y: number,
+		public pathString: string,
 		public strokeColor: string,
 		public strokeWidth: number
 	) {}
+	buildRecursivePath(
+		settings: RecursiveSetting,
+		imageData: Uint8ClampedArray,
+		width: number,
+		height: number,
+		isTraveled: boolean[][],
+		stack: number
+	) {
+		if (this.x < 0 || this.y < 0 || this.x >= width || this.y >= height) {
+			return '';
+		}
+
+		if (isTraveled[this.x][this.y]) {
+			return '';
+		}
+
+		const {
+			scale,
+			maxRecursiveDepth,
+			renderEveryXPixels,
+			renderEveryYPixels,
+			recursiveAlgorithm,
+		} = settings;
+
+		let pathString = ` L ${this.x * scale} ${this.y * scale}`;
+		isTraveled[this.x][this.y] = true;
+
+		if (stack > maxRecursiveDepth) {
+			return pathString;
+		}
+
+		let moved = false;
+		for (let i = -1; i < 2; i++) {
+			for (let k = -1; k < 2; k++) {
+				if (i === 0 && k === 0) {
+					continue;
+				}
+
+				// eslint-disable-next-line default-case
+				switch (recursiveAlgorithm) {
+					case 'A': {
+						this.x = this.x + renderEveryXPixels * i;
+						this.y = this.y + renderEveryYPixels * k;
+						break;
+					}
+					case 'B': {
+						this.x = this.x + Math.abs(renderEveryXPixels * i);
+						this.y = this.y - renderEveryYPixels * k;
+						break;
+					}
+					case 'C': {
+						this.x = this.x + Math.abs(renderEveryXPixels * i);
+						this.y = this.y - Math.abs(renderEveryYPixels * k);
+						break;
+					}
+					case 'D': {
+						this.x = this.x + renderEveryXPixels * i;
+						this.y = this.y + renderEveryYPixels * k;
+						break;
+					}
+					case 'E': {
+						this.x = this.x + Math.abs(renderEveryXPixels * i);
+						this.y = this.y + Math.abs(renderEveryYPixels * k);
+						break;
+					}
+				}
+
+				const pathAddition = this.buildRecursivePath(
+					settings,
+					imageData,
+					width,
+					height,
+					isTraveled,
+					stack + 1
+				);
+
+				if (pathAddition) {
+					if (moved) {
+						pathString += ` M ${this.x * scale} ${this.y * scale}`;
+					} else {
+						moved = true;
+					}
+
+					pathString += pathAddition;
+
+					if (recursiveAlgorithm === 'D' || recursiveAlgorithm === 'E') {
+						return pathString;
+					}
+				}
+			}
+		}
+
+		return pathString;
+	}
 }
