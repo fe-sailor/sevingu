@@ -42,14 +42,25 @@ export const recursiveSettingSchema = z.object({
 export type RecursiveSetting = z.infer<typeof recursiveSettingSchema>;
 
 export class Recursive {
+	private moveX: number;
+	private moveY: number;
+	public pathString: string = '';
+
 	constructor(
 		private x: number,
 		private y: number,
-		public pathString: string,
 		public strokeColor: string,
 		public strokeWidth: number
-	) {}
-	buildRecursivePath(
+	) {
+		this.moveX = x;
+		this.moveY = y;
+	}
+
+	public getRecursivePath(scale: number, pathString: string) {
+		return `M ${this.x * scale} ${this.y * scale} ${pathString}`;
+	}
+
+	public buildRecursivePath(
 		settings: RecursiveSetting,
 		imageData: Uint8ClampedArray,
 		width: number,
@@ -57,11 +68,16 @@ export class Recursive {
 		isTraveled: boolean[][],
 		stack: number
 	) {
-		if (this.x < 0 || this.y < 0 || this.x >= width || this.y >= height) {
+		if (
+			this.moveX < 0 ||
+			this.moveY < 0 ||
+			this.moveX >= width ||
+			this.moveY >= height
+		) {
 			return '';
 		}
 
-		if (isTraveled[this.x][this.y]) {
+		if (isTraveled[this.moveX][this.moveY]) {
 			return '';
 		}
 
@@ -73,8 +89,8 @@ export class Recursive {
 			recursiveAlgorithm,
 		} = settings;
 
-		let pathString = ` L ${this.x * scale} ${this.y * scale}`;
-		isTraveled[this.x][this.y] = true;
+		let pathString = ` L ${this.moveX * scale} ${this.moveY * scale}`;
+		isTraveled[this.moveX][this.moveY] = true;
 
 		if (stack > maxRecursiveDepth) {
 			return pathString;
@@ -90,28 +106,28 @@ export class Recursive {
 				// eslint-disable-next-line default-case
 				switch (recursiveAlgorithm) {
 					case 'A': {
-						this.x = this.x + renderEveryXPixels * i;
-						this.y = this.y + renderEveryYPixels * k;
+						this.moveX = this.moveX + renderEveryXPixels * i;
+						this.moveY = this.moveY + renderEveryYPixels * k;
 						break;
 					}
 					case 'B': {
-						this.x = this.x + Math.abs(renderEveryXPixels * i);
-						this.y = this.y - renderEveryYPixels * k;
+						this.moveX = this.moveX + Math.abs(renderEveryXPixels * i);
+						this.moveY = this.moveY - renderEveryYPixels * k;
 						break;
 					}
 					case 'C': {
-						this.x = this.x + Math.abs(renderEveryXPixels * i);
-						this.y = this.y - Math.abs(renderEveryYPixels * k);
+						this.moveX = this.moveX + Math.abs(renderEveryXPixels * i);
+						this.moveY = this.moveY - Math.abs(renderEveryYPixels * k);
 						break;
 					}
 					case 'D': {
-						this.x = this.x + renderEveryXPixels * i;
-						this.y = this.y + renderEveryYPixels * k;
+						this.moveX = this.moveX + renderEveryXPixels * i;
+						this.moveY = this.moveY + renderEveryYPixels * k;
 						break;
 					}
 					case 'E': {
-						this.x = this.x + Math.abs(renderEveryXPixels * i);
-						this.y = this.y + Math.abs(renderEveryYPixels * k);
+						this.moveX = this.moveX + Math.abs(renderEveryXPixels * i);
+						this.moveY = this.moveY + Math.abs(renderEveryYPixels * k);
 						break;
 					}
 				}
@@ -127,7 +143,7 @@ export class Recursive {
 
 				if (pathAddition) {
 					if (moved) {
-						pathString += ` M ${this.x * scale} ${this.y * scale}`;
+						pathString += ` M ${this.moveX * scale} ${this.moveY * scale}`;
 					} else {
 						moved = true;
 					}

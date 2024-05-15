@@ -10,11 +10,12 @@ import {
 	SvgSetting,
 	isInColorThreshold,
 	forEachPixelPoints,
-	getPixelColorIntensity,
+	getPixelColorAtXY,
 } from './svg-renderer-schema';
 import { RenderSvg } from '@/lib/svg-renderers/bases';
 
 export class RecursiveRenderer implements RenderSvg {
+	isTraveledPosition: boolean[][] = [];
 	constructor(
 		private recursiveSetting: SvgSettingSvgurt | SvgSetting,
 		private width: number,
@@ -34,7 +35,12 @@ export class RecursiveRenderer implements RenderSvg {
 			console.error('no recursive setting error');
 			return;
 		}
+
 		const { renderEveryXPixels, renderEveryYPixels } = this.recursiveSetting;
+
+		for (let x = 0; x < this.width; x += renderEveryXPixels) {
+			this.isTraveledPosition[x] = [];
+		}
 
 		forEachPixelPoints(
 			{
@@ -74,67 +80,41 @@ export class RecursiveRenderer implements RenderSvg {
 	}
 
 	private createRecursive(pixelPoint: PixelPoint): Recursive {
-		const {
-			useAutoColor,
-			direction,
-			directionRandomness,
-			lineLength,
-			useLengthOnColor,
-			lengthRandomness,
-			strokeColor,
-			strokeWidth,
-			strokeWidthRandomness,
-		} = this.adaptSetting(this.recursiveSetting);
-
-		const x1 = pixelPoint.x;
-		const y1 = pixelPoint.y;
-
-		const recursiveColor = useAutoColor
-			? `rgb(${pixelPoint.r}, ${pixelPoint.g}, ${pixelPoint.b})`
+		const { strokeColor, strokeWidth, useAutoColor, strokeWidthRandomness } =
+			this.adaptSetting(this.recursiveSetting);
+		const pixelColor = getPixelColorAtXY(
+			this.pixelRawData,
+			pixelPoint.x,
+			pixelPoint.y,
+			this.width
+		);
+		const pathColor = useAutoColor
+			? `rgb(${pixelColor.r}, ${pixelColor.g}, ${pixelColor.b})`
 			: strokeColor;
 
-		const lengthOfRecursive = useLengthOnColor
-			? getPixelColorIntensity(
-					pick(pixelPoint, ['r', 'g', 'b', 'a']),
-					this.recursiveSetting
-				) * lineLength
-			: lineLength;
-
-		const dir = -direction + 180 * directionRandomness * Math.random();
-		const xMove = lengthOfRecursive * Math.cos(dir * (Math.PI / 180));
-		const yMove = lengthOfRecursive * Math.sin(dir * (Math.PI / 180));
-
-		const lenRandom = 1 - Math.random() * lengthRandomness;
-		const x2 = x1 + xMove * lenRandom;
-		const y2 = y1 + yMove * lenRandom;
-
-		const recursive = {
-			x1,
-			y1,
-			x2,
-			y2,
-			strokeColor: recursiveColor,
-			strokeWidth: strokeWidth * (1 - Math.random() * strokeWidthRandomness),
-		};
-
 		return new Recursive(
-			recursive.x1,
-			recursive.y1,
-			recursive.x2,
-			recursive.y2,
-			recursive.strokeColor,
-			recursive.strokeWidth
+			pixelPoint.x,
+			pixelPoint.y,
+			pathColor,
+			strokeWidth * (1 - Math.random() * strokeWidthRandomness)
 		);
 	}
 
 	private renderRecursive(recursive: Recursive): string {
 		const { scale } = this.adaptSetting(this.recursiveSetting);
-		const { x1, y1, x2, y2, strokeWidth, strokeColor } = recursive;
-		return `<recursive x1="${x1 * scale}" y1="${
-			y1 * scale
-		}" x2="${x2 * scale}" y2="${
-			y2 * scale
-		}" style="stroke: ${strokeColor}; stroke-width: ${strokeWidth}" />`;
+		const { strokeWidth, strokeColor } = recursive;
+		const pathString = recursive.getRecursivePath(
+			scale,
+			recursive.buildRecursivePath(
+				this.adaptSetting(this.recursiveSetting),
+				this.pixelRawData,
+				this.width,
+				this.height,
+				this.isTraveledPosition,
+				0
+			)
+		);
+		return `<path d="${pathString}" style="stroke: ${strokeColor}; stroke-width: ${strokeWidth}; fill: none;" />`;
 	}
 
 	private adaptSetting(
@@ -145,31 +125,16 @@ export class RecursiveRenderer implements RenderSvg {
 		}
 		return {
 			scale: setting.scale,
-
 			minColorRecognized: setting.minColorRecognized,
 			maxColorRecognized: setting.maxColorRecognized,
-
-			useStroke: setting.stroke,
-			useAutoStrokeColor: setting.autoColor,
-			strokeWidth: setting.strokeWidth,
-			strokeWidthRandomness: setting.strokeWidthRandomness,
-			useAutoColor: setting.autoColor,
-			strokeColor: setting.strokeColor,
-
-			// NOTE: 일단 추후 추가
-			// useContinuous: setting.continuous,
-			// minrecursiveLength: setting.minlienLength,
-			// useCrossHatch: setting.crossHatch,
-			// amountOfRecursives: setting.amountOfRecursives,
-
 			renderEveryXPixels: setting.renderEveryXPixels,
 			renderEveryYPixels: setting.renderEveryYPixels,
-			lineLength: setting.lineLength,
-			useLengthOnColor: setting.lengthOnColor,
-			lengthRandomness: setting.lengthRandomness,
-
-			direction: setting.direction,
-			directionRandomness: setting.directionRandomness,
+			useAutoColor: setting.autoStrokeColor,
+			strokeColor: setting.strokeColor,
+			strokeWidth: setting.strokeWidth,
+			strokeWidthRandomness: setting.strokeWidthRandomness,
+			recursiveAlgorithm: setting.recursiveAlgorithm,
+			maxRecursiveDepth: setting.maxRecursiveDepth,
 		};
 	}
 
