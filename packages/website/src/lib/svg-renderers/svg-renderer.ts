@@ -16,7 +16,7 @@ import pick from 'lodash/pick';
 import { CurveRenderer } from '@/lib/svg-renderers/curve-renderer';
 import { LineRenderer } from './line-renderer';
 import { RecursiveRenderer } from './recursive-renderer';
-import { ConcentricRenderer } from './concentric-renderer';
+import { ConcentricCircleRenderer } from './concentric-circle-renderer';
 
 export class SvgRenderer
 	implements RenderSvg, SetSetting, SetRenderSize, SetPixelRawData
@@ -96,7 +96,7 @@ export class SvgRenderer
 					this.pixelRawData
 				);
 			case 'CONCENTRIC':
-				return new ConcentricRenderer(
+				return new ConcentricCircleRenderer(
 					this.setting,
 					this.width,
 					this.height,

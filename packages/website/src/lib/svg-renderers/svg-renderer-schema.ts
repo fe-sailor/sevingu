@@ -11,7 +11,7 @@ import {
 	RecursiveSetting,
 	RECURSIVE_ALGORITHM,
 } from '@/lib/svg-renderers/recursive-renderer-schema';
-import { ConcentricSetting } from '@/lib/svg-renderers/concentric-renderer-schema';
+import { ConcentricCircleSetting } from '@/lib/svg-renderers/concentric-circle-renderer-schema';
 
 export const SVG_RENDER_TYPES = z.enum([
 	'CIRCLE',
@@ -29,12 +29,12 @@ export const svgRendererSettingSchema = z.object({
 export type SvgRendererSetting = z.infer<typeof svgRendererSettingSchema>;
 
 // prettier-ignore
-export type SvgSetting = SvgRendererSetting
-  & CircleSetting
-  & CurveSetting
-  & LineSetting
-  & RecursiveSetting
-  & ConcentricSetting;
+export type SvgSetting = SvgRendererSetting &
+	CircleSetting &
+	CurveSetting &
+	LineSetting &
+	RecursiveSetting &
+	ConcentricCircleSetting;
 
 export type SvgSettingSvgurt = {
 	scale: number;

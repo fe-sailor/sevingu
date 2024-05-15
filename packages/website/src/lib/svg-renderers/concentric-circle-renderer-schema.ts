@@ -19,7 +19,7 @@ export type PixelData = {
 	betweenY: number;
 };
 
-export const concentricSettingSchema = z.object({
+export const concentricCircleSettingSchema = z.object({
 	scale: z.number().int().min(0).max(3),
 
 	strokeWidth: z.number().min(1).max(100),
@@ -31,15 +31,10 @@ export const concentricSettingSchema = z.object({
 	radiusStep: z.number().int().min(1).max(100),
 });
 
-export type ConcentricSetting = z.infer<typeof concentricSettingSchema>;
+export type ConcentricCircleSetting = z.infer<
+	typeof concentricCircleSettingSchema
+>;
 
-export class Concentric {
-	constructor(
-		public x1: number,
-		public y1: number,
-		public x2: number,
-		public y2: number,
-		public strokeColor: string,
-		public strokeWidth: number
-	) {}
+export class ConcentricCircle {
+	constructor(rx: number, ry: number, xRot: number, x: number, y: number) {}
 }
