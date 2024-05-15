@@ -7,6 +7,10 @@ import {
 } from '@/lib/svg-renderers/circle-renderer-schema';
 import { CurveSetting } from '@/lib/svg-renderers/curve-renderer-schema';
 import { LineSetting } from '@/lib/svg-renderers/line-renderer-schema';
+import {
+	RecursiveSetting,
+	RECURSIVE_ALGORITHM,
+} from '@/lib/svg-renderers/recursive-renderer-schema';
 
 export const SVG_RENDER_TYPES = z.enum(['CIRCLE', 'CURVE', 'LINE']);
 
@@ -21,7 +25,8 @@ export type SvgRendererSetting = z.infer<typeof svgRendererSettingSchema>;
 export type SvgSetting = SvgRendererSetting
   & CircleSetting
   & CurveSetting
-  & LineSetting;
+  & LineSetting
+  & RecursiveSetting;
 
 export type SvgSettingSvgurt = {
 	scale: number;
@@ -52,12 +57,16 @@ export type SvgSettingSvgurt = {
 	wavesRandomness: number;
 
 	continuous: boolean;
-	minlienLength: number;
+	minlineLength: number;
 	crossHatch: boolean;
 	amountOfLines: number;
 	lineLength: number;
 	lengthOnColor: boolean;
 	lengthRandomness: number;
+
+	autoStrokeColor: boolean;
+	recursiveAlgorithm: z.infer<typeof RECURSIVE_ALGORITHM>;
+	maxRecursiveDepth: number;
 };
 
 export function getPixelColorAtXY(
