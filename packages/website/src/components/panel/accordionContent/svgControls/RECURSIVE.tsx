@@ -1,4 +1,3 @@
-import { useStore } from '@/stores/store';
 import { Controller } from '../../panel';
 import PanelElement from '../../PanelElement';
 

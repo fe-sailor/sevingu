@@ -421,6 +421,11 @@ export const useStore = create<SevinguState>(
 			maxRecursiveDepth: 150,
 			// fractal
 			applyFractalDisplacement: '',
+
+			//concentric-circle
+			circleArcs: 400,
+			intensityWeight: 100000,
+			radiusStep: 5,
 		},
 		changePanelState: (panelType, [key, value]) => {
 			if (panelType === 'image' || panelType === 'svg') {
