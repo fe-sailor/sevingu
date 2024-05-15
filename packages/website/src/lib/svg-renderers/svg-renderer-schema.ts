@@ -50,6 +50,14 @@ export type SvgSettingSvgurt = {
 	wavelengthRandomness: number;
 	waves: number;
 	wavesRandomness: number;
+
+	continuous: boolean;
+	minlienLength: number;
+	crossHatch: boolean;
+	amountOfLines: number;
+	lineLength: number;
+	lengthOnColor: boolean;
+	lengthRandomness: number;
 };
 
 export function getPixelColorAtXY(

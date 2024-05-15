@@ -123,25 +123,31 @@ export class LineRenderer implements RenderSvg {
 			return setting;
 		}
 		return {
-			useRadiusColorIntensity: setting.radiusOnColor,
-			radius: setting.radius,
-			radiusRandomness: setting.radiusRandomness,
-
-			useStroke: setting.stroke,
-			useAutoStrokeColor: setting.autoColor,
-			strokeColor: setting.strokeColor,
-			strokeWidth: setting.strokeWidth,
-			strokeWidthRandomness: setting.strokeWidthRandomness,
-
-			renderEveryXPixels: setting.renderEveryXPixels,
-			renderEveryYPixels: setting.renderEveryYPixels,
+			scale: setting.scale,
 
 			minColorRecognized: setting.minColorRecognized,
 			maxColorRecognized: setting.maxColorRecognized,
 
-			useFill: setting.fill,
-			fillColor: setting.fillColor,
-			scale: setting.scale,
+			useStroke: setting.stroke,
+			useAutoStrokeColor: setting.autoColor,
+			strokeWidth: setting.strokeWidth,
+			strokeWidthRandomness: setting.strokeWidthRandomness,
+			useAutoColor: setting.autoColor,
+			strokeColor: setting.strokeColor,
+
+			useContinuous: setting.continuous,
+			minlineLength: setting.minlienLength,
+			useCrossHatch: setting.crossHatch,
+			amountOfLines: setting.amountOfLines,
+
+			renderEveryXPixels: setting.renderEveryXPixels,
+			renderEveryYPixels: setting.renderEveryYPixels,
+			lineLength: setting.lineLength,
+			useLengthOnColor: setting.lengthOnColor,
+			lengthRandomness: setting.lengthRandomness,
+
+			direction: setting.direction,
+			directionRandomness: setting.directionRandomness,
 		};
 	}
 
