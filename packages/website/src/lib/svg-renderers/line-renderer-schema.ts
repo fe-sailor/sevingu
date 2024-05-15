@@ -56,7 +56,6 @@ export class Line {
 		public y1: number,
 		public x2: number,
 		public y2: number,
-		public direction: number,
 		public strokeColor: string,
 		public strokeWidth: number
 	) {}

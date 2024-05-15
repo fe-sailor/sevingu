@@ -4,13 +4,13 @@ import {
 	LineSetting,
 	PixelPoint,
 	lineSettingSchema,
-	getPixelColorIntensity,
 } from './line-renderer-schema';
 import {
 	SvgSettingSvgurt,
 	SvgSetting,
 	isInColorThreshold,
 	forEachPixelPoints,
+	getPixelColorIntensity,
 } from './svg-renderer-schema';
 import { RenderSvg } from '@/lib/svg-renderers/bases';
 
@@ -75,36 +75,55 @@ export class LineRenderer implements RenderSvg {
 
 	private createLine(pixelPoint: PixelPoint): Line {
 		const {
-			useAutoStrokeColor,
-			radius,
-			useRadiusColorIntensity,
-			radiusRandomness,
+			useAutoColor,
+			direction,
+			directionRandomness,
+			lineLength,
+			useLengthOnColor,
+			lengthRandomness,
 			strokeColor,
 			strokeWidth,
 			strokeWidthRandomness,
 		} = this.adaptSetting(this.lineSetting);
 
-		let lineRadius = radius;
-		if (useRadiusColorIntensity) {
-			lineRadius =
-				getPixelColorIntensity(
-					pick(pixelPoint, ['r', 'g', 'b', 'a']),
-					this.lineSetting
-				) * radius;
-		}
+		const x1 = pixelPoint.x;
+		const y1 = pixelPoint.y;
 
-		lineRadius *= 1 - Math.random() * radiusRandomness;
-
-		const lineColor = useAutoStrokeColor
+		const lineColor = useAutoColor
 			? `rgb(${pixelPoint.r}, ${pixelPoint.g}, ${pixelPoint.b})`
 			: strokeColor;
 
+		const lengthOfLine = useLengthOnColor
+			? getPixelColorIntensity(
+					pick(pixelPoint, ['r', 'g', 'b', 'a']),
+					this.lineSetting
+				) * lineLength
+			: lineLength;
+
+		const dir = -direction + 180 * directionRandomness * Math.random();
+		const xMove = lengthOfLine * Math.cos(dir * (Math.PI / 180));
+		const yMove = lengthOfLine * Math.sin(dir * (Math.PI / 180));
+
+		const lenRandom = 1 - Math.random() * lengthRandomness;
+		const x2 = x1 + xMove * lenRandom;
+		const y2 = y1 + yMove * lenRandom;
+
+		const line = {
+			x1,
+			y1,
+			x2,
+			y2,
+			strokeColor: lineColor,
+			strokeWidth: strokeWidth * (1 - Math.random() * strokeWidthRandomness),
+		};
+
 		return new Line(
-			pixelPoint.x,
-			pixelPoint.y,
-			lineRadius,
-			lineColor,
-			strokeWidth * (1 - Math.random() * strokeWidthRandomness)
+			line.x1,
+			line.y1,
+			line.x2,
+			line.y2,
+			line.strokeColor,
+			line.strokeWidth
 		);
 	}
 

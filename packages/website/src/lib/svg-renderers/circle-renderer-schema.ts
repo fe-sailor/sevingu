@@ -55,22 +55,6 @@ export class Circle {
 	) {}
 }
 
-export function getPixelColorIntensity(
-	pixel: Pick<PixelPoint, 'r' | 'g' | 'b' | 'a'>,
-	settings: Pick<SvgSetting, 'minColorRecognized' | 'maxColorRecognized'>
-) {
-	const { minColorRecognized, maxColorRecognized } = settings;
-
-	const r = pixel.r - minColorRecognized;
-	const g = pixel.g - minColorRecognized;
-	const b = pixel.b - minColorRecognized;
-	const colorSum = Math.max(1, r + g + b);
-
-	const outOf = Math.max(1, Math.abs(maxColorRecognized - minColorRecognized));
-
-	return colorSum / 3 / outOf;
-}
-
 export function getPixelColorAtDataIndex(
 	imageData: Uint8ClampedArray,
 	dataIndex: number
