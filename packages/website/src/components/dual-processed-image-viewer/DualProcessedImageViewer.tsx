@@ -12,7 +12,7 @@ import {
 	ResizablePanelGroup,
 } from '@/components/ui/resizable';
 import { Skeleton } from '@/components/ui/skeleton';
-import { CONTROLLER_BOUNDARY_SELECTOR, DEFAULT_IMAGE_URI } from '@/constants';
+import { CONTROLLER_BOUNDARY_ID, DEFAULT_IMAGE_URI } from '@/constants';
 import { ImageDataBlender } from '@/lib/canvas-blender/canvas-blender';
 import { cn, loadImageAsBlob } from '@/lib/utils';
 import { useImageViewerStore } from '@/stores/imageViewerStore';
@@ -82,7 +82,7 @@ const DualProcessedImageViewer = () => {
 		},
 		{
 			on: 'ChangeImageSetting',
-			listener: (state, prevState) => {
+			listener: state => {
 				if (!state.sevinguImage?.imageBlob) {
 					console.error('empty image blob');
 					return;
@@ -133,10 +133,7 @@ const DualProcessedImageViewer = () => {
 
 	return (
 		<>
-			<div
-				id={CONTROLLER_BOUNDARY_SELECTOR}
-				className="w-screen"
-				ref={dragOverRef}>
+			<div id={CONTROLLER_BOUNDARY_ID} className="w-screen" ref={dragOverRef}>
 				<ResizablePanelGroup
 					direction="horizontal"
 					className={cn('rounded-lg border-4 border-solid mx-auto', {
