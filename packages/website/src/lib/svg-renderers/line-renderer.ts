@@ -109,15 +109,13 @@ export class LineRenderer implements RenderSvg {
 	}
 
 	private renderLine(line: Line): string {
-		const { useFill, fillColor, scale, useStroke } = this.adaptSetting(
-			this.lineSetting
-		);
-		const { x, y, r, strokeWidth, strokeColor } = line;
-		return `<line cx="${x * scale}" cy="${
-			y * scale
-		}" r="${r * scale}" style="stroke: ${
-			useStroke ? strokeColor : 'none'
-		}; stroke-width: ${strokeWidth}; fill: ${useFill ? fillColor : 'none'};" />`;
+		const { scale } = this.adaptSetting(this.lineSetting);
+		const { x1, y1, x2, y2, strokeWidth, strokeColor } = line;
+		return `<line x1="${x1 * scale}" y1="${
+			y1 * scale
+		}" x2="${x2 * scale}" y2="${
+			y2 * scale
+		}" style="stroke: ${strokeColor}; stroke-width: ${strokeWidth}" />`;
 	}
 
 	private adaptSetting(setting: SvgSettingSvgurt | LineSetting): LineSetting {
