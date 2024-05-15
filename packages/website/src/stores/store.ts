@@ -18,17 +18,13 @@ import { create } from 'zustand';
 import { ImageViewerStore } from './imageViewerStore';
 import { MessageStore, SevinguMessage } from './messageStore';
 import { SvgViewerStore } from './svgViewerStore';
+import { SevinguImage } from '@/lib/SevinguImage';
 
 type Entries<T> = {
 	[K in keyof T]: [K, T[K]];
 }[keyof T];
 
 export type PanelEntries = Entries<SvgSettingSvgurt>; // Entries<SvgRenderer>
-export type SevinguImage = {
-	imageBlob: Blob;
-	setting?: SvgSettingSvgurt;
-	timeStamp?: number;
-};
 
 // prettier-ignore
 export type SevinguState =
@@ -85,12 +81,7 @@ export const useStore = create<SevinguState>(
 			set(state => {
 				if (isUndoRedoAction !== true) {
 					const newStack = state.undoRedoStack.slice(0, state.currentIndex + 1);
-					const imageObj: SevinguImage = {
-						...sevinguImage,
-						setting: get().svgPanelState,
-						timeStamp: Date.now(),
-					};
-					newStack.push(imageObj);
+					newStack.push(sevinguImage);
 					return {
 						undoRedoStack: newStack,
 						hasShownDefaultImage: false,
@@ -117,13 +108,13 @@ export const useStore = create<SevinguState>(
 				return { currentIndex: state.currentIndex - 1 };
 			});
 
-			const imageObj = get().getCurImage();
-			if (imageObj === undefined) {
+			const sevinguImage = get().getCurImage();
+			if (sevinguImage === undefined) {
 				console.error('empty image object');
 				return;
 			}
 
-			get().showImage(imageObj, true);
+			get().showImage(sevinguImage, true);
 			console.log('execute redo');
 		},
 
@@ -134,12 +125,12 @@ export const useStore = create<SevinguState>(
 				return { currentIndex: state.currentIndex + 1 };
 			});
 
-			const imageObj = get().getCurImage();
-			if (imageObj === undefined) {
+			const sevinguImage = get().getCurImage();
+			if (sevinguImage === undefined) {
 				console.error('empty image object');
 				return;
 			}
-			get().showImage(imageObj, true);
+			get().showImage(sevinguImage, true);
 			console.log('execute undo');
 		},
 

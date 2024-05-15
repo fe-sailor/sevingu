@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/resizable';
 import { Skeleton } from '@/components/ui/skeleton';
 import { CONTROLLER_BOUNDARY_ID, DEFAULT_IMAGE_URI } from '@/constants';
+import { SevinguImage } from '@/lib/SevinguImage';
 import { ImageDataBlender } from '@/lib/canvas-blender/canvas-blender';
 import { cn, loadImageAsBlob } from '@/lib/utils';
 import { useImageViewerStore } from '@/stores/imageViewerStore';
@@ -57,7 +58,7 @@ const DualProcessedImageViewer = () => {
 		if (!files) {
 			return;
 		}
-		showImage({ imageBlob: files[0] });
+		showImage(new SevinguImage(files[0]));
 	});
 
 	useMessageListener(
@@ -127,7 +128,8 @@ const DualProcessedImageViewer = () => {
 			return;
 		}
 		loadImageAsBlob(DEFAULT_IMAGE_URI).then(imageBlob => {
-			if (imageBlob !== undefined) setState({ sevinguImage: { imageBlob } });
+			if (imageBlob !== undefined)
+				setState({ sevinguImage: new SevinguImage(imageBlob) });
 		});
 	}, [setState, getState]);
 
