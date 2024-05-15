@@ -6,7 +6,7 @@ import { debounce } from 'lodash';
 
 export default function ColorPicker() {
 	const changePanelState = useStore(state => state.changePanelState);
-	const [color, setColor] = useState({ r: 200, g: 100, b: 0, a: 1 });
+	const [color, setColor] = useState({ r: 28, g: 32, b: 28, a: 1 });
 	const [isPickerVisible, setPickerVisible] = useState(false);
 
 	function rgb(r: number, g: number, b: number): string {

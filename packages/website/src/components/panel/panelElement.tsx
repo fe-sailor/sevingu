@@ -2,17 +2,11 @@ import { useStore } from '@/stores/store';
 import { Label } from '../ui/label';
 import { Switch } from '../ui/switch';
 import { Slider } from '../ui/slider';
-import { Controller, PanelType, SVGRenderTypes } from './panel';
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from '../ui/select';
+import { Controller, PanelType } from './panel';
 import ColorPicker from './feature/ColorPicker';
 import { debounce } from 'lodash';
 import LabelTooltip from './feature/LabelTooltip';
+import { useEffect } from 'react';
 
 type Props = {
 	panelType: PanelType;
@@ -42,33 +36,6 @@ export default function PanelElement({
 		changePanelState(panelType, [id, value]);
 	}, 300);
 
-	const selectList = [
-		{
-			id: 'TRACE',
-			name: '추적',
-		},
-		{
-			id: 'CIRCLE',
-			name: '원',
-		},
-		{
-			id: 'CURVE',
-			name: '곡선',
-		},
-		{
-			id: 'LINE',
-			name: '선',
-		},
-		{
-			id: 'RECURSIVE',
-			name: '반복',
-		},
-		{
-			id: 'CONCENTRIC',
-			name: '동심원',
-		},
-	];
-
 	return (
 		<div className="mb-1 flex items-center last:m-0 ">
 			<div className="w-20">
@@ -82,7 +49,11 @@ export default function PanelElement({
 			</div>
 
 			{style === 'switch' && (
-				<Switch id={id} onCheckedChange={value => changePanelValue(value)} />
+				<Switch
+					id={id}
+					defaultChecked={checkPanelIdState as boolean}
+					onCheckedChange={value => changePanelValue(value)}
+				/>
 			)}
 			{style === 'slider' && (
 				<div className="w-full flex">
@@ -96,24 +67,6 @@ export default function PanelElement({
 					/>
 					<div>{checkPanelIdState}</div>
 				</div>
-			)}
-			{style === 'select' && (
-				<Select
-					onValueChange={(value: keyof typeof SVGRenderTypes) =>
-						changePanelValue(value)
-					}
-					defaultValue={selectList[1].id}>
-					<SelectTrigger className="w-[180px]">
-						<SelectValue />
-					</SelectTrigger>
-					<SelectContent>
-						{selectList.map(({ id, name }) => (
-							<SelectItem key={id} value={id}>
-								{name}
-							</SelectItem>
-						))}
-					</SelectContent>
-				</Select>
 			)}
 			{style === 'color' && <ColorPicker />}
 		</div>

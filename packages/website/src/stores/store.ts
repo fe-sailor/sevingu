@@ -16,7 +16,7 @@ import {
 	PushMessage,
 	PushMessageStore,
 } from '@/components/push-alert/PushAlert';
-import { DEFAULT_IMAGE_URI } from '@/consts';
+import { DEFAULT_IMAGE_URI } from '@/constants';
 import { debounce } from 'lodash';
 
 type Entries<T> = {
@@ -39,7 +39,7 @@ export type SevinguState =
     currentIndex: number;
     hasShownDefaultImage: boolean;
     getCurImage: () => SevinguImage | undefined;
-    setCurImage: (image: SevinguImage, isUndoRedoAction?: boolean) => void;
+    setCurImage: (sevinguImage: SevinguImage, isUndoRedoAction?: boolean) => void;
     undo: () => void;
     redo: () => void;
     download: () => void;
@@ -109,12 +109,12 @@ export const useStore = create<SevinguState>(
 			return get().undoRedoStack.at(idx);
 		},
 
-		setCurImage: (image, isUndoRedoAction) =>
+		setCurImage: (sevinguImage, isUndoRedoAction) =>
 			set(state => {
 				if (isUndoRedoAction !== true) {
 					const newStack = state.undoRedoStack.slice(0, state.currentIndex + 1);
 					const imageObj: SevinguImage = {
-						...image,
+						...sevinguImage,
 						setting: get().svgPanelState,
 						timeStamp: Date.now(),
 					};
@@ -205,7 +205,7 @@ export const useStore = create<SevinguState>(
 		imageConfig: { blur: 20 },
 		htmlRenderedImage: new Image(),
 		imageUri: '',
-		image: null,
+		sevinguImage: null,
 		currentImageData: null,
 		setImageViewer: (imageViewer: HTMLCanvasElement) => {
 			const prevViewer = get().imageViewer;
@@ -222,15 +222,16 @@ export const useStore = create<SevinguState>(
 			}
 		},
 
-		showImage: async (image: SevinguImage, isUndoRedoAction) => {
-			if (image === null) return;
-			const imagUri = await getFileUri(image.imageBlob);
-			set(() => ({ image }));
-			get().setCurImage(image, isUndoRedoAction);
+		showImage: async (sevinguImage, isUndoRedoAction) => {
+			if (sevinguImage === null) return;
+			const imagUri = await getFileUri(sevinguImage.imageBlob);
+			set(() => ({ sevinguImage }));
+			get().setCurImage(sevinguImage, isUndoRedoAction);
 			set(() => ({ imageUri: imagUri }));
 			get().sendMessage('SuccessToGetImageUri');
 			const imageViewer = get().imageViewer;
-
+			console.log('image viewer', imageViewer);
+			console.log('svg viewer', get().svgViewer);
 			if (!imageViewer) {
 				console.error('image view empty');
 				return;
@@ -298,20 +299,9 @@ export const useStore = create<SevinguState>(
 							postBlur: 0,
 						}
 					: imagePanelState
-				// {
-				// 		grayscale: false,
-				// 		invert: false,
-				// 		blur: 0,
-				// 		posterize: false,
-				// 		posterizeLevels: 5,
-				// 		edgeDetection: false,
-				// 		lowThreshold: 20,
-				// 		highThreshold: 50,
-				// 		postBlur: 1,
-				// 	}
 			);
 
-			if (!get().currentImageData) {
+			if (willSendSevinguMessage === 'SuccessToImageLoaded') {
 				set({
 					currentImageData: await canvasFilter.renderImage(),
 				});
@@ -321,7 +311,6 @@ export const useStore = create<SevinguState>(
 			}
 			const imageDataFrom = get().currentImageData!;
 			const imageDataTo = await canvasFilter.renderImage();
-
 			const svgImageBlender = get().svgImageBlender!;
 			svgImageBlender.stopBlending();
 			svgImageBlender.setImages(
@@ -429,15 +418,15 @@ export const useStore = create<SevinguState>(
 			renderEveryYPixels: 6,
 			fill: true,
 			fillColor: 'rgb(28,32,38)',
-			stroke: true,
+			stroke: false,
+			autoColor: false,
+			strokeColor: 'rgb(28,32,38)',
+			strokeWidth: 30,
+			strokeWidthRandomness: 1,
 			radius: 4,
 			radiusOnColor: true,
 			radiusRandomness: 0.2,
 			// 커브에서 추가된것
-			autoColor: true,
-			strokeColor: '',
-			strokeWidth: 30,
-			strokeWidthRandomness: 1,
 			amplitude: 20,
 			amplitudeRandomness: 1,
 			direction: 1,
@@ -446,6 +435,14 @@ export const useStore = create<SevinguState>(
 			wavelengthRandomness: 1,
 			waves: 5,
 			wavesRandomness: 1,
+			// 라인에서 추가된것
+			continuous: false,
+			minLineLength: 1,
+			crossHatch: false,
+			amountOfLines: 150,
+			lineLength: 6,
+			lengthOnColor: true,
+			lengthRandomness: 0.2,
 			// 프렉탈
 			applyFractalDisplacement: '',
 		},

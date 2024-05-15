@@ -23,4 +23,6 @@ export type Controller = {
 	min?: number;
 	max?: number;
 	step?: number;
+	dependentOn?: string;
+	isShowDependentState?: boolean;
 };
