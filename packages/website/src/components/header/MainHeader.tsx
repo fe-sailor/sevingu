@@ -5,16 +5,6 @@ import React, { useEffect, useCallback, useState } from 'react';
 //import { Input } from '../ui/input';
 import Modal from '../header/Modal';
 
-// global.d.ts
-
-declare global {
-	interface Window {
-		adsbygoogle: { [key: string]: unknown }[];
-	}
-}
-
-export {};
-
 const MainHeader = () => {
 	const { showImage, undo, redo, download } = useStore();
 
