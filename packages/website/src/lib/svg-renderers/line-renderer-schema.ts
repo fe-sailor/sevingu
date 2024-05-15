@@ -21,26 +21,31 @@ export type PixelData = {
 };
 
 export const lineSettingSchema = z.object({
-	useRadiusColorIntensity: z.boolean(),
-	radius: z.number().int().min(0).max(50),
-	radiusRandomness: z.number().min(0).max(1),
-
-	useStroke: z.boolean(),
-	useAutoStrokeColor: z.boolean(),
-	strokeColor: z.string(),
-	strokeWidth: z.number().min(1).max(100),
-	strokeWidthRandomness: z.number().min(0).max(1),
-
-	renderEveryXPixels: z.number().min(1).max(100),
-	renderEveryYPixels: z.number().min(1).max(100),
+	scale: z.number().min(0).max(3),
 
 	minColorRecognized: z.number().min(0).max(255),
 	maxColorRecognized: z.number().min(0).max(255),
 
-	useFill: z.boolean(),
-	fillColor: z.string(),
+	useStroke: z.boolean(),
+	useAutoStrokeColor: z.boolean(),
+	strokeWidth: z.number().min(1).max(100),
+	strokeWidthRandomness: z.number().min(0).max(1),
+	useAutoColor: z.boolean(),
+	strokeColor: z.string(),
 
-	scale: z.number().min(0).max(3),
+	useContinuous: z.boolean(),
+	minlineLength: z.number().min(0).max(300),
+	useCrossHatch: z.boolean(),
+	amountOfLines: z.number().int().min(1).max(5000),
+
+	renderEveryXPixels: z.number().min(1).max(100),
+	renderEveryYPixels: z.number().min(1).max(100),
+	lineLength: z.number().min(0).max(300),
+	useLengthOnColor: z.boolean(),
+	lengthRandomness: z.number().min(0).max(1),
+
+	direction: z.number().int().min(0).max(360),
+	directionRandomness: z.number().min(0).max(1),
 });
 
 export type LineSetting = z.infer<typeof lineSettingSchema>;
@@ -51,35 +56,8 @@ export class Line {
 		public y1: number,
 		public x2: number,
 		public y2: number,
+		public direction: number,
 		public strokeColor: string,
 		public strokeWidth: number
 	) {}
-}
-
-export function getPixelColorIntensity(
-	pixel: Pick<PixelPoint, 'r' | 'g' | 'b' | 'a'>,
-	settings: Pick<SvgSetting, 'minColorRecognized' | 'maxColorRecognized'>
-) {
-	const { minColorRecognized, maxColorRecognized } = settings;
-
-	const r = pixel.r - minColorRecognized;
-	const g = pixel.g - minColorRecognized;
-	const b = pixel.b - minColorRecognized;
-	const colorSum = Math.max(1, r + g + b);
-
-	const outOf = Math.max(1, Math.abs(maxColorRecognized - minColorRecognized));
-
-	return colorSum / 3 / outOf;
-}
-
-export function getPixelColorAtDataIndex(
-	imageData: Uint8ClampedArray,
-	dataIndex: number
-) {
-	return {
-		r: imageData[dataIndex],
-		g: imageData[dataIndex + 1],
-		b: imageData[dataIndex + 2],
-		a: imageData[dataIndex + 3] / 255,
-	};
 }
