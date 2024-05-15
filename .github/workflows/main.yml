@@ -69,7 +69,7 @@ jobs:
           git push origin --tags
           git push
         env:
-          GITHUB_TOKEN: ${{ secrets.SECRET_PAT }}
+          GITHUB_TOKEN: ${{ secrets.YOHAN_PAT }}
 
       - name: Generate release notes
         run: |
