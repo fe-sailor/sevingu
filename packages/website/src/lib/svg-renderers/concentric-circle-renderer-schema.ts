@@ -22,6 +22,7 @@ export type PixelData = {
 export const concentricCircleSettingSchema = z.object({
 	scale: z.number().int().min(0).max(3),
 
+	useAutoColor: z.boolean(),
 	strokeWidth: z.number().min(1).max(100),
 	strokeWidthRandomness: z.number().min(0).max(1),
 	strokeColor: z.string(),
@@ -36,5 +37,17 @@ export type ConcentricCircleSetting = z.infer<
 >;
 
 export class ConcentricCircle {
-	constructor(rx: number, ry: number, xRot: number, x: number, y: number) {}
+	constructor(
+		public radius: number,
+		public ellipses: Ellipse[]
+	) {}
+}
+export class Ellipse {
+	constructor(
+		public rx: number,
+		public ry: number,
+		public xRot: number,
+		public x: number,
+		public y: number
+	) {}
 }

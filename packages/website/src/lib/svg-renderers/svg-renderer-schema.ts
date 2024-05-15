@@ -29,12 +29,12 @@ export const svgRendererSettingSchema = z.object({
 export type SvgRendererSetting = z.infer<typeof svgRendererSettingSchema>;
 
 // prettier-ignore
-export type SvgSetting = SvgRendererSetting &
-	CircleSetting &
-	CurveSetting &
-	LineSetting &
-	RecursiveSetting &
-	ConcentricCircleSetting;
+export type SvgSetting = SvgRendererSetting
+  & CircleSetting 
+  & CurveSetting 
+  & LineSetting 
+  & RecursiveSetting 
+  & ConcentricCircleSetting;
 
 export type SvgSettingSvgurt = {
 	scale: number;

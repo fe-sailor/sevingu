@@ -11,8 +11,11 @@ import {
 	isInColorThreshold,
 	forEachPixelPoints,
 	getPixelColorIntensity,
+	getPixelColorAtXY,
 } from './svg-renderer-schema';
 import { RenderSvg } from '@/lib/svg-renderers/bases';
+import { Ellipse } from '@/lib/svg-renderers/concentric-circle-renderer-schema';
+import { stringJoin } from '../utils';
 
 export class ConcentricCircleRenderer implements RenderSvg {
 	constructor(
@@ -22,7 +25,11 @@ export class ConcentricCircleRenderer implements RenderSvg {
 		private pixelRawData: Uint8ClampedArray,
 		public instances: ConcentricCircle[] = [],
 		public instancesRendered: string = ''
-	) {}
+	) {
+		if (this.validateConcentricCircleSetting(concentricCircleSetting)) {
+			concentricCircleSetting;
+		}
+	}
 
 	renderSvg(): string {
 		this.createConcentricCircles();
@@ -34,25 +41,12 @@ export class ConcentricCircleRenderer implements RenderSvg {
 			console.error('no concentricCircle setting error');
 			return;
 		}
-		const { renderEveryXPixels, renderEveryYPixels } =
-			this.concentricCircleSetting;
+		const { radiusStep } = this.adaptSetting(this.concentricCircleSetting);
+		const maxRadius = Math.max(this.width, this.height) / 2;
+		for (let r = radiusStep; r <= maxRadius; r += radiusStep) {
+			this.instances.push(this.createConcentricCircle(r));
+		}
 
-		forEachPixelPoints(
-			{
-				clampedArray: this.pixelRawData,
-				width: this.width,
-				height: this.height,
-				betweenX: renderEveryXPixels,
-				betweenY: renderEveryYPixels,
-			},
-			pixelPoint => {
-				if (!this.isInColorThreshold(pixelPoint)) {
-					return;
-				}
-
-				this.instances.push(this.createConcentricCircle(pixelPoint));
-			}
-		);
 		return this.instances;
 	}
 
@@ -68,7 +62,9 @@ export class ConcentricCircleRenderer implements RenderSvg {
 		));
 	}
 
-	private isInColorThreshold(pixelPoint: PixelPoint): boolean {
+	private isInColorThreshold(
+		pixelPoint: PixelPoint | Pick<PixelPoint, 'r' | 'g' | 'b' | 'a'>
+	): boolean {
 		return isInColorThreshold(
 			pick(pixelPoint, ['r', 'g', 'b', 'a']),
 			pick(this.concentricCircleSetting, [
@@ -78,68 +74,71 @@ export class ConcentricCircleRenderer implements RenderSvg {
 		);
 	}
 
-	private createConcentricCircle(pixelPoint: PixelPoint): ConcentricCircle {
-		const {
-			useAutoColor,
-			direction,
-			directionRandomness,
-			concentricCircleLength,
-			useLengthOnColor,
-			lengthRandomness,
-			strokeColor,
-			strokeWidth,
-			strokeWidthRandomness,
-		} = this.adaptSetting(this.concentricCircleSetting);
-
-		const x1 = pixelPoint.x;
-		const y1 = pixelPoint.y;
-
-		const concentricCircleColor = useAutoColor
-			? `rgb(${pixelPoint.r}, ${pixelPoint.g}, ${pixelPoint.b})`
-			: strokeColor;
-
-		const lengthOfConcentricCircle = useLengthOnColor
-			? getPixelColorIntensity(
-					pick(pixelPoint, ['r', 'g', 'b', 'a']),
-					this.concentricCircleSetting
-				) * concentricCircleLength
-			: concentricCircleLength;
-
-		const dir = -direction + 180 * directionRandomness * Math.random();
-		const xMove = lengthOfConcentricCircle * Math.cos(dir * (Math.PI / 180));
-		const yMove = lengthOfConcentricCircle * Math.sin(dir * (Math.PI / 180));
-
-		const lenRandom = 1 - Math.random() * lengthRandomness;
-		const x2 = x1 + xMove * lenRandom;
-		const y2 = y1 + yMove * lenRandom;
-
-		const concentricCircle = {
-			x1,
-			y1,
-			x2,
-			y2,
-			strokeColor: concentricCircleColor,
-			strokeWidth: strokeWidth * (1 - Math.random() * strokeWidthRandomness),
-		};
-
-		return new ConcentricCircle(
-			concentricCircle.x1,
-			concentricCircle.y1,
-			concentricCircle.x2,
-			concentricCircle.y2,
-			concentricCircle.strokeColor,
-			concentricCircle.strokeWidth
+	private createConcentricCircle(radius: number): ConcentricCircle {
+		const { circleArcs, intensityWeight } = this.adaptSetting(
+			this.concentricCircleSetting
 		);
+
+		const centerX = this.width / 2;
+		const centerY = this.height / 2;
+
+		const arcAngle = (2 * Math.PI) / circleArcs; // hardcoded to 1 degree for now
+
+		const ellipses: Ellipse[] = [];
+		for (let i = 1; i <= circleArcs; i++) {
+			const xNew = centerX + radius * Math.sin(arcAngle * i);
+			const yNew = centerY - radius * Math.cos(arcAngle * i);
+
+			const xArcCenter =
+				centerX + radius * Math.sin(arcAngle * i - arcAngle / 2);
+			const yArcCenter =
+				centerY - radius * Math.cos(arcAngle * i - arcAngle / 2);
+
+			const pixelColor = getPixelColorAtXY(
+				this.pixelRawData,
+				xArcCenter,
+				yArcCenter,
+				centerX * 2
+			);
+			let eclipseHeight = radius;
+			if (this.isInColorThreshold(pixelColor)) {
+				const intensity = getPixelColorIntensity(
+					pixelColor,
+					this.concentricCircleSetting
+				);
+				eclipseHeight = intensity * intensityWeight + radius;
+			}
+
+			const pathArc = {
+				rx: radius,
+				ry: eclipseHeight,
+				xRot: ((i * arcAngle - arcAngle / 2) * 360) / (2 * Math.PI),
+				x: xNew,
+				y: yNew,
+			};
+			ellipses.push(pathArc);
+		}
+
+		return new ConcentricCircle(radius, ellipses);
 	}
 
 	private renderConcentricCircle(concentricCircle: ConcentricCircle): string {
-		const { scale } = this.adaptSetting(this.concentricCircleSetting);
-		const { x1, y1, x2, y2, strokeWidth, strokeColor } = concentricCircle;
-		return `<concentricCircle x1="${x1 * scale}" y1="${
-			y1 * scale
-		}" x2="${x2 * scale}" y2="${
-			y2 * scale
-		}" style="stroke: ${strokeColor}; stroke-width: ${strokeWidth}" />`;
+		const { scale, strokeColor, strokeWidth, useAutoColor } = this.adaptSetting(
+			this.concentricCircleSetting
+		);
+
+		const centerX = this.width / 2;
+		const centerY = this.height / 2;
+		// TODO: 개별 색상 적용해야 이쁠듯
+		return [
+			`<path d="M ${centerX * scale} ${
+				centerY * scale
+			} m 0 ${-concentricCircle.radius * scale}`,
+			...concentricCircle.ellipses.map(({ rx, ry, xRot, x, y }) => {
+				return ` A ${rx * scale} ${ry * scale} ${xRot} 0 1 ${x * scale} ${y * scale}`;
+			}),
+			`" stroke="${strokeColor}" stroke-width="${strokeWidth}" style="fill: none;" />`,
+		].join('');
 	}
 
 	private adaptSetting(
@@ -150,6 +149,7 @@ export class ConcentricCircleRenderer implements RenderSvg {
 		}
 		return {
 			scale: setting.scale,
+			useAutoColor: setting.autoColor,
 			strokeWidth: setting.strokeWidth,
 			strokeWidthRandomness: setting.strokeWidthRandomness,
 			strokeColor: setting.strokeColor,
