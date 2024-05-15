@@ -25,6 +25,7 @@ import CIRCLE from './accordionContent/svgControls/CIRCLE';
 import CURVE from './accordionContent/svgControls/CURVE';
 import LINE from './accordionContent/svgControls/LINE';
 import RECURSIVE from './accordionContent/svgControls/RECURSIVE';
+import CONCENTRIC from './accordionContent/svgControls/CONCENTRIC';
 
 const ACCORDION_TITLE = 'p-1 bg-[#c5f6fa] text-sm font-bold';
 
@@ -125,6 +126,7 @@ export default function MainPanel() {
 		[SVGRenderTypes.CURVE]: CURVE,
 		[SVGRenderTypes.LINE]: LINE,
 		[SVGRenderTypes.RECURSIVE]: RECURSIVE,
+		[SVGRenderTypes.CONCENTRIC]: CONCENTRIC,
 		// 다른 SVGRenderTypes에 대한 컴포넌트를 여기에 추가하세요.
 	};
 
@@ -185,12 +187,11 @@ export default function MainPanel() {
 							</AccordionTrigger>
 							<AccordionContent className="p-2">
 								{/* svg 타입 선택 */}
-								<div className="flex items-center space-x-2">
-									<Label
-										htmlFor={'svgRenderType'}
-										className="block mb-2 text-xs">
+								<div className="flex items-center space-x-2 mb-1">
+									<Label htmlFor={'svgRenderType'} className="block text-xs">
 										svg렌더타입
 									</Label>
+									{/* <div> */}
 									<Select
 										onValueChange={(value: keyof typeof SVGRenderTypes) =>
 											changePanelValue(value)
@@ -207,6 +208,7 @@ export default function MainPanel() {
 											))}
 										</SelectContent>
 									</Select>
+									{/* </div> */}
 								</div>
 
 								{SVG_COMPONENTS[svgSelect] &&

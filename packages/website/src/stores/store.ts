@@ -423,7 +423,7 @@ export const useStore = create<SevinguState>(
 			applyFractalDisplacement: '',
 
 			//concentric-circle
-			circleArcs: 400,
+			circleArcs: 200,
 			intensityWeight: 100000,
 			radiusStep: 5,
 		},
