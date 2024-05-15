@@ -16,6 +16,7 @@ import pick from 'lodash/pick';
 import { CurveRenderer } from '@/lib/svg-renderers/curve-renderer';
 import { LineRenderer } from './line-renderer';
 import { RecursiveRenderer } from './recursive-renderer';
+import { ConcentricCircleRenderer } from './concentric-circle-renderer';
 
 export class SvgRenderer
 	implements RenderSvg, SetSetting, SetRenderSize, SetPixelRawData
@@ -30,7 +31,7 @@ export class SvgRenderer
 	renderSvg(): string {
 		const nameSpaceString =
 			'xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"';
-		// console.warn(this.getRenderer());
+
 		return stringJoin(
 			`<svg ${this.getSizeString()} ${nameSpaceString}>`,
 			() => this.getRenderer().renderSvg(),
@@ -89,6 +90,13 @@ export class SvgRenderer
 				);
 			case 'RECURSIVE':
 				return new RecursiveRenderer(
+					this.setting,
+					this.width,
+					this.height,
+					this.pixelRawData
+				);
+			case 'CONCENTRIC':
+				return new ConcentricCircleRenderer(
 					this.setting,
 					this.width,
 					this.height,

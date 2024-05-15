@@ -11,12 +11,14 @@ import {
 	RecursiveSetting,
 	RECURSIVE_ALGORITHM,
 } from '@/lib/svg-renderers/recursive-renderer-schema';
+import { ConcentricCircleSetting } from '@/lib/svg-renderers/concentric-circle-renderer-schema';
 
 export const SVG_RENDER_TYPES = z.enum([
 	'CIRCLE',
 	'CURVE',
 	'LINE',
 	'RECURSIVE',
+	'CONCENTRIC',
 ]);
 
 export const svgRendererSettingSchema = z.object({
@@ -28,10 +30,11 @@ export type SvgRendererSetting = z.infer<typeof svgRendererSettingSchema>;
 
 // prettier-ignore
 export type SvgSetting = SvgRendererSetting
-  & CircleSetting
-  & CurveSetting
-  & LineSetting
-  & RecursiveSetting;
+  & CircleSetting 
+  & CurveSetting 
+  & LineSetting 
+  & RecursiveSetting 
+  & ConcentricCircleSetting;
 
 export type SvgSettingSvgurt = {
 	scale: number;
@@ -72,6 +75,10 @@ export type SvgSettingSvgurt = {
 	autoStrokeColor: boolean;
 	recursiveAlgorithm: z.infer<typeof RECURSIVE_ALGORITHM>;
 	maxRecursiveDepth: number;
+
+	circleArcs: number;
+	intensityWeight: number;
+	radiusStep: number;
 };
 
 export function getPixelColorAtXY(
