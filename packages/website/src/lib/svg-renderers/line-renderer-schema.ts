@@ -19,49 +19,43 @@ export type PixelData = {
 	betweenY: number;
 };
 
-export const circleSettingSchema = z.object({
-	useRadiusColorIntensity: z.boolean(),
-	radius: z.number().int().min(0).max(50),
-	radiusRandomness: z.number().min(0).max(1),
-
-	useStroke: z.boolean(),
-	useAutoStrokeColor: z.boolean(),
-	strokeColor: z.string(),
-	strokeWidth: z.number().min(1).max(100),
-	strokeWidthRandomness: z.number().min(0).max(1),
-
-	renderEveryXPixels: z.number().min(1).max(100),
-	renderEveryYPixels: z.number().min(1).max(100),
+export const lineSettingSchema = z.object({
+	scale: z.number().min(0).max(3),
 
 	minColorRecognized: z.number().min(0).max(255),
 	maxColorRecognized: z.number().min(0).max(255),
 
-	useFill: z.boolean(),
-	fillColor: z.string(),
+	useStroke: z.boolean(),
+	useAutoStrokeColor: z.boolean(),
+	strokeWidth: z.number().min(1).max(100),
+	strokeWidthRandomness: z.number().min(0).max(1),
+	useAutoColor: z.boolean(),
+	strokeColor: z.string(),
 
-	scale: z.number().min(0).max(3),
+	// useContinuous: z.boolean(),
+	// minlineLength: z.number().min(0).max(300),
+	// useCrossHatch: z.boolean(),
+	// amountOfLines: z.number().int().min(1).max(5000),
+
+	renderEveryXPixels: z.number().min(1).max(100),
+	renderEveryYPixels: z.number().min(1).max(100),
+	lineLength: z.number().min(0).max(300),
+	useLengthOnColor: z.boolean(),
+	lengthRandomness: z.number().min(0).max(1),
+
+	direction: z.number().int().min(0).max(360),
+	directionRandomness: z.number().min(0).max(1),
 });
 
-export type CircleSetting = z.infer<typeof circleSettingSchema>;
+export type LineSetting = z.infer<typeof lineSettingSchema>;
 
-export class Circle {
+export class Line {
 	constructor(
-		public x: number,
-		public y: number,
-		public r: number,
+		public x1: number,
+		public y1: number,
+		public x2: number,
+		public y2: number,
 		public strokeColor: string,
 		public strokeWidth: number
 	) {}
-}
-
-export function getPixelColorAtDataIndex(
-	imageData: Uint8ClampedArray,
-	dataIndex: number
-) {
-	return {
-		r: imageData[dataIndex],
-		g: imageData[dataIndex + 1],
-		b: imageData[dataIndex + 2],
-		a: imageData[dataIndex + 3] / 255,
-	};
 }

@@ -6,8 +6,9 @@ import {
 	PixelData,
 } from '@/lib/svg-renderers/circle-renderer-schema';
 import { CurveSetting } from '@/lib/svg-renderers/curve-renderer-schema';
+import { LineSetting } from '@/lib/svg-renderers/line-renderer-schema';
 
-export const SVG_RENDER_TYPES = z.enum(['CIRCLE', 'CURVE']);
+export const SVG_RENDER_TYPES = z.enum(['CIRCLE', 'CURVE', 'LINE']);
 
 export const svgRendererSettingSchema = z.object({
 	renderType: SVG_RENDER_TYPES,
@@ -15,7 +16,12 @@ export const svgRendererSettingSchema = z.object({
 });
 
 export type SvgRendererSetting = z.infer<typeof svgRendererSettingSchema>;
-export type SvgSetting = SvgRendererSetting & CircleSetting & CurveSetting;
+
+// prettier-ignore
+export type SvgSetting = SvgRendererSetting
+  & CircleSetting
+  & CurveSetting
+  & LineSetting;
 
 export type SvgSettingSvgurt = {
 	scale: number;
@@ -44,6 +50,14 @@ export type SvgSettingSvgurt = {
 	wavelengthRandomness: number;
 	waves: number;
 	wavesRandomness: number;
+
+	continuous: boolean;
+	minlienLength: number;
+	crossHatch: boolean;
+	amountOfLines: number;
+	lineLength: number;
+	lengthOnColor: boolean;
+	lengthRandomness: number;
 };
 
 export function getPixelColorAtXY(
@@ -89,3 +103,19 @@ export const forEachPixelPoints = (
 		}
 	}
 };
+
+export function getPixelColorIntensity(
+	pixel: Pick<PixelPoint, 'r' | 'g' | 'b' | 'a'>,
+	settings: Pick<SvgSetting, 'minColorRecognized' | 'maxColorRecognized'>
+) {
+	const { minColorRecognized, maxColorRecognized } = settings;
+
+	const r = pixel.r - minColorRecognized;
+	const g = pixel.g - minColorRecognized;
+	const b = pixel.b - minColorRecognized;
+	const colorSum = Math.max(1, r + g + b);
+
+	const outOf = Math.max(1, Math.abs(maxColorRecognized - minColorRecognized));
+
+	return colorSum / 3 / outOf;
+}

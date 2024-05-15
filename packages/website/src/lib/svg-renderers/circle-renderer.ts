@@ -4,13 +4,13 @@ import {
 	CircleSetting,
 	PixelPoint,
 	circleSettingSchema,
-	getPixelColorIntensity,
 } from './circle-renderer-schema';
 import {
 	SvgSettingSvgurt,
 	SvgSetting,
 	isInColorThreshold,
 	forEachPixelPoints,
+	getPixelColorIntensity,
 } from './svg-renderer-schema';
 import { RenderSvg } from '@/lib/svg-renderers/bases';
 
