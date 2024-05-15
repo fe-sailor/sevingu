@@ -32,10 +32,10 @@ export const lineSettingSchema = z.object({
 	useAutoColor: z.boolean(),
 	strokeColor: z.string(),
 
-	useContinuous: z.boolean(),
-	minlineLength: z.number().min(0).max(300),
-	useCrossHatch: z.boolean(),
-	amountOfLines: z.number().int().min(1).max(5000),
+	// useContinuous: z.boolean(),
+	// minlineLength: z.number().min(0).max(300),
+	// useCrossHatch: z.boolean(),
+	// amountOfLines: z.number().int().min(1).max(5000),
 
 	renderEveryXPixels: z.number().min(1).max(100),
 	renderEveryYPixels: z.number().min(1).max(100),

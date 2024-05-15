@@ -154,10 +154,11 @@ export class LineRenderer implements RenderSvg {
 			useAutoColor: setting.autoColor,
 			strokeColor: setting.strokeColor,
 
-			useContinuous: setting.continuous,
-			minlineLength: setting.minlienLength,
-			useCrossHatch: setting.crossHatch,
-			amountOfLines: setting.amountOfLines,
+			// NOTE: 일단 추후 추가
+			// useContinuous: setting.continuous,
+			// minlineLength: setting.minlienLength,
+			// useCrossHatch: setting.crossHatch,
+			// amountOfLines: setting.amountOfLines,
 
 			renderEveryXPixels: setting.renderEveryXPixels,
 			renderEveryYPixels: setting.renderEveryYPixels,
