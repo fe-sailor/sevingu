@@ -4,6 +4,12 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: 'Version type to bump (major, minor, patch)'
+        required: true
+        default: 'patch'
 
 jobs:
   build:
@@ -31,6 +37,68 @@ jobs:
       - name: Build
         run: CI=false pnpm run build
 
+      - name: Determine version bump type
+        id: determine_version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            case "${{ github.event.inputs.version_type }}" in
+              major|minor|patch)
+                echo "::set-output name=version_type::${{ github.event.inputs.version_type }}"
+                ;;
+              *)
+                echo "Invalid version type specified: ${{ github.event.inputs.version_type }}"
+                exit 1
+                ;;
+            esac
+          else
+            COMMIT_MESSAGE=$(git log -1 --pretty=%B)
+            if echo "$COMMIT_MESSAGE" | grep -q "MAJOR"; then
+              echo "::set-output name=version_type::major"
+            elif echo "$COMMIT_MESSAGE" | grep -iq "feature"; then
+              echo "::set-output name=version_type::minor"
+            elif echo "$COMMIT_MESSAGE" | grep -iq "fix bug"; then
+              echo "::set-output name=version_type::patch"
+            else
+              echo "No version bump keyword found in the commit message."
+              exit 1
+            fi
+          fi
+
+      - name: Bump version
+        run: |
+          node ./scripts/bump-version.js ${{ steps.determine_version.outputs.version_type }}
+
+      - name: Commit version bump and create tag
+        id: commit_version
+        run: |
+          git config --global user.name 'obov'
+          git config --global user.email 'obov3e@gmail.com'
+          git add package.json
+          git commit -m "chore(release): bump version"
+          NEW_VERSION=$(node -p "require('./package.json').version")
+          echo "::set-output name=new_version::$NEW_VERSION"
+          git tag -a "v$NEW_VERSION" -m "Release version $NEW_VERSION"
+          git push origin --tags
+          git push
+
+      - name: Generate release notes
+        run: |
+          chmod +x ./scripts/generate-release-notes.sh
+          ./scripts/generate-release-notes.sh
+
+      - name: Create GitHub Release
+        id: create_release
+        if: steps.determine_version.outputs.version_type == 'minor' || steps.determine_version.outputs.version_type == 'major'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.commit_version.outputs.new_version }}
+          release_name: Release v${{ steps.commit_version.outputs.new_version }}
+          body_path: ./release-notes.md
+          draft: false
+          prerelease: false
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:
@@ -41,5 +109,5 @@ jobs:
       - name: Deploy to S3
         run: aws s3 sync --region ap-northeast-2 ./packages/website/dist/ ${{ secrets.AWS_SECRET_BUCKET_NAME }} --delete
 
-      - name: invalidate cloudfront cache
+      - name: Invalidate CloudFront cache
         run: aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_SECRET_DISTRIBUTION_ID }} --paths "/*"
