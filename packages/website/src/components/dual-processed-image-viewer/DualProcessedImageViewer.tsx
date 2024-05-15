@@ -21,7 +21,7 @@ import { useStore } from '@/stores/store';
 import { ImageDataBlender } from '@/lib/canvas-blender/canvas-blender';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useSvgViewerStore } from '@/stores/svgViewerStore';
-import { DEFAULT_IMAGE_URI } from '@/consts';
+import { DEFAULT_IMAGE_URI, CONTROLLER_BOUNDARY } from '@/constants';
 
 const DualProcessedImageViewer = () => {
 	const { setState, getState } = useStore;
@@ -133,7 +133,7 @@ const DualProcessedImageViewer = () => {
 
 	return (
 		<>
-			<div className="w-screen" ref={dragOverRef}>
+			<div id={CONTROLLER_BOUNDARY} className="w-screen" ref={dragOverRef}>
 				<ResizablePanelGroup
 					direction="horizontal"
 					className={cn('rounded-lg border-4 border-solid mx-auto', {

@@ -22,6 +22,7 @@ import { Label } from '../ui/label';
 import { createElement, useState, useEffect, useRef } from 'react';
 import CURVE from './accordionContent/svgControls/CURVE';
 import { Rnd } from 'react-rnd';
+import { CONTROLLER_BOUNDARY } from '@/constants';
 
 const ACCORDION_TITLE = 'p-1 bg-[#c5f6fa] text-sm font-bold';
 
@@ -131,7 +132,7 @@ export default function MainPanel() {
 				height: defaultHeight,
 			}}
 			position={position}
-			bounds={'.w-screen'}
+			bounds={CONTROLLER_BOUNDARY}
 			enableResizing={false}
 			onDragStop={(e, d) => {
 				setPosition({ x: d.x, y: d.y });

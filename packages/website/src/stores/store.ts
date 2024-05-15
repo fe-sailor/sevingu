@@ -16,7 +16,7 @@ import {
 	PushMessage,
 	PushMessageStore,
 } from '@/components/push-alert/PushAlert';
-import { DEFAULT_IMAGE_URI } from '@/consts';
+import { DEFAULT_IMAGE_URI } from '@/constants';
 import { debounce } from 'lodash';
 
 type Entries<T> = {
