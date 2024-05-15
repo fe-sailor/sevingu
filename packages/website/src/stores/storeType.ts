@@ -7,14 +7,6 @@ export const SVGRenderTypes = {
 	CONCENTRIC: 'CONCENTRIC',
 } as const;
 
-// export type SVGRenderTypes =
-// 	| 'TRACE'
-// 	| 'CIRCLE'
-// 	| 'CURVE'
-// 	| 'LINE'
-// 	| 'RECURSIVE'
-// 	| 'CONCENTRIC';
-
 export interface PanelState {
 	grayscale: boolean;
 	invert: boolean;

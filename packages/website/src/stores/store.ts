@@ -48,7 +48,7 @@ export type SevinguState =
 		imagePanelState: CanvasSettingSvgurt;
     svgPanelState: SvgSettingSvgurt; // PanelState; // SvgRenderer
 		changePanelState:  (
-			panelType: PanelType ,[PanelStateKey, PanelEntries]: [keyof SvgSettingSvgurt, SvgSettingSvgurt[keyof SvgSettingSvgurt]]
+			panelType: PanelType ,[PanelStateKey, PanelEntries]: [keyof SvgSettingSvgurt | keyof CanvasSettingSvgurt , SvgSettingSvgurt[keyof SvgSettingSvgurt] | CanvasSettingSvgurt[keyof CanvasSettingSvgurt] ]
 			) => void;
   }
   & ImageViewerStore
@@ -390,15 +390,15 @@ export const useStore = create<SevinguState>(
 			renderEveryYPixels: 6,
 			fill: true,
 			fillColor: 'rgb(28,32,38)',
-			stroke: true,
+			stroke: false,
+			autoColor: false,
+			strokeColor: 'rgb(28,32,38)',
+			strokeWidth: 1,
+			strokeWidthRandomness: 0.1,
 			radius: 4,
 			radiusOnColor: true,
 			radiusRandomness: 0.2,
 			// 커브에서 추가된것
-			autoColor: true,
-			strokeColor: '',
-			strokeWidth: 30,
-			strokeWidthRandomness: 1,
 			amplitude: 20,
 			amplitudeRandomness: 1,
 			direction: 1,
@@ -407,8 +407,6 @@ export const useStore = create<SevinguState>(
 			wavelengthRandomness: 1,
 			waves: 5,
 			wavesRandomness: 1,
-			// 프렉탈
-			applyFractalDisplacement: '',
 			// LINE
 			continuous: false,
 			minlineLength: 6,
@@ -421,6 +419,8 @@ export const useStore = create<SevinguState>(
 			autoStrokeColor: true,
 			recursiveAlgorithm: 'E',
 			maxRecursiveDepth: 150,
+			// fractal
+			applyFractalDisplacement: '',
 		},
 		changePanelState: (panelType, [key, value]) => {
 			if (panelType === 'image' || panelType === 'svg') {

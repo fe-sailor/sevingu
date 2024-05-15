@@ -2,11 +2,10 @@ import { useStore } from '@/stores/store';
 import { Controller } from '../../panel';
 import PanelElement from '../../PanelElement';
 
-export default function CIRCLE() {
+export default function LINE() {
 	const storeState = useStore(state => state.svgPanelState);
 
 	const imageControls: Controller[] = [
-		// { id: 'svgRenderType', name: 'svg렌더타입', style: 'select' },
 		{
 			id: 'minColorRecognized',
 			name: '최소 색상 인식',
@@ -18,28 +17,6 @@ export default function CIRCLE() {
 			name: '최대 색상 인식',
 			style: 'slider',
 			max: 255,
-		},
-		{
-			id: 'renderEveryXPixels',
-			name: 'X픽셀마다 렌더링',
-			style: 'slider',
-			min: 1,
-			max: 50,
-		},
-		{
-			id: 'renderEveryYPixels',
-			name: 'Y픽셀마다 렌더링',
-			style: 'slider',
-			min: 1,
-			max: 50,
-		},
-		{ id: 'fill', name: '채우기', style: 'switch' },
-		{
-			id: 'fillColor',
-			name: '채우기 색상',
-			style: 'color',
-			dependentOn: 'fill',
-			isShowDependentState: true,
 		},
 		{ id: 'stroke', name: '선', style: 'switch' },
 		{
@@ -73,11 +50,52 @@ export default function CIRCLE() {
 			dependentOn: 'stroke',
 			isShowDependentState: true,
 		},
-		{ id: 'radius', name: '반경', style: 'slider', max: 50 },
-		{ id: 'radiusOnColor', name: '색상 반경', style: 'switch' },
+		{ id: 'continuous', name: '연속적', style: 'switch' },
+		// continuous가 true일 때만 렌더링
 		{
-			id: 'radiusRandomness',
-			name: '반경 무작위',
+			id: 'minlineLength',
+			name: '최소 선 길이',
+			style: 'slider',
+			min: 1,
+			max: 50,
+		},
+		{ id: 'crossHatch', name: '교차 해칭', style: 'switch' },
+		{
+			id: 'amountOfLines',
+			name: '선의 양',
+			style: 'slider',
+			min: 1,
+			max: 5000,
+		},
+		// continuous가 false일 때만 렌더링
+		{
+			id: 'renderEveryXPixels',
+			name: 'X픽셀마다 렌더링',
+			style: 'slider',
+			min: 1,
+			max: 50,
+		},
+		{
+			id: 'renderEveryYPixels',
+			name: 'Y픽셀마다 렌더링',
+			style: 'slider',
+			min: 1,
+			max: 50,
+		},
+		{ id: 'lineLength', name: '선 길이', style: 'slider', max: 300 },
+		{ id: 'lengthOnColor', name: '색상별 길이조절', style: 'switch' },
+		{
+			id: 'lengthRandomness',
+			name: '길이 무작위',
+			style: 'slider',
+			max: 1,
+			step: 0.01,
+		},
+		// 공통
+		{ id: 'direction', name: '방향', style: 'slider', min: 1, max: 180 },
+		{
+			id: 'directionRandomness',
+			name: '방향 무작위',
 			style: 'slider',
 			max: 1,
 			step: 0.01,
