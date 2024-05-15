@@ -1,6 +1,6 @@
 import { useStore } from '@/stores/store';
 import { Controller } from '../../panel';
-import PanelElement from '../../panelElement';
+import PanelElement from '../../PanelElement';
 
 export default function LINE() {
 	const storeState = useStore(state => state.svgPanelState);
@@ -30,8 +30,10 @@ export default function LINE() {
 			id: 'strokeColor',
 			name: '선 색상',
 			style: 'color',
-			dependentOn: 'autoColor',
-			isShowDependentState: false,
+			dependentOn: 'stroke',
+			dependentOn2: 'autoColor',
+			isShowDependentState: true,
+			isShowDependent2State: false,
 		},
 		{
 			id: 'strokeWidth',
@@ -58,14 +60,24 @@ export default function LINE() {
 			style: 'slider',
 			min: 1,
 			max: 50,
+			dependentOn: 'continuous',
+			isShowDependentState: true,
 		},
-		{ id: 'crossHatch', name: '교차 해칭', style: 'switch' },
+		{
+			id: 'crossHatch',
+			name: '교차 해칭',
+			style: 'switch',
+			dependentOn: 'continuous',
+			isShowDependentState: true,
+		},
 		{
 			id: 'amountOfLines',
 			name: '선의 양',
 			style: 'slider',
 			min: 1,
 			max: 5000,
+			dependentOn: 'continuous',
+			isShowDependentState: true,
 		},
 		// continuous가 false일 때만 렌더링
 		{
@@ -74,6 +86,8 @@ export default function LINE() {
 			style: 'slider',
 			min: 1,
 			max: 50,
+			dependentOn: 'continuous',
+			isShowDependentState: false,
 		},
 		{
 			id: 'renderEveryYPixels',
@@ -81,15 +95,32 @@ export default function LINE() {
 			style: 'slider',
 			min: 1,
 			max: 50,
+			dependentOn: 'continuous',
+			isShowDependentState: false,
 		},
-		{ id: 'lineLength', name: '선 길이', style: 'slider', max: 300 },
-		{ id: 'lengthOnColor', name: '색상별 길이조절', style: 'switch' },
+		{
+			id: 'lineLength',
+			name: '선 길이',
+			style: 'slider',
+			max: 300,
+			dependentOn: 'continuous',
+			isShowDependentState: false,
+		},
+		{
+			id: 'lengthOnColor',
+			name: '색상별 길이조절',
+			style: 'switch',
+			dependentOn: 'continuous',
+			isShowDependentState: false,
+		},
 		{
 			id: 'lengthRandomness',
 			name: '길이 무작위',
 			style: 'slider',
 			max: 1,
 			step: 0.01,
+			dependentOn: 'continuous',
+			isShowDependentState: false,
 		},
 		// 공통
 		{ id: 'direction', name: '방향', style: 'slider', min: 1, max: 180 },
@@ -105,26 +136,33 @@ export default function LINE() {
 	return (
 		<>
 			{imageControls.map(imageControl => {
-				const { dependentOn, isShowDependentState, ...otherProps } =
-					imageControl;
-				// dependentOn이 있으면
-				// isShowDependentState가 스토어값과 같을 때, 해당 값을 렌더합니다.
-				if (dependentOn) {
-					if (isShowDependentState === storeState[dependentOn]) {
-						return (
-							<PanelElement
-								key={otherProps.id}
-								panelType={'svg'}
-								{...otherProps}
-							/>
-						);
-					}
-				} else {
+				const {
+					dependentOn,
+					isShowDependentState,
+					dependentOn2,
+					isShowDependent2State,
+					...otherProps
+				} = imageControl;
+
+				const dependencies = [
+					{ dependentOn, isShowDependentState },
+					{
+						dependentOn: dependentOn2,
+						isShowDependentState: isShowDependent2State,
+					},
+				];
+
+				const shouldRender = dependencies.every(
+					({ dependentOn, isShowDependentState }) =>
+						!dependentOn || isShowDependentState === storeState[dependentOn]
+				);
+
+				if (shouldRender) {
 					return (
 						<PanelElement
-							key={imageControl.id}
+							key={otherProps.id}
 							panelType={'svg'}
-							{...imageControl}
+							{...otherProps}
 						/>
 					);
 				}

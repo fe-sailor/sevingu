@@ -382,14 +382,14 @@ export const useStore = create<SevinguState>(
 			fill: true,
 			fillColor: 'rgb(28,32,38)',
 			stroke: false,
+			autoColor: false,
+			strokeColor: 'rgb(28,32,38)',
 			strokeWidth: 1,
 			strokeWidthRandomness: 0.1,
 			radius: 4,
 			radiusOnColor: true,
 			radiusRandomness: 0.2,
 			// 커브에서 추가된것
-			autoColor: true,
-			strokeColor: 'rgb(78,90,38)',
 			amplitude: 20,
 			amplitudeRandomness: 1,
 			direction: 1,
@@ -414,7 +414,7 @@ export const useStore = create<SevinguState>(
 			applyFractalDisplacement: '',
 
 			//concentric-circle
-			circleArcs: 400,
+			circleArcs: 200,
 			intensityWeight: 100000,
 			radiusStep: 5,
 		},

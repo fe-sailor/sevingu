@@ -18,6 +18,8 @@ export type Controller = {
 	max?: number;
 	step?: number;
 	dependentOn?: string;
+	dependentOn2?: string;
 	isShowDependentState?: boolean;
+	isShowDependent2State?: boolean;
 	selectList?: { id: string; name: string }[];
 };
