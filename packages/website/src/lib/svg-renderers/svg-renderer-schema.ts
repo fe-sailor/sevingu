@@ -7,6 +7,7 @@ import {
 } from '@/lib/svg-renderers/circle-renderer-schema';
 import { CurveSetting } from '@/lib/svg-renderers/curve-renderer-schema';
 import { LineSetting } from '@/lib/svg-renderers/line-renderer-schema';
+import { RecursiveSetting } from '@/lib/svg-renderers/recursive-renderer-schema';
 
 export const SVG_RENDER_TYPES = z.enum(['CIRCLE', 'CURVE', 'LINE']);
 
@@ -21,7 +22,8 @@ export type SvgRendererSetting = z.infer<typeof svgRendererSettingSchema>;
 export type SvgSetting = SvgRendererSetting
   & CircleSetting
   & CurveSetting
-  & LineSetting;
+  & LineSetting
+  & RecursiveSetting;
 
 export type SvgSettingSvgurt = {
 	scale: number;
