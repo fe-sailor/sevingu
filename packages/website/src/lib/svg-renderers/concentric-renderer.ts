@@ -146,31 +146,12 @@ export class ConcentricRenderer implements RenderSvg {
 		}
 		return {
 			scale: setting.scale,
-
-			minColorRecognized: setting.minColorRecognized,
-			maxColorRecognized: setting.maxColorRecognized,
-
-			useStroke: setting.stroke,
-			useAutoStrokeColor: setting.autoColor,
 			strokeWidth: setting.strokeWidth,
 			strokeWidthRandomness: setting.strokeWidthRandomness,
-			useAutoColor: setting.autoColor,
 			strokeColor: setting.strokeColor,
-
-			// NOTE: 일단 추후 추가
-			// useContinuous: setting.continuous,
-			// minconcentricLength: setting.minconcentricLength,
-			// useCrossHatch: setting.crossHatch,
-			// amountOfConcentrics: setting.amountOfConcentrics,
-
-			renderEveryXPixels: setting.renderEveryXPixels,
-			renderEveryYPixels: setting.renderEveryYPixels,
-			concentricLength: setting.concentricLength,
-			useLengthOnColor: setting.lengthOnColor,
-			lengthRandomness: setting.lengthRandomness,
-
-			direction: setting.direction,
-			directionRandomness: setting.directionRandomness,
+			circleArcs: setting.circleArcs,
+			intensityWeight: setting.intensityWeight,
+			radiusStep: setting.radiusStep,
 		};
 	}
 

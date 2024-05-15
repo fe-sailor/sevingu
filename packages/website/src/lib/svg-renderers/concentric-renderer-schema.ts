@@ -20,6 +20,8 @@ export type PixelData = {
 };
 
 export const concentricSettingSchema = z.object({
+	scale: z.number().int().min(0).max(3),
+
 	strokeWidth: z.number().min(1).max(100),
 	strokeWidthRandomness: z.number().min(0).max(1),
 	strokeColor: z.string(),

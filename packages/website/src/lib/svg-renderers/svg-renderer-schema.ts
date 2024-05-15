@@ -75,6 +75,10 @@ export type SvgSettingSvgurt = {
 	autoStrokeColor: boolean;
 	recursiveAlgorithm: z.infer<typeof RECURSIVE_ALGORITHM>;
 	maxRecursiveDepth: number;
+
+	circleArcs: number;
+	intensityWeight: number;
+	radiusStep: number;
 };
 
 export function getPixelColorAtXY(
