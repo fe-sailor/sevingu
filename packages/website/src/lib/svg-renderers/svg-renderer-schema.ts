@@ -11,12 +11,14 @@ import {
 	RecursiveSetting,
 	RECURSIVE_ALGORITHM,
 } from '@/lib/svg-renderers/recursive-renderer-schema';
+import { ConcentricSetting } from '@/lib/svg-renderers/concentric-renderer-schema';
 
 export const SVG_RENDER_TYPES = z.enum([
 	'CIRCLE',
 	'CURVE',
 	'LINE',
 	'RECURSIVE',
+	'CONCENTRIC',
 ]);
 
 export const svgRendererSettingSchema = z.object({
@@ -31,7 +33,8 @@ export type SvgSetting = SvgRendererSetting
   & CircleSetting
   & CurveSetting
   & LineSetting
-  & RecursiveSetting;
+  & RecursiveSetting
+  & ConcentricSetting;
 
 export type SvgSettingSvgurt = {
 	scale: number;
