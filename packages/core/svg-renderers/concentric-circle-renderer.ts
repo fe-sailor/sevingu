@@ -13,9 +13,9 @@ import {
 	getPixelColorIntensity,
 	getPixelColorAtXY,
 } from './svg-renderer-schema';
-import { RenderSvg } from '@/lib/svg-renderers/bases';
-import { Ellipse } from '@/lib/svg-renderers/concentric-circle-renderer-schema';
-import { stringJoin } from '../utils';
+import { RenderSvg } from './bases';
+import { Ellipse } from './concentric-circle-renderer-schema';
+import { stringJoin } from '../libs/utils';
 
 export class ConcentricCircleRenderer implements RenderSvg {
 	constructor(

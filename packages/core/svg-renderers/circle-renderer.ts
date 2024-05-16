@@ -12,7 +12,7 @@ import {
 	forEachPixelPoints,
 	getPixelColorIntensity,
 } from './svg-renderer-schema';
-import { RenderSvg } from '@/lib/svg-renderers/bases';
+import { RenderSvg } from './bases';
 
 export class CircleRenderer implements RenderSvg {
 	constructor(

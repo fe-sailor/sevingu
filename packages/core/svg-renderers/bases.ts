@@ -1,7 +1,4 @@
-import {
-	SvgSetting,
-	SvgSettingSvgurt,
-} from '@/lib/svg-renderers/svg-renderer-schema';
+import { SvgSetting, SvgSettingSvgurt } from './svg-renderer-schema';
 export interface RenderSvg {
 	renderSvg: () => string;
 }

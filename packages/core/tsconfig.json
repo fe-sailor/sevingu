@@ -19,10 +19,9 @@
 		"noFallthroughCasesInSwitch": true,
 		"baseUrl": ".",
 		"paths": {
-			"@sevingu/core": ["packages/core"],
 			"@/*": ["./src/*"]
 		},
 		"noImplicitAny": false
 	},
-	"include": ["src", "vite.config.ts"]
+	"include": ["./**/*"]
 }

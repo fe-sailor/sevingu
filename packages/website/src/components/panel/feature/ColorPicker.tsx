@@ -3,7 +3,7 @@ import './colorPicker.css';
 import { useEffect, useState } from 'react';
 import { useStore } from '@/stores/store';
 import { debounce } from 'lodash';
-import { SvgSettingSvgurt } from '@/lib/svg-renderers/svg-renderer-schema';
+import { SvgSettingSvgurt } from '@sevingu/core';
 
 type Props = {
 	id: keyof SvgSettingSvgurt;

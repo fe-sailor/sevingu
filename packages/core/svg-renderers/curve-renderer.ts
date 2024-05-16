@@ -1,14 +1,11 @@
-import { RenderSvg } from '@/lib/svg-renderers/bases';
-import { PixelPoint } from '@/lib/svg-renderers/circle-renderer-schema';
-import {
-	ControlPoint,
-	CurveSetting,
-} from '@/lib/svg-renderers/curve-renderer-schema';
+import { RenderSvg } from './bases';
+import { PixelPoint } from './circle-renderer-schema';
+import { ControlPoint, CurveSetting } from './curve-renderer-schema';
 import {
 	SvgSetting,
 	SvgSettingSvgurt,
 	forEachPixelPoints,
-} from '@/lib/svg-renderers/svg-renderer-schema';
+} from './svg-renderer-schema';
 import pick from 'lodash/pick';
 import { Curve, curveSettingSchema } from './curve-renderer-schema';
 import { isInColorThreshold } from './svg-renderer-schema';
