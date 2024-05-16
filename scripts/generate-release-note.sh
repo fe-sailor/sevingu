@@ -25,6 +25,7 @@ output_file="release-note.md"
             if echo "$line" | grep -q "chore"; then
                 continue
             fi
+            echo "$line" 
         done
     else
         echo "No previous tag found with one minor version lower."
