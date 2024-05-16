@@ -28,4 +28,4 @@ if (!versionType) {
 	process.exit(1);
 }
 
-console.log(`::set-output name=version_type::${versionType}`);
+console.log(versionType);
