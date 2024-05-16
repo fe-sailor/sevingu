@@ -41,6 +41,12 @@ jobs:
       - name: Build project
         run: CI=false pnpm run build
 
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifacts
+          path: ./packages/website/dist/
+
       - name: Determine version bump type
         id: determine_version
         run: |
@@ -105,6 +111,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-artifacts
+          path: ./packages/website/dist/
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v3
