@@ -1,4 +1,4 @@
-import PanelElement from '../PanelElement';
+import PanelElement from '../PanelElements';
 import { Controller } from '../panel';
 
 export default function Posterize() {

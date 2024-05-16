@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { useStore } from '@/stores/store';
 import { useCallback } from 'react';
 import { Input } from '../ui/input';
-import { SevinguImage } from '@/lib/SevinguImage';
+import { SevinguImage } from '@sevingu/core';
 
 const MainHeader = () => {
 	const { showImage, undo, redo, download } = useStore();

@@ -4,13 +4,14 @@ import {
 	PushMessageStore,
 } from '@/components/push-alert/PushAlert';
 import { DEFAULT_IMAGE_URI } from '@/constants';
-import { CanvasFilter } from '@/lib/canvas-filter/canvas-filter';
-import { CanvasSettingSvgurt } from '@/lib/canvas-filter/canvas-filter-schema';
-import { SvgRenderer } from '@/lib/svg-renderers/svg-renderer';
 import {
+	CanvasFilter,
 	SVG_RENDER_TYPES,
 	SvgSettingSvgurt,
-} from '@/lib/svg-renderers/svg-renderer-schema';
+	CanvasSettingSvgurt,
+	SvgRenderer,
+	SevinguImage,
+} from '@sevingu/core';
 import { getFileUri, getImageWidthAndHeight, getSvgUrl } from '@/lib/utils';
 import { catchStoreError } from '@/stores/middleware';
 import { debounce } from 'lodash';
@@ -18,7 +19,6 @@ import { create } from 'zustand';
 import { ImageViewerStore } from './imageViewerStore';
 import { MessageStore, SevinguMessage } from './messageStore';
 import { SvgViewerStore } from './svgViewerStore';
-import { SevinguImage } from '@/lib/SevinguImage';
 
 type Entries<T> = {
 	[K in keyof T]: [K, T[K]];
@@ -135,32 +135,59 @@ export const useStore = create<SevinguState>(
 		},
 
 		download: () => {
-			// 사용자에게 파일 이름 입력받기
+			const canvasRef = get().imageViewer;
+			if (!canvasRef) {
+				console.error('Canvas reference is null.');
+				return;
+			}
+
+			const canvas2dContext = canvasRef.getContext('2d', {
+				willReadFrequently: true,
+			});
+			if (!canvas2dContext) {
+				console.error('Canvas context is null.');
+				return;
+			}
+
+			const imageData = canvas2dContext.getImageData(
+				0,
+				0,
+				canvasRef.width,
+				canvasRef.height
+			);
+			const svgPanelState = get().svgPanelState;
+			const renderer = new SvgRenderer(
+				{
+					...svgPanelState,
+				},
+				canvasRef.width,
+				canvasRef.height,
+				imageData.data
+			);
+
+			const svgContent = renderer.renderSvg();
+			const blob = new Blob([svgContent], {
+				type: 'image/svg+xml;charset=utf-8',
+			});
 			const fileName = prompt(
 				'다운로드할 SVG 파일의 이름을 입력하세요.',
 				'downloaded_svg.svg'
 			);
-			// 사용자가 취소를 누른 경우
-			if (fileName === null) {
+
+			if (fileName !== null) {
+				const linkElement = document.createElement('a');
+				linkElement.download = fileName;
+				linkElement.href = URL.createObjectURL(blob);
+				linkElement.style.display = 'none';
+
+				document.body.appendChild(linkElement);
+				linkElement.click();
+				document.body.removeChild(linkElement);
+
+				console.log('SVG 다운로드 완료.');
+			} else {
 				console.log('다운로드 취소됨.');
-				return;
 			}
-
-			console.log('download complete.');
-			const linkElement = document.createElement('a');
-			linkElement.download = fileName; // 입력받은 파일 이름 사용
-			const svgViewer = get().svgViewer;
-			if (!svgViewer) {
-				return;
-			}
-			const svgData = new XMLSerializer().serializeToString(svgViewer);
-			const blob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
-			linkElement.href = URL.createObjectURL(blob);
-			linkElement.style.display = 'none';
-
-			document.body.appendChild(linkElement);
-			linkElement.click();
-			document.body.removeChild(linkElement);
 		},
 
 		/** ImageViewerStore */
