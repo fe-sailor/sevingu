@@ -135,10 +135,13 @@ const DualProcessedImageViewer = () => {
 
 	return (
 		<>
-			<div id={CONTROLLER_BOUNDARY_ID} className="w-screen" ref={dragOverRef}>
+			<div
+				id={CONTROLLER_BOUNDARY_ID}
+				className={'w-screen bg-slate-50'}
+				ref={dragOverRef}>
 				<ResizablePanelGroup
 					direction="horizontal"
-					className={cn('rounded-lg border-4 border-solid mx-auto', {
+					className={cn('rounded-lg mx-auto', {
 						'border-lime-400 border-dashed bg-lime-50': isOver,
 					})}
 					style={{
