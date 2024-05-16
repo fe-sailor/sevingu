@@ -11,7 +11,7 @@ import { CurveRenderer } from './curve-renderer';
 import { LineRenderer } from './line-renderer';
 import { RecursiveRenderer } from './recursive-renderer';
 import { ConcentricCircleRenderer } from './concentric-circle-renderer';
-import { exhaustiveTypeCheck, stringJoin } from 'libs/utils';
+import { exhaustiveTypeCheck, stringJoin } from '../libs/utils';
 
 export class SvgRenderer
 	implements RenderSvg, SetSetting, SetRenderSize, SetPixelRawData

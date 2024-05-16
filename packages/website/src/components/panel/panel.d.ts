@@ -1,5 +1,5 @@
-import { CanvasSettingSvgurt } from '@/lib/canvas-filter/canvas-filter-schema';
-import { SvgSettingSvgurt } from '@/lib/svg-renderers/svg-renderer-schema';
+import { CanvasSettingSvgurt } from '@sevingu/core';
+import { SvgSettingSvgurt } from '@sevingu/core';
 import { PanelStateKey } from '@/stores/store';
 
 export const ElementStyle = {
