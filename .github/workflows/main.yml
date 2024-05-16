@@ -100,7 +100,7 @@ jobs:
         with:
           tag_name: v${{ steps.commit_version.outputs.new_version }}
           release_name: Release v${{ steps.commit_version.outputs.new_version }}
-          body_path: ./release-notes.md
+          body_path: ./release-note.md
           draft: false
           prerelease: false
 
