@@ -28,7 +28,7 @@ import CONCENTRIC from './accordionContent/svgControls/CONCENTRIC';
 import { SVG_RENDER_TYPES } from '@sevingu/core';
 import { z } from 'zod';
 
-const ACCORDION_TITLE = 'p-1 bg-[#c5f6fa] text-sm font-bold';
+const ACCORDION_TITLE = 'p-1 bg-background-panelsub text-sm font-bold';
 
 export default function MainPanel() {
 	const { defaultWidth, defaultHeight } = {
@@ -40,7 +40,9 @@ export default function MainPanel() {
 	const screenSizeRef = useRef({ width: 0, height: 0 });
 
 	useEffect(() => {
-		const viewerElement = document.querySelector('.w-screen') as HTMLElement;
+		const viewerElement = document.querySelector(
+			CONTROLLER_BOUNDARY_SELECTOR
+		) as HTMLElement;
 		if (viewerElement) {
 			screenSizeRef.current = {
 				width: viewerElement.offsetWidth,
@@ -141,7 +143,7 @@ export default function MainPanel() {
 				setPosition({ x: d.x, y: d.y });
 				positionRef.current = { x: d.x, y: d.y };
 			}}
-			className={'z-10 rounded-t-xl bg-amber-100'}>
+			className={'z-10 rounded-t-xl bg-amber-100 drop-shadow-panel'}>
 			<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-2 w-20 bg-white/90 rounded-full"></div>
 			<div className="h-5"></div>
 			<div className="border-solid border-4 rounded-b bg-amber-100 border-amber-100">
