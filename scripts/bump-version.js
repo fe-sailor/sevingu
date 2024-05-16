@@ -13,7 +13,7 @@ function saveVersion(packageJson) {
 			if (err) {
 				return console.log('Error!', err);
 			}
-
+			console.log(`::set-output name=new_version::${version}`);
 			console.log(`Successfully updated package.json to version ${version}`);
 		}
 	);
