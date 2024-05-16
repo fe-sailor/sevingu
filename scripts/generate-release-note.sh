@@ -1,7 +1,7 @@
 # #!/bin/bash
 
 current_tag=$(git describe --tags --abbrev=0)
-
+echo "#{current_tag} : current tag"
 IFS='.' read -r major minor patch <<< "${current_tag}"
 
 current_base_tag="${major}.${minor}.0"
@@ -9,6 +9,7 @@ current_base_tag="${major}.${minor}.0"
 previous_minor=$((minor - 1))
 
 previous_tag=$(git tag -l "${major}.${previous_minor}.*" --sort=-v:refname | head -n 1)
+echo "#{previous_tag} : previous tag"
 
 repo_url=https://github.com/fe-sailor/sevingu
 output_file="release-note.md"
