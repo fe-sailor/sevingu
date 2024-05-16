@@ -61,7 +61,7 @@ jobs:
       - name: Bump version
         id: new_version
         run: |
-          node ./scripts/bump-version.js ${{ steps.version_type.outputs.value }}
+          node ./scripts/bump-version.js ${{ env.version_type }}
 
       - name: Configure Git
         run: |
