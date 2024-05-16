@@ -2,13 +2,34 @@
 
 current_tag=$(git describe --tags --abbrev=0)
 
+if [[ $current_tag == v* ]]; then
+    v_prefix="v"
+    version=${current_tag#v}
+else
+    v_prefix=""
+    version=${current_tag}
+fi
+
 IFS='.' read -r major minor patch <<< "${current_tag}"
 
-current_base_tag="${major}.${minor}.0"
+current_base_tag="${v_prefix}${major}.${minor}.0"
 
-previous_minor=$((minor - 1))
+if [ "$minor" -eq 0 ]; then
+    previous_major=$((major - 1))
+    if [ "$previous_major" -lt 0 ]; then
+        echo "No previous version available."
+        exit 1
+    fi
 
-previous_tag=$(git tag -l "${major}.${previous_minor}.*" --sort=-v:refname | head -n 1)
+    # 이전 major 버전의 모든 태그를 가져와서 minor의 최대값 찾기
+    previous_minor=$(git tag -l "${v_prefix}${previous_major}.*" | grep -oE "${previous_major}\.[0-9]+" | sed "s/${previous_major}\.//" | sort -nr | head -n 1)
+else
+    previous_major=$major
+    previous_minor=$((minor - 1))
+fi
+
+
+previous_tag=$(git tag -l "${v_prefix}${previous_major}.${previous_minor}.*" --sort=-v:refname | head -n 1)
 
 repo_url=https://github.com/fe-sailor/sevingu
 output_file="release-note.md"
