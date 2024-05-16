@@ -25,15 +25,6 @@ output_file="release-note.md"
             if echo "$line" | grep -q "chore"; then
                 continue
             fi
-
-            # PR 번호가 있는 경우 링크로 변경 (예: #1234)
-            pr_number=$(echo "$line" | grep -oE "#[0-9]+")
-            if [ -n "$pr_number" ]; then
-                pr_number="${pr_number//#}"
-                echo "$line ([PR #$pr_number]($repo_url/pull/$pr_number))"
-            else
-                echo "$line"
-            fi
         done
     else
         echo "No previous tag found with one minor version lower."
