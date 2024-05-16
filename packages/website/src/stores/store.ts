@@ -42,7 +42,7 @@ export type SevinguState =
 
     /** controller 관련 */
 		imagePanelState: CanvasSettingSvgurt;
-    svgPanelState: SvgSettingSvgurt; // PanelState; // SvgRenderer
+    svgPanelState: SvgSettingSvgurt;
 		changePanelState:  (
 			panelType: PanelType ,[PanelStateKey, PanelEntries]: [keyof SvgSettingSvgurt | keyof CanvasSettingSvgurt , SvgSettingSvgurt[keyof SvgSettingSvgurt] | CanvasSettingSvgurt[keyof CanvasSettingSvgurt] ]
 			) => void;
@@ -400,7 +400,7 @@ export const useStore = create<SevinguState>(
 		svgPanelState: {
 			//svg관련
 			scale: 1,
-			svgRenderType: SVG_RENDER_TYPES.enum.CIRCLE, // SVGRenderTypes.CURVE, // SVG_RENDER_TYPES.enum.CIRCLE,
+			svgRenderType: SVG_RENDER_TYPES.enum.CIRCLE,
 			minColorRecognized: 50,
 			maxColorRecognized: 200,
 			// TODO: 성능을 위해 최소값 설정 필요
