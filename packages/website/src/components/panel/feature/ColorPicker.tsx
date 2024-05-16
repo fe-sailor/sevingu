@@ -34,10 +34,9 @@ export default function ColorPicker({ id }: Props) {
 		return r * 0.299 + g * 0.587 + b * 0.114 > 186 ? 'black' : 'white';
 	}
 
-	const changePanelValue = debounce(() => {
+	const changePanelValue = () => {
 		changePanelState('svg', [id, rgb(color.r, color.g, color.b)]);
-		console;
-	}, 300);
+	};
 
 	return (
 		<div
