@@ -10,10 +10,8 @@ else
     version=${current_tag}
 fi
 
-IFS='.' read -r major minor patch <<< "${current_tag}"
-
+IFS='.' read -r major minor patch <<< "${version}"
 current_base_tag="${v_prefix}${major}.${minor}.0"
-
 if [ "$minor" -eq 0 ]; then
     previous_major=$((major - 1))
     if [ "$previous_major" -lt 0 ]; then
@@ -28,8 +26,7 @@ else
     previous_minor=$((minor - 1))
 fi
 
-
-previous_tag=$(git tag -l "${v_prefix}${previous_major}.${previous_minor}.*" --sort=-v:refname | head -n 1)
+previous_tag=$(git tag -l "${v_prefix}${previous_major}.${previous_minor}.*" --sort=-v:refname | head -n 2 | tail -n 1)
 
 repo_url=https://github.com/fe-sailor/sevingu
 output_file="release-note.md"
