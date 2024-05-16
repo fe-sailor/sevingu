@@ -116,11 +116,11 @@ jobs:
         id: check_changes
         run: |
           if git diff --quiet HEAD~1 HEAD -- packages/website; then
-            echo "No changes in packages/website. Skipping deployment."
-            echo "::set-output name=skip_deploy::true"
-          else
             echo "Changes detected in packages/website. Proceeding with deployment."
             echo "::set-output name=skip_deploy::false"
+          else
+            echo "No changes in packages/website. Skipping deployment."
+            echo "::set-output name=skip_deploy::true"
           fi
 
       - name: Download build artifacts
@@ -140,7 +140,7 @@ jobs:
 
       - name: Deploy to S3
         if: steps.check_changes.outputs.skip_deploy == 'false'
-        run: aws s3 sync --region ap-northeast-2 ./packages/website/dist/ s3://${{ secrets.AWS_SECRET_BUCKET_NAME }} --delete
+        run: aws s3 sync --region ap-northeast-2 ./packages/website/dist/ ${{ secrets.AWS_SECRET_BUCKET_NAME }} --delete
 
       - name: Invalidate CloudFront cache
         if: steps.check_changes.outputs.skip_deploy == 'false'
