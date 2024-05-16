@@ -24,9 +24,8 @@ for (const [type, words] of Object.entries(keywords)) {
 }
 
 if (!versionType) {
-	// console.error('No version bump keyword found in the commit message.');
-	// process.exit(1);
-	console.log('patch');
+	console.error('No version bump keyword found in the commit message.');
+	process.exit(1);
 }
 
-console.log(versionType);
+console.log(`::set-output name=version_type::${versionType}`);
