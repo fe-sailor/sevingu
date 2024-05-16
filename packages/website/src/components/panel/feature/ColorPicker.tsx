@@ -40,6 +40,7 @@ export default function ColorPicker({ id }: Props) {
 
 	return (
 		<div
+			className="w-full"
 			onMouseEnter={() => setPickerVisible(true)}
 			onMouseLeave={() => setPickerVisible(false)}>
 			<p
@@ -47,12 +48,14 @@ export default function ColorPicker({ id }: Props) {
 					backgroundColor: rgb(color.r, color.g, color.b),
 					color: getContrastColor(color.r, color.g, color.b),
 					position: 'relative',
+					borderRadius: '10px',
+					textAlign: 'center',
 				}}>
 				rgb({color.r}, {color.g}, {color.b})
 			</p>
 			{isPickerVisible && (
 				<div
-					style={{ position: 'absolute', zIndex: 1 }}
+					style={{ position: 'absolute', zIndex: 1, left: 76 }}
 					onMouseDown={event => event.stopPropagation()}>
 					<RgbaColorPicker
 						color={color}
