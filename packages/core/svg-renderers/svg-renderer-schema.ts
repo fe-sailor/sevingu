@@ -1,17 +1,15 @@
 import { z } from 'zod';
-import {
-	CircleSetting,
-	getPixelColorAtDataIndex,
-	PixelPoint,
-	PixelData,
-} from '@/lib/svg-renderers/circle-renderer-schema';
-import { CurveSetting } from '@/lib/svg-renderers/curve-renderer-schema';
-import { LineSetting } from '@/lib/svg-renderers/line-renderer-schema';
+import { CurveSetting } from './curve-renderer-schema';
+import { LineSetting, PixelData, PixelPoint } from './line-renderer-schema';
 import {
 	RecursiveSetting,
 	RECURSIVE_ALGORITHM,
-} from '@/lib/svg-renderers/recursive-renderer-schema';
-import { ConcentricCircleSetting } from '@/lib/svg-renderers/concentric-circle-renderer-schema';
+} from './recursive-renderer-schema';
+import { ConcentricCircleSetting } from './concentric-circle-renderer-schema';
+import {
+	CircleSetting,
+	getPixelColorAtDataIndex,
+} from './circle-renderer-schema';
 
 export const SVG_RENDER_TYPES = z.enum([
 	'CIRCLE',

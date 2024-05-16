@@ -13,8 +13,8 @@ import {
 } from '@/components/ui/resizable';
 import { Skeleton } from '@/components/ui/skeleton';
 import { CONTROLLER_BOUNDARY_ID, DEFAULT_IMAGE_URI } from '@/constants';
-import { SevinguImage } from '@/lib/SevinguImage';
-import { ImageDataBlender } from '@/lib/canvas-blender/canvas-blender';
+import { SevinguImage } from '@sevingu/core';
+import { ImageDataBlender } from '@sevingu/core';
 import { cn, loadImageAsBlob } from '@/lib/utils';
 import { useImageViewerStore } from '@/stores/imageViewerStore';
 import { useMessageListener, useMessageStore } from '@/stores/messageStore';

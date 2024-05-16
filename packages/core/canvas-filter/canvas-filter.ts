@@ -3,7 +3,7 @@ import {
 	ImageSize,
 	PromiseWithResolvers,
 	canvasSettingSchema,
-} from '@/lib/canvas-filter/canvas-filter-schema';
+} from './canvas-filter-schema';
 import * as StackBlur from 'stackblur-canvas';
 import { z } from 'zod';
 import jsfeat from 'jsfeat';

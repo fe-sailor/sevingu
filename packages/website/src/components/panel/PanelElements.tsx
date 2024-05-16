@@ -6,7 +6,7 @@ import { Controller, PanelType } from './panel';
 import ColorPicker from './feature/ColorPicker';
 import { debounce } from 'lodash';
 import LabelTooltip from './feature/LabelTooltip';
-import { SvgSettingSvgurt } from '@/lib/svg-renderers/svg-renderer-schema';
+import { SvgSettingSvgurt } from '@sevingu/core';
 import {
 	Select,
 	SelectContent,
