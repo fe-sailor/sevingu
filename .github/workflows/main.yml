@@ -54,7 +54,7 @@ jobs:
                 ;;
             esac
           else
-            node ./scripts/determine-version-bump.js
+            node ./scripts/determine-version-type.js
           fi
 
       - name: Bump version
