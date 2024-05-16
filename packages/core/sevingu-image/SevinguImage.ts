@@ -1,4 +1,4 @@
-import { SvgSettingSvgurt } from '@/lib/svg-renderers/svg-renderer-schema';
+import { SvgSettingSvgurt } from '../svg-renderers/svg-renderer-schema';
 
 export class SevinguImage {
 	#imageBlob: Blob;

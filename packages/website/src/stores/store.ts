@@ -4,13 +4,14 @@ import {
 	PushMessageStore,
 } from '@/components/push-alert/PushAlert';
 import { DEFAULT_IMAGE_URI } from '@/constants';
-import { CanvasFilter } from '@/lib/canvas-filter/canvas-filter';
-import { CanvasSettingSvgurt } from '@/lib/canvas-filter/canvas-filter-schema';
-import { SvgRenderer } from '@/lib/svg-renderers/svg-renderer';
 import {
+	CanvasFilter,
 	SVG_RENDER_TYPES,
 	SvgSettingSvgurt,
-} from '@/lib/svg-renderers/svg-renderer-schema';
+	CanvasSettingSvgurt,
+	SvgRenderer,
+	SevinguImage,
+} from '@sevingu/core';
 import { getFileUri, getImageWidthAndHeight, getSvgUrl } from '@/lib/utils';
 import { catchStoreError } from '@/stores/middleware';
 import { debounce } from 'lodash';
@@ -18,7 +19,6 @@ import { create } from 'zustand';
 import { ImageViewerStore } from './imageViewerStore';
 import { MessageStore, SevinguMessage } from './messageStore';
 import { SvgViewerStore } from './svgViewerStore';
-import { SevinguImage } from '@/lib/SevinguImage';
 
 type Entries<T> = {
 	[K in keyof T]: [K, T[K]];

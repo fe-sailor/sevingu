@@ -12,7 +12,7 @@ import {
 	forEachPixelPoints,
 	getPixelColorAtXY,
 } from './svg-renderer-schema';
-import { RenderSvg } from '@/lib/svg-renderers/bases';
+import { RenderSvg } from './bases';
 
 export class RecursiveRenderer implements RenderSvg {
 	isTraveledPosition: boolean[][] = [];

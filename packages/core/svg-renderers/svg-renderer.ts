@@ -1,22 +1,17 @@
-import {
-	RenderSvg,
-	SetSetting,
-	SetRenderSize,
-	SetPixelRawData,
-} from '@/lib/svg-renderers/bases';
-import { CircleRenderer } from '@/lib/svg-renderers/circle-renderer';
+import { RenderSvg, SetSetting, SetRenderSize, SetPixelRawData } from './bases';
+import { CircleRenderer } from './circle-renderer';
 import {
 	SvgRendererSetting,
 	SvgSetting,
 	SvgSettingSvgurt,
 	svgRendererSettingSchema,
-} from '@/lib/svg-renderers/svg-renderer-schema';
-import { exhaustiveTypeCheck, stringJoin } from '@/lib/utils';
+} from './svg-renderer-schema';
 import pick from 'lodash/pick';
-import { CurveRenderer } from '@/lib/svg-renderers/curve-renderer';
+import { CurveRenderer } from './curve-renderer';
 import { LineRenderer } from './line-renderer';
 import { RecursiveRenderer } from './recursive-renderer';
 import { ConcentricCircleRenderer } from './concentric-circle-renderer';
+import { exhaustiveTypeCheck, stringJoin } from 'libs/utils';
 
 export class SvgRenderer
 	implements RenderSvg, SetSetting, SetRenderSize, SetPixelRawData
