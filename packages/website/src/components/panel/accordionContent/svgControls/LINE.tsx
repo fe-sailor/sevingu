@@ -82,7 +82,7 @@ export default function LINE() {
 		// continuous가 false일 때만 렌더링
 		{
 			id: 'renderEveryXPixels',
-			name: 'X픽셀마다 렌더링',
+			name: '렌더링 (X)',
 			style: 'slider',
 			min: 1,
 			max: 50,
@@ -91,7 +91,7 @@ export default function LINE() {
 		},
 		{
 			id: 'renderEveryYPixels',
-			name: 'Y픽셀마다 렌더링',
+			name: '렌더링 (Y)',
 			style: 'slider',
 			min: 1,
 			max: 50,

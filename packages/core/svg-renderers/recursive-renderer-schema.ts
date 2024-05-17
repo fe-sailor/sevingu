@@ -27,8 +27,8 @@ export const recursiveSettingSchema = z.object({
 	minColorRecognized: z.number().min(0).max(255),
 	maxColorRecognized: z.number().min(0).max(255),
 
-	renderEveryXPixels: z.number().min(1).max(100),
-	renderEveryYPixels: z.number().min(1).max(100),
+	renderEveryXPixels: z.number().min(1).max(50),
+	renderEveryYPixels: z.number().min(1).max(50),
 
 	useAutoColor: z.boolean(),
 	strokeColor: z.string(),

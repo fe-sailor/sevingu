@@ -44,6 +44,21 @@ export default function PanelElement({
 		changePanelState(panelType, [id, value]);
 	}, 300);
 
+	const isReverseSlider = (id: string) =>
+		['renderEveryXPixels', 'renderEveryYPixels'].includes(id);
+	const revertValue = (num: number) => 50 - num + 1;
+	const handleSliderChange = (id: Controller['id'], value: number) => {
+		const adjustValue = isReverseSlider(id) ? revertValue(value) : value;
+		changePanelValue(adjustValue);
+	};
+
+	const getSliderShowingValue = () => {
+		if (isReverseSlider(id) && typeof checkPanelIdState === 'number') {
+			return revertValue(checkPanelIdState);
+		}
+		return checkPanelIdState;
+	};
+
 	return (
 		<div className="mb-1 flex items-center last:m-0 ">
 			<div className="w-20">
@@ -70,10 +85,10 @@ export default function PanelElement({
 						min={min}
 						max={max}
 						step={step}
-						defaultValue={[checkPanelIdState as number]}
-						onValueChange={value => changePanelValue(value[0])}
+						defaultValue={[getSliderShowingValue()]}
+						onValueChange={value => handleSliderChange(id, value[0])}
 					/>
-					<div>{checkPanelIdState}</div>
+					<div>{getSliderShowingValue()}</div>
 				</div>
 			)}
 			{style === 'select' && (

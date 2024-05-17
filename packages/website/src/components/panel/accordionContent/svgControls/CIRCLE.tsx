@@ -21,14 +21,14 @@ export default function CIRCLE() {
 		},
 		{
 			id: 'renderEveryXPixels',
-			name: 'X픽셀마다 렌더링',
+			name: '렌더링 (X)',
 			style: 'slider',
 			min: 1,
 			max: 50,
 		},
 		{
 			id: 'renderEveryYPixels',
-			name: 'Y픽셀마다 렌더링',
+			name: '렌더링 (Y)',
 			style: 'slider',
 			min: 1,
 			max: 50,
