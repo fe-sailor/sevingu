@@ -28,7 +28,8 @@ import CONCENTRIC from './accordionContent/svgControls/CONCENTRIC';
 import { SVG_RENDER_TYPES } from '@sevingu/core';
 import { z } from 'zod';
 
-const ACCORDION_TITLE = 'p-1 bg-background-subui text-sm font-bold';
+const ACCORDION_TITLE =
+	'p-1 bg-background-subui text-sm font-bold rounded-ss rounded-se';
 
 export default function MainPanel() {
 	const { defaultWidth, defaultHeight } = {
