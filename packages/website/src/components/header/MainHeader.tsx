@@ -35,7 +35,10 @@ const MainHeader = () => {
 				<span className={'font-sans text-lg font-bold'}>Sevingu</span>
 			</div>
 			<div className={'flex gap-9 mr-3'}>
-				<Button variant="outline">
+				<Button
+					className={
+						'bg-background-mainui hover:scale-105 hover:drop-shadow hover:bg-white hover:text-text-mainui transition-all duration-300 ease-in-out'
+					}>
 					<label className={'cursor-pointer flex items-center'}>
 						<Upload className="mr-2 h-4 w-5" /> upload
 						<input
@@ -45,15 +48,27 @@ const MainHeader = () => {
 							type="file"></input>
 					</label>
 				</Button>
-				<Button variant="outline" onClick={undo}>
+				<Button
+					className={
+						'bg-background-mainui hover:scale-105 hover:drop-shadow hover:bg-white hover:text-text-mainui transition-all duration-300 ease-in-out'
+					}
+					onClick={undo}>
 					<Undo2 className="mr-2 h-4 w-4" /> undo
 				</Button>
-				<Button variant="outline" onClick={redo}>
+				<Button
+					className={
+						'bg-background-mainui hover:scale-105 hover:drop-shadow hover:bg-white hover:text-text-mainui transition-all duration-300 ease-in-out'
+					}
+					onClick={redo}>
 					<Redo2 className="mr-2 h-4 w-4" /> redo
 				</Button>
 
 				{/* downloadWithAd 함수를 사용하도록 수정 */}
-				<Button variant="outline" onClick={downloadWithAd}>
+				<Button
+					className={
+						'bg-background-mainui hover:scale-105 hover:drop-shadow hover:bg-white hover:text-text-mainui transition-all duration-300 ease-in-out'
+					}
+					onClick={downloadWithAd}>
 					<Download className="mr-2 h-4 w-4" /> download
 				</Button>
 			</div>
