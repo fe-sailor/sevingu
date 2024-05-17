@@ -28,7 +28,7 @@ import CONCENTRIC from './accordionContent/svgControls/CONCENTRIC';
 import { SVG_RENDER_TYPES } from '@sevingu/core';
 import { z } from 'zod';
 
-const ACCORDION_TITLE = 'p-1 bg-background-panelsub text-sm font-bold';
+const ACCORDION_TITLE = 'p-1 bg-background-subui text-sm font-bold';
 
 export default function MainPanel() {
 	const { defaultWidth, defaultHeight } = {
@@ -143,11 +143,11 @@ export default function MainPanel() {
 				setPosition({ x: d.x, y: d.y });
 				positionRef.current = { x: d.x, y: d.y };
 			}}
-			className={'z-10 rounded-t-xl bg-amber-100 drop-shadow-panel'}>
+			className={'z-10 rounded-t-xl bg-background-mainui drop-shadow-panel'}>
 			<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-2 w-20 bg-white/90 rounded-full"></div>
 			<div className="h-5"></div>
-			<div className="border-solid border-4 rounded-b bg-amber-100 border-amber-100">
-				<div className="rounded-lg overflow-hidden bg-white">
+			<div className="border-solid border-4 rounded-b bg-white border-white">
+				<div className="overflow-hidden bg-white">
 					<Accordion type="multiple">
 						<AccordionItem value="item-1">
 							<AccordionTrigger className={ACCORDION_TITLE}>

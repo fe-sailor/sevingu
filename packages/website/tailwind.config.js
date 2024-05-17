@@ -18,12 +18,17 @@ module.exports = {
 		},
 		extend: {
 			colors: {
+				text: {
+					mainui: 'rgba(var(--sevingu-main))',
+					subui: 'rgba(var(--sevingu-sub))',
+				},
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
 				background: {
 					DEFAULT: 'hsl(var(--background))',
-					panelsub: 'rgba(197, 246, 250, 1)',
+					mainui: 'rgba(var(--sevingu-main))',
+					subui: 'rgba(var(--sevingu-sub))',
 				},
 				foreground: 'hsl(var(--foreground))',
 				primary: {
