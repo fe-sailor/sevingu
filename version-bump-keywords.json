@@ -1,0 +1,5 @@
+{
+	"major": ["MAJOR"],
+	"minor": ["feature", "feat"],
+	"patch": ["fix", "bug", "refactor"]
+}

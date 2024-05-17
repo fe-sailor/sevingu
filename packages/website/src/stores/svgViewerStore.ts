@@ -1,5 +1,5 @@
 import { useStore } from '@/stores/store';
-import { ImageDataBlender } from '@/lib/canvas-blender/canvas-blender';
+import { ImageDataBlender } from '@sevingu/core';
 
 export type SvgViewerStore = {
 	svgViewer: HTMLCanvasElement | null;

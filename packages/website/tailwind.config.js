@@ -21,7 +21,10 @@ module.exports = {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
-				background: 'hsl(var(--background))',
+				background: {
+					DEFAULT: 'hsl(var(--background))',
+					panelsub: 'rgba(197, 246, 250, 1)',
+				},
 				foreground: 'hsl(var(--foreground))',
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
@@ -81,6 +84,13 @@ module.exports = {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'push-alert': 'push-alert 3s',
+			},
+			boxShadow: {
+				header:
+					'rgba(0, 0, 0, 0.07) 0px 0.7px 1.4px, rgba(0, 0, 0, 0.05) 0px 1.9px 4px, rgba(0, 0, 0, 0.05) 0px 4.5px 10px',
+			},
+			dropShadow: {
+				panel: '0px 11px 5px rgba(0, 0, 0, 0.2)',
 			},
 		},
 	},

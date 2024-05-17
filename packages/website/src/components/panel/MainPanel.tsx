@@ -6,7 +6,6 @@ import {
 } from '@/components/ui/accordion';
 import { CONTROLLER_BOUNDARY_SELECTOR } from '@/constants';
 import { useStore } from '@/stores/store';
-import { SVGRenderTypes } from '@/stores/storeType';
 import { throttle } from 'lodash';
 import { createElement, useEffect, useRef, useState } from 'react';
 import { Rnd } from 'react-rnd';
@@ -26,8 +25,10 @@ import CURVE from './accordionContent/svgControls/CURVE';
 import LINE from './accordionContent/svgControls/LINE';
 import RECURSIVE from './accordionContent/svgControls/RECURSIVE';
 import CONCENTRIC from './accordionContent/svgControls/CONCENTRIC';
+import { SVG_RENDER_TYPES } from '@sevingu/core';
+import { z } from 'zod';
 
-const ACCORDION_TITLE = 'p-1 bg-[#c5f6fa] text-sm font-bold';
+const ACCORDION_TITLE = 'p-1 bg-background-panelsub text-sm font-bold';
 
 export default function MainPanel() {
 	const { defaultWidth, defaultHeight } = {
@@ -39,7 +40,9 @@ export default function MainPanel() {
 	const screenSizeRef = useRef({ width: 0, height: 0 });
 
 	useEffect(() => {
-		const viewerElement = document.querySelector('.w-screen') as HTMLElement;
+		const viewerElement = document.querySelector(
+			CONTROLLER_BOUNDARY_SELECTOR
+		) as HTMLElement;
 		if (viewerElement) {
 			screenSizeRef.current = {
 				width: viewerElement.offsetWidth,
@@ -85,48 +88,44 @@ export default function MainPanel() {
 	const checkSvgPanelState = useStore(state => state.svgPanelState);
 	const changePanelState = useStore(state => state.changePanelState);
 
-	const [svgSelect, setSvgSelect] = useState<keyof typeof SVGRenderTypes>(
+	const [svgSelect, setSvgSelect] = useState<z.infer<typeof SVG_RENDER_TYPES>>(
 		checkSvgPanelState.svgRenderType
 	);
 
-	const changePanelValue = (value: keyof typeof SVGRenderTypes) => {
+	const changePanelValue = (value: z.infer<typeof SVG_RENDER_TYPES>) => {
 		changePanelState('svg', ['svgRenderType', value]);
 		setSvgSelect(value);
 	};
 
 	const svgSelectList = [
 		{
-			id: SVGRenderTypes.TRACE,
-			name: '추적',
-		},
-		{
-			id: SVGRenderTypes.CIRCLE,
+			id: SVG_RENDER_TYPES.enum.CIRCLE,
 			name: '원',
 		},
 		{
-			id: SVGRenderTypes.CURVE,
+			id: SVG_RENDER_TYPES.enum.CURVE,
 			name: '곡선',
 		},
 		{
-			id: SVGRenderTypes.LINE,
+			id: SVG_RENDER_TYPES.enum.LINE,
 			name: '선',
 		},
 		{
-			id: SVGRenderTypes.RECURSIVE,
+			id: SVG_RENDER_TYPES.enum.RECURSIVE,
 			name: '반복',
 		},
 		{
-			id: SVGRenderTypes.CONCENTRIC,
+			id: SVG_RENDER_TYPES.enum.CONCENTRIC,
 			name: '동심원',
 		},
 	];
 
 	const SVG_COMPONENTS = {
-		[SVGRenderTypes.CIRCLE]: CIRCLE,
-		[SVGRenderTypes.CURVE]: CURVE,
-		[SVGRenderTypes.LINE]: LINE,
-		[SVGRenderTypes.RECURSIVE]: RECURSIVE,
-		[SVGRenderTypes.CONCENTRIC]: CONCENTRIC,
+		[SVG_RENDER_TYPES.enum.CIRCLE]: CIRCLE,
+		[SVG_RENDER_TYPES.enum.CURVE]: CURVE,
+		[SVG_RENDER_TYPES.enum.LINE]: LINE,
+		[SVG_RENDER_TYPES.enum.RECURSIVE]: RECURSIVE,
+		[SVG_RENDER_TYPES.enum.CONCENTRIC]: CONCENTRIC,
 		// 다른 SVGRenderTypes에 대한 컴포넌트를 여기에 추가하세요.
 	};
 
@@ -144,7 +143,7 @@ export default function MainPanel() {
 				setPosition({ x: d.x, y: d.y });
 				positionRef.current = { x: d.x, y: d.y };
 			}}
-			className={'z-10 rounded-t-xl bg-amber-100'}>
+			className={'z-10 rounded-t-xl bg-amber-100 drop-shadow-panel'}>
 			<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-2 w-20 bg-white/90 rounded-full"></div>
 			<div className="h-5"></div>
 			<div className="border-solid border-4 rounded-b bg-amber-100 border-amber-100">
@@ -193,10 +192,10 @@ export default function MainPanel() {
 									</Label>
 									{/* <div> */}
 									<Select
-										onValueChange={(value: keyof typeof SVGRenderTypes) =>
+										onValueChange={(value: z.infer<typeof SVG_RENDER_TYPES>) =>
 											changePanelValue(value)
 										}
-										defaultValue={svgSelectList[1].id}>
+										defaultValue={svgSelectList[0].id}>
 										<SelectTrigger className="w-[40%]">
 											<SelectValue />
 										</SelectTrigger>

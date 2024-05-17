@@ -1,12 +1,22 @@
-name: Deploy to AWS S3 and CloudFront
+name: Release and Deploy to AWS S3 and CloudFront
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: 'Version type to bump (major, minor, patch)'
+        required: true
+        default: 'patch'
+
+permissions:
+  contents: write
 
 jobs:
-  build:
+  release:
+    name: Create Release
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -14,6 +24,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - uses: pnpm/action-setup@v3
         with:
@@ -28,10 +40,102 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Build
+      - name: Build project
         run: CI=false pnpm run build
 
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifacts
+          path: ./packages/website/dist/
+
+      - name: Determine version bump type
+        id: determine_version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            case "${{ github.event.inputs.version_type }}" in
+              major|minor|patch)
+                echo "::set-output name=version_type::${{ github.event.inputs.version_type }}"
+                ;;
+              *)
+                echo "Invalid version type specified: ${{ github.event.inputs.version_type }}"
+                exit 1
+                ;;
+            esac
+          else
+            node ./scripts/determine-version-type.js
+          fi
+
+      - name: Bump version
+        run: |
+          node ./scripts/bump-version.js ${{ steps.determine_version.outputs.version_type }}
+
+      - name: Configure Git
+        run: |
+          git config --global user.name ${{ secrets.USER_NAME }}
+          git config --global user.email ${{ secrets.USER_EMAIL }}
+          git remote set-url origin https://x-access-token:${{ secrets.USER_PAT }}@github.com/${{ github.repository }}
+
+      - name: Commit version bump and create tag
+        id: commit_version
+        run: |
+          NEW_VERSION=$(node -p "require('./package.json').version")
+          git add package.json
+          git commit -m "chore(release): bump version to ${NEW_VERSION}"
+          echo "::set-output name=new_version::${NEW_VERSION}"
+          git tag -a "v${NEW_VERSION}" -m "Release version ${NEW_VERSION}"
+          git push origin --tags
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.USER_PAT }}
+
+      - name: Generate release notes
+        run: |
+          chmod +x ./scripts/generate-release-note.sh
+          ./scripts/generate-release-note.sh
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.commit_version.outputs.new_version }}
+          release_name: Release v${{ steps.commit_version.outputs.new_version }}
+          body_path: ./release-note.md
+          draft: false
+          prerelease: false
+
+  deploy:
+    name: Deploy to AWS S3 and Invalidate CloudFront Cache
+    runs-on: ubuntu-latest
+    needs: release
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Check for changes in packages/website
+        id: check_changes
+        run: |
+          if git diff --quiet HEAD~1 HEAD -- packages/website; then
+            echo "No changes in packages/website. Skipping deployment."
+            echo "::set-output name=skip_deploy::true"
+          else
+            echo "Changes detected in packages/website. Proceeding with deployment."
+            echo "::set-output name=skip_deploy::false"
+          fi
+
+      - name: Download build artifacts
+        if: steps.check_changes.outputs.skip_deploy == 'false'
+        uses: actions/download-artifact@v3
+        with:
+          name: build-artifacts
+          path: ./packages/website/dist/
+
       - name: Configure AWS Credentials
+        if: steps.check_changes.outputs.skip_deploy == 'false'
         uses: aws-actions/configure-aws-credentials@v3
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -39,7 +143,9 @@ jobs:
           aws-region: ap-northeast-2
 
       - name: Deploy to S3
+        if: steps.check_changes.outputs.skip_deploy == 'false'
         run: aws s3 sync --region ap-northeast-2 ./packages/website/dist/ ${{ secrets.AWS_SECRET_BUCKET_NAME }} --delete
 
-      - name: invalidate cloudfront cache
+      - name: Invalidate CloudFront cache
+        if: steps.check_changes.outputs.skip_deploy == 'false'
         run: aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_SECRET_DISTRIBUTION_ID }} --paths "/*"

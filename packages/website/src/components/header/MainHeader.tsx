@@ -3,7 +3,8 @@ import { Button } from '@/components/ui/button';
 import { useStore } from '@/stores/store';
 import { useCallback } from 'react';
 import { Input } from '../ui/input';
-import { SevinguImage } from '@/lib/SevinguImage';
+import { SevinguImage } from '@sevingu/core';
+import { Download, Upload, Undo2, Redo2 } from 'lucide-react';
 
 const MainHeader = () => {
 	const { showImage, undo, redo, download } = useStore();
@@ -28,33 +29,34 @@ const MainHeader = () => {
 	}, [download]);
 
 	return (
-		<div className={'flex gap-9 items-center'}>
+		<div className={'flex items-center justify-between shadow-header sticky'}>
 			<div className={'flex justify-center items-center'}>
 				<img className={'w-16 h-16 ml-4'} src={logo} alt="logo" />
 				<span className={'font-sans text-lg font-bold'}>Sevingu</span>
 			</div>
+			<div className={'flex gap-9 mr-3'}>
+				<Button variant="outline">
+					<label className={'cursor-pointer flex items-center'}>
+						<Upload className="mr-2 h-4 w-5" /> upload
+						<input
+							className="hidden"
+							accept="image/*"
+							onChange={handleImageChange}
+							type="file"></input>
+					</label>
+				</Button>
+				<Button variant="outline" onClick={undo}>
+					<Undo2 className="mr-2 h-4 w-4" /> undo
+				</Button>
+				<Button variant="outline" onClick={redo}>
+					<Redo2 className="mr-2 h-4 w-4" /> redo
+				</Button>
 
-			<Button variant="destructive">
-				<label className="cursor-pointer">
-					<span>upload</span>
-					<input
-						className="hidden"
-						accept="image/*"
-						onChange={handleImageChange}
-						type="file"></input>
-				</label>
-			</Button>
-			<Button variant="destructive" onClick={undo}>
-				undo
-			</Button>
-			<Button variant="destructive" onClick={redo}>
-				redo
-			</Button>
-
-			{/* downloadWithAd 함수를 사용하도록 수정 */}
-			<Button variant="destructive" onClick={downloadWithAd}>
-				download
-			</Button>
+				{/* downloadWithAd 함수를 사용하도록 수정 */}
+				<Button variant="outline" onClick={downloadWithAd}>
+					<Download className="mr-2 h-4 w-4" /> download
+				</Button>
+			</div>
 		</div>
 	);
 };
