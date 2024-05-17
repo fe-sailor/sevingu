@@ -1,4 +1,4 @@
-import logo from '@/assets/sevingu_logo.png';
+import logo from '@/assets/sevingu_logo.svg';
 import { Button } from '@/components/ui/button';
 import { useStore } from '@/stores/store';
 import { useCallback } from 'react';
@@ -29,12 +29,15 @@ const MainHeader = () => {
 	}, [download]);
 
 	return (
-		<div className={'flex items-center justify-between shadow-header sticky'}>
-			<div className={'flex justify-center items-center'}>
-				<img className={'w-16 h-16 ml-4'} src={logo} alt="logo" />
-				<span className={'font-sans text-lg font-bold'}>Sevingu</span>
+		<div
+			className={
+				'flex items-center justify-between shadow-header sticky bg-background-mainui text-white'
+			}>
+			<div className={'flex justify-center items-center gap-2'}>
+				<img className={'w-16 h-16 ml-4 invert'} src={logo} alt="logo" />
+				<span className={'font-sans text-2xl font-bold'}>Sevingu</span>
 			</div>
-			<div className={'flex gap-9 mr-3'}>
+			<div className={'flex gap-5 mr-3'}>
 				<Button
 					className={
 						'bg-background-mainui hover:scale-105 hover:drop-shadow hover:bg-white hover:text-text-mainui transition-all duration-300 ease-in-out'
