@@ -23,16 +23,22 @@ Sevingu에서는 이미지를 SVG 형식으로 쉽게 변환하고, 독특하고
 
 ## Input OutPut
 
-![sample_work](./packages/website/public/sample_work.png)  
-이미지를 업로드 하여 속성을 조절하여 원하는 모양의 svg를 만듭니다.  
-이미지를 추가 하여도 undo, redo 버튼을 이용하여 이전 업로드 이미지로 바꿀 수 있습니다.  
-완성된 작품을 다운로드 하여 파일을 소장할 수 있습니다.
+![sample_work](./packages/website/public/sample_work.png)
 
+![sevingu](./packages/website/public/www.sevingu.com.jpeg)
+
+<div align="left">
+
+- 이미지를 업로드 하여 속성을 조절하여 원하는 모양의 svg를 만듭니다.
+- 이미지를 추가 하여도 undo, redo 버튼을 이용하여 이전 업로드 이미지로 바꿀 수 있습니다.
+- 완성된 작품을 다운로드 하여 파일을 소장할 수 있습니다.
+
+</div>
 </div>
 
 ## Development
 
-개발을 시작하려면:
+로컬 환경에서 실행하는 방법:
 
 1. 저장소 복제 `git clone https://github.com/fe-sailor/sevingu.git`
 1. 종속성 설치 `pnpm install`
