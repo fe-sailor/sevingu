@@ -12,3 +12,30 @@ Sevingu는 SVG에 대한 궁극적인 놀이터로, 당신의 창의력을 자�
 ## Sevingu 서비스는 이런걸 할 수 있어요!
 
 ![sevingu_preview](./packages/website/public/preview_img.png)
+이미지를 업로드 하여 속성을 조절하여 원하는 모양의 svg를 만듭니다.  
+이미지를 추가 하여도 undo, redo 버튼을 이용하여 이전 업로드 이미지로 바꿀 수 있습니다.  
+완성된 작품을 다운로드 하여 파일을 소장할 수 있습니다.
+
+## Sevingu는 이런걸 했어요
+
+svg변환 최적화
+
+## Sevingu는 이런 기술을 사용했어요
+
+- Service  
+  <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=white">
+  <img src="https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=white">
+
+- State Manage  
+  <img src="https://img.shields.io/badge/zustand-433e38?style=for-the-badge&logo=zustand&logoColor=white">
+
+- Lint  
+  <img src="https://img.shields.io/badge/eslint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white">
+  <img src="https://img.shields.io/badge/prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=white">
+
+- Style  
+  <img src="https://img.shields.io/badge/tailwindcss-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white">
+  <img src="https://img.shields.io/badge/shadcnui-000000?style=for-the-badge&logo=shadcnui&logoColor=white">
+
+- CI/CD  
+  <img src="https://img.shields.io/badge/githubactions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white">
