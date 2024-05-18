@@ -99,14 +99,19 @@ export class ImageDataBlender {
 
 		for (let i = 0; i < blendedData.data.length; i += 4) {
 			blendedData.data[i] =
-				blend * (this.imgDataTo!.data[i] || 255) +
-				(1 - blend) * (this.imgDataFrom!.data[i] || 255); // Red
+				blend * (this.imgDataTo!.data[i + 3] ? this.imgDataTo!.data[i] : 255) +
+				(1 - blend) *
+					(this.imgDataTo!.data[i + 3] ? this.imgDataFrom!.data[i] : 255); // Red
 			blendedData.data[i + 1] =
-				blend * (this.imgDataTo!.data[i + 1] || 255) +
-				(1 - blend) * (this.imgDataFrom!.data[i + 1] || 255); // Green
+				blend *
+					(this.imgDataTo!.data[i + 3] ? this.imgDataTo!.data[i + 1] : 255) +
+				(1 - blend) *
+					(this.imgDataTo!.data[i + 3] ? this.imgDataFrom!.data[i + 1] : 255); // Green
 			blendedData.data[i + 2] =
-				blend * (this.imgDataTo!.data[i + 2] || 255) +
-				(1 - blend) * (this.imgDataFrom!.data[i + 2] || 255); // Blue
+				blend *
+					(this.imgDataTo!.data[i + 3] ? this.imgDataTo!.data[i + 2] : 255) +
+				(1 - blend) *
+					(this.imgDataTo!.data[i + 3] ? this.imgDataFrom!.data[i + 2] : 255); // Blue
 			blendedData.data[i + 3] =
 				blend * this.imgDataTo!.data[i + 3] +
 				(1 - blend) * this.imgDataFrom!.data[i + 3]; //Alpha
